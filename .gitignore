@@ -18,7 +18,10 @@ prj/*/*/*.filters*
 prj/tests/*/*
 !prj/tests/*/*.vcxproj
 !prj/tests/*/*.sln
+!prj/tests/*/*.pro
+!prj/tests/*/Makefile
 .DS_Store
 .qmake.stash
 *after-import-key-*.wallet
 *.so*
+src/.old

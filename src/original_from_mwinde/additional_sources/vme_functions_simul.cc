@@ -50,7 +50,6 @@ class VME {
 #endif
 
 #include "VME.h"
-#include <iobus.h>
 
 VME::VME(){}
 caddr_t VME::map_device (const char *){return (caddr_t)0;}

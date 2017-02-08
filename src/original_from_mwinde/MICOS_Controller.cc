@@ -141,7 +141,7 @@ MICOS_Controller::MICOS_Controller(EqFctMICOS_Controller* anEqf, IP500_Acromag* 
     tryMulti = false;
     itsSerialMotorController->SetEndOfInfo(0xA);
     if(instanceCounter == 0) {
-	errorTexts = new NumberedStrings(NULL, 3);
+        errorTexts = new NumberedStrings(NULL, 3); // baseSet will be set later, after Motor was created
 	errorTexts->Append(ErrPowerIsOff, "motor power supply off");
 	errorTexts->Append(ErrResetting, "controller reset ...");
 	errorTexts->Append(ErrWrongProgramFlow, "internal program error");
@@ -154,6 +154,8 @@ void MICOS_Controller::AppendMotor(StepperM_MICOS* aMotor) {
 #ifndef __NO_DOOCS_SERVER
     listOfMotors.push_back(aMotor);
 #endif
+if(errorTexts->GetBaseSet() == NULL)
+    errorTexts->ChangeBaseSet(aMotor->ErrorTexts());
 }
 
 void MICOS_Controller::InitAllMotors() {

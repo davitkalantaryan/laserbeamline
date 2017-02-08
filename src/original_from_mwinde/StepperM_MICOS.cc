@@ -25,12 +25,11 @@ StepperM_MICOS::StepperM_MICOS(MICOS_Controller * theSMController, int theMICOS_
     itsController = theSMController;
     itsMICOS_Addr = theMICOS_Addr;
     iniVelocity = moveVelocity = 1e06;	// just an estimate for timeout, improved by Init()
-    strcpy(versionText, "V1.2, 21-Dec-2004, M. Winde -- Micos Schrittmotor (MICOS)");
+    strcpy(versionText, "V2.0, 08-Feb-2017, M. Winde -- Micos Schrittmotor (MICOS)");
     strcat(versionText, itsController->GetVersion());
     if(instanceCounter == 0) {
-            // ??
-            //errorTexts = new NumberedStrings(StepperMotor::ErrorTexts(), itsController->ErrorTexts(), 0);
-            errorTexts = new NumberedStrings(itsController->ErrorTexts(), 0);
+            errorTexts = new NumberedStrings(StepperMotor::ErrorTexts());
+            // ??? errorTexts = new NumberedStrings(StepperMotor::ErrorTexts(), itsController->ErrorTexts(), 0);
     }
     instanceCounter++;    
 }

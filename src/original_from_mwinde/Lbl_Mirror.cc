@@ -4,10 +4,8 @@ int	EqFctLbl_Mirror::mirrorConf_done = 0;
 
 EqFctLbl_Mirror::EqFctLbl_Mirror() :
     EqFctLbl_XYDevice()
-    //??,mirrorConstB("MIRROR.CONST.B half of diameter", this)
 {
     if (!mirrorConf_done) {
-	//??list_append();
 	mirrorConf_done = 1;
     }
 };

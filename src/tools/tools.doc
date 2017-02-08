@@ -1,0 +1,3 @@
+tools directory contains files, that is copied from other projects
+This copying is done instead of using project as submodule,
+because only couple of files from entire project are needed

@@ -16,11 +16,15 @@ public:
 	// create a set of number-string pairs with an existing subset of pairs
 	NumberedStrings(NumberedStrings * baseSet, int nbOfErrs = 20);	
 
+
 	// --- destructor
 	~NumberedStrings();	
 				
 	// --- functions
 	void Append(int id, const char * str);		// append a text
+
+        void ChangeBaseSet(NumberedStrings* aPtr) {itsBaseSet = aPtr;}
+        NumberedStrings* GetBaseSet() {return itsBaseSet;}
 	
 //	char * Get(int id) {return "NumberedStrings not working - sorry";}
 	char * Get(int id);

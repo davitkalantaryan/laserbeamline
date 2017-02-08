@@ -122,7 +122,7 @@ void	EqFctlaserBeamLine::init ( )
 void	eq_init_epilog ()	// called at end of init of all EqFct's
 {
     EqFctlaserBeamLineInitDone = true;
-};
+}
 
 /*
 void	eq_call_back (int i)
@@ -301,6 +301,8 @@ void EqFctlaserBeamLine::online()        // called by init() and RPC "set online
 	//
 	// test successful
 	//
+    //???
+    // error always is 0, why checking is done here?
 	if (!error) {
 	    g_sts_.error (0);
 	    g_sts_.newerror (0);
@@ -310,35 +312,35 @@ void EqFctlaserBeamLine::online()        // called by init() and RPC "set online
 		g_sts_.online (0);
 		// error handling
 	}
-};
+}
 
 
 void refresh_prolog ()		// called before "update"
 {
 	walltime = ::time(0);
-};
+}
 
 void refresh_epilog ()		// called after "update"
 {
-};
+}
 
-void post_init_prolog() {}; 
-void eq_cancel() {};
-void post_init_epilog() {};
+void post_init_prolog() {}
+void eq_cancel() {}
+void post_init_epilog() {}
 
 void interrupt_usr1_prolog (int)
 {
-};
+}
 
 void interrupt_usr1_epilog (int)
 {
-};
+}
 
 void interrupt_usr2_prolog ()
 {
-};
+}
 
 void interrupt_usr2_epilog ()
 {
-};
+}
 

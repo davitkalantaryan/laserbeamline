@@ -72,7 +72,7 @@ public:
 	void	init ();	// started after creation of all Eq's
         int	fct_code()	{ return CodeMICOS_Controller; }
 	
-	static int	conf_done;
+        static int	conf_done;
 		
 private:
 	MICOS_Controller* theMICOS_Controller;

@@ -146,7 +146,6 @@ EqFctLbl_XYDevice::EqFctLbl_XYDevice():
 }
 
 
-//??void 
 NumberedStrings* EqFctLbl_XYDevice::errorTexts(NULL);
 
 void EqFctLbl_XYDevice::init()
@@ -159,7 +158,7 @@ void EqFctLbl_XYDevice::init()
     Y_mmAct_hist_.book_hist (arch, name_.value(), ring_buffer );
     
     if(!errorTexts) {
-	errorTexts = new NumberedStrings(3);
+        errorTexts = new NumberedStrings(NULL, 3); // will be set after Drives have been created
 	errorTexts->Append(errIllCmd, "illegal cmd number");
 	errorTexts->Append(errCommandPending, "operation in progress");
 	errorTexts->Append(errDeviceOffline, "server is offline");
@@ -186,7 +185,7 @@ void EqFctLbl_XYDevice::CreateDrives() {
         getOrSet_Y.SetHalf(Y_drive);
 	
         //??
-        //errorTexts->ChangeBaseSet(X_drive->ErrorTexts());
+        errorTexts->ChangeBaseSet(X_drive->ErrorTexts());
 }
 
 void EqFctLbl_XYDevice::initHardware()

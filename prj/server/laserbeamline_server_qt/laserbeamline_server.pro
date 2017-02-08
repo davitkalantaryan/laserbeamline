@@ -28,12 +28,13 @@ CONFIG += debug
 
 #CONFIG += c++11
 # greaterThan(QT_MAJOR_VERSION, 4):QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4):message("!!!!!! greater than 4")
 QT -= core
 QT -= gui
 
 LIBS += -L/doocs/lib
-LIBS += -lDOOCSapi
 LIBS += -lEqServer
+LIBS += -lDOOCSapi
 LIBS += -lrt
 LIBS += -lldap
 DEFINES += LINUX
@@ -68,8 +69,10 @@ HEADERS += ../../../src/original_from_mwinde/timeClass.h \
     ../../../src/original_from_mwinde/eq_laserBeamLine.h \
     ../../../src/original_from_mwinde/doocsDebug.h \
     ../../../src/original_from_mwinde/DigIO.h \
-    ../../../src/original_from_mwinde/definePosixSource.h
-SOURCES += ../../../src/original_from_mwinde/timeClass.cc \
+    ../../../src/original_from_mwinde/definePosixSource.h \
+    ../../../src/additional_sources/stdint.h
+SOURCES += \
+    ../../../src/original_from_mwinde/timeClass.cc \
     ../../../src/original_from_mwinde/StepperMotor.cc \
     ../../../src/original_from_mwinde/StepperM_MICOS.cc \
     ../../../src/original_from_mwinde/SMTrapezProfile.cc \
@@ -85,7 +88,6 @@ SOURCES += ../../../src/original_from_mwinde/timeClass.cc \
     ../../../src/original_from_mwinde/Lbl_Aperture.cc \
     ../../../src/original_from_mwinde/laserBeamLine_rpc_server.cc \
     ../../../src/original_from_mwinde/IPModule.cc \
-    ../../../src/original_from_mwinde/IP501_Acromag.cc \
     ../../../src/original_from_mwinde/IP500_Acromag.cc \
     ../../../src/additional_sources/vme_functions_simul.cc \
     ../../../src/original_from_mwinde/IPUnidig.cc
