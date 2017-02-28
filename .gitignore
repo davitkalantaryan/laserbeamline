@@ -25,3 +25,4 @@ prj/tests/*/*
 *after-import-key-*.wallet
 *.so*
 src/.old
+!prj/server/laserbeamline_server_mkfl/Makefile

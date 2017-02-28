@@ -244,7 +244,7 @@ protected:
 
 public:
     EqFctLbl_XYDevice();		// constructor
-    ~EqFctLbl_XYDevice() { ; }	// destructor
+    virtual ~EqFctLbl_XYDevice() { ; }	// destructor
 
     virtual void	update ();
     virtual void updateAllDrives();
@@ -258,11 +258,11 @@ public:
 
     static int	conf_done;
 
-    void PerformCommand(int val, D_int * itsButton);
+    virtual void PerformCommand(int val, D_int * itsButton);
     virtual smStatus PerformSeletedCmd(int val);
     
     virtual smStatus TryReady();
-    void commandFinished(smStatus stat);
+    virtual void commandFinished(smStatus stat);
     
     NumberedStrings* ErrorTexts() {return errorTexts;}
     
@@ -282,7 +282,7 @@ protected:
 						    // last operation is still in progress
     static const int errDeviceOffline = errBase-5;  // device is offline
 
-private:
+protected:
     
     void ActPosKnown(bool isKnown);
     

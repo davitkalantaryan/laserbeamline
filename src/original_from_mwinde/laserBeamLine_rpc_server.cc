@@ -17,6 +17,8 @@
 
 #include 	"MICOS_Controller.h"
 
+#include "pitz_eqfctmirroronedim.hpp"
+
 //int current;	// dummy for libVME
 
 MICOS_Controller* MICOS_controllers[maxNbOfControllers];	// array of all controllers
@@ -205,6 +207,9 @@ eq_create (int eq_code, void *)
 		case CodeLbl_WedgePlates:
 			eqn =  new EqFctLbl_WedgePlates ();
 			break;
+        case CodeLbl_OneDimMirror:
+            eqn = new pitz::EqFctMirrorOneDim;
+            break;
  
         default: 
              eqn = (EqFct *) 0; 

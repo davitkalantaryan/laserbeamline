@@ -29,7 +29,6 @@ StepperM_MICOS::StepperM_MICOS(MICOS_Controller * theSMController, int theMICOS_
     strcat(versionText, itsController->GetVersion());
     if(instanceCounter == 0) {
             errorTexts = new NumberedStrings(StepperMotor::ErrorTexts());
-            // ??? errorTexts = new NumberedStrings(StepperMotor::ErrorTexts(), itsController->ErrorTexts(), 0);
     }
     instanceCounter++;    
 }

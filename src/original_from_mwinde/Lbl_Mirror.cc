@@ -8,7 +8,7 @@ EqFctLbl_Mirror::EqFctLbl_Mirror() :
     if (!mirrorConf_done) {
 	mirrorConf_done = 1;
     }
-};
+}
 
 smStatus EqFctLbl_Mirror::PerformSeletedCmd(int val) {
     smStatus stat = 0;

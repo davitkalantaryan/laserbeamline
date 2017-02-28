@@ -26,7 +26,7 @@ void EqFctLbl_WedgePlates::CreateDrives() {
     	&Y_stepsTo, &Y_stepsBy, &Y_mmTo, &Y_mmBy, &Y_destinationReachable, &Y_stepsMax, &X_stepsMaxMax,
 	&Y_stepsNormPosition, Y_axisFactor.value(), Y_diode_dark_at0.value()!=0);
     //??
-    //errorTexts->ChangeBaseSet(X_drive->ErrorTexts());
+    errorTexts->ChangeBaseSet(X_drive->ErrorTexts());
 }
 
 void EqFctLbl_WedgePlates::initHardware() {

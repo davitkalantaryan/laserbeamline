@@ -5,41 +5,14 @@
 # for PITZ
 # CONFIG += TEST
 # For making test: '$qmake "CONFIG+=TEST" daqadcreceiver.pro' , then '$make'
-#
 
-QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-parameter
-QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-variable
-QMAKE_CXXFLAGS_WARN_ON += -Wno-sign-compare
-QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-function
-QMAKE_CXXFLAGS_WARN_ON -= -Wunused-function
+include(../../libs/common_qt/doocs_server_common.pri)
 
-win32:SYSTEM_PATH = ../../../sys/win64
-else {
-    macx:SYSTEM_PATH = ../../../sys/mac
-    else {
-        CODENAME = $$system(lsb_release -c | cut -f 2)
-        SYSTEM_PATH = ../../../sys/$$CODENAME
-    }
-}
-
-DESTDIR = $$SYSTEM_PATH/bin
-OBJECTS_DIR = $$SYSTEM_PATH/.objects
-CONFIG += debug
-
-#CONFIG += c++11
-# greaterThan(QT_MAJOR_VERSION, 4):QT += widgets
-greaterThan(QT_MAJOR_VERSION, 4):message("!!!!!! greater than 4")
 QT -= core
 QT -= gui
 
-LIBS += -L/doocs/lib
-LIBS += -lEqServer
-LIBS += -lDOOCSapi
-LIBS += -lrt
-LIBS += -lldap
-DEFINES += LINUX
-INCLUDEPATH += /doocs/lib/include
 INCLUDEPATH += ../../../src/original_from_mwinde
+INCLUDEPATH += ../../../src/server
 OTHER_FILES += ../../../src/original_from_mwinde/Lbl_Aperture.cc.old \
     ../../../src/original_from_mwinde/laserBeamLine.hist.index \
     ../../../src/original_from_mwinde/laserBeamLine.hist
@@ -70,9 +43,9 @@ HEADERS += ../../../src/original_from_mwinde/timeClass.h \
     ../../../src/original_from_mwinde/doocsDebug.h \
     ../../../src/original_from_mwinde/DigIO.h \
     ../../../src/original_from_mwinde/definePosixSource.h \
-    ../../../src/additional_sources/stdint.h
-SOURCES += \
-    ../../../src/original_from_mwinde/timeClass.cc \
+    ../../../src/additional_sources/stdint.h \
+    ../../../src/server/pitz_eqfctmirroronedim.hpp
+SOURCES += ../../../src/original_from_mwinde/timeClass.cc \
     ../../../src/original_from_mwinde/StepperMotor.cc \
     ../../../src/original_from_mwinde/StepperM_MICOS.cc \
     ../../../src/original_from_mwinde/SMTrapezProfile.cc \
@@ -90,4 +63,5 @@ SOURCES += \
     ../../../src/original_from_mwinde/IPModule.cc \
     ../../../src/original_from_mwinde/IP500_Acromag.cc \
     ../../../src/additional_sources/vme_functions_simul.cc \
-    ../../../src/original_from_mwinde/IPUnidig.cc
+    ../../../src/original_from_mwinde/IPUnidig.cc \
+    ../../../src/server/pitz_eqfctmirroronedim.cpp

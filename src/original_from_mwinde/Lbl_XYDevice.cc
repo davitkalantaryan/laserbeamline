@@ -305,7 +305,6 @@ int Drive::Calc_Steps(float mm) {
 }
 
 void Drive::CheckIfTargetCanBeReached() {
-    //??int motorSteps = stepsTo->value() + stepsNormPosition->value();
     int motorSteps = stepsTo->value() + nominal->value() + stepsNormPosition->value();
     bool canBeReached = motorSteps >= 0;
     canBeReached &= motorSteps <= stepperMotor->GetMaxSteps();

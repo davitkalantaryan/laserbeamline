@@ -7,7 +7,7 @@ class EqFctLbl_Mirror : public EqFctLbl_XYDevice {
 
 public:
     EqFctLbl_Mirror();		// constructor
-    ~EqFctLbl_Mirror() { ; };	// destructor
+    ~EqFctLbl_Mirror() { ; }	// destructor
 
     virtual int	fct_code()	{ return CodeLbl_Mirror; }
 
