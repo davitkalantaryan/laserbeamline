@@ -17,26 +17,36 @@ extern ArchiveFile*	arch;
 extern time_t		walltime;
 extern  int		ring_buffer;
 
+int g_nDebugApp = 0;
+
+#ifndef __DEBUG_APP__
+#define __DEBUG_APP__(__log_level__,...)  do{\
+    if((__log_level__)<=g_nDebugApp){\
+        printf("fl:%s, ln:%d",__FILE__,__LINE__); printf(__VA_ARGS__); printf("\n");}}while(0)
+#endif
+
 pitz::EqFctMirrorOneDim::EqFctMirrorOneDim()
 {
-    //
+    __DEBUG_APP__(1," ");
 }
 
 
 pitz::EqFctMirrorOneDim::~EqFctMirrorOneDim()
 {
-    //
+    __DEBUG_APP__(1," ");
 }
 
 
 int	pitz::EqFctMirrorOneDim::fct_code()
 {
+    __DEBUG_APP__(1," ");
     return CodeLbl_OneDimMirror;
 }
 
 
 smStatus pitz::EqFctMirrorOneDim::PerformSeletedCmd(int a_nVal)
 {
+    __DEBUG_APP__(1," ");
     smStatus stat = 0;
     int baseCmd = a_nVal & cmdMask_baseCmds;
     switch(baseCmd) {
@@ -51,6 +61,7 @@ smStatus pitz::EqFctMirrorOneDim::PerformSeletedCmd(int a_nVal)
 
 void pitz::EqFctMirrorOneDim::init()
 {
+    __DEBUG_APP__(1," ");
     set_error ( no_error );
 
     theMICOS_Controller = NULL;
@@ -71,6 +82,7 @@ void pitz::EqFctMirrorOneDim::init()
 
 void pitz::EqFctMirrorOneDim::online()        // called by init() and RPC "set online"
 {
+    __DEBUG_APP__(1," ");
     int	error = 0;
     // do some online/alive test
     smStatus stat = X_drive->stepperMotor->ItsController()->GetStatus();
@@ -91,12 +103,14 @@ void pitz::EqFctMirrorOneDim::online()        // called by init() and RPC "set o
 
 
 void pitz::EqFctMirrorOneDim::updateAllDrives() {
+    __DEBUG_APP__(1," ");
     if(theMICOS_Controller->getDoUpdateAllDrives())
     {	// do NOT perform the update when an other motor command is "on the way"
         // since that will cause problems with the controller
         X_drive->update();
-        Y_drive->update();
+        //Y_drive->update();
     }
+    __DEBUG_APP__(1," ");
 }
 
 

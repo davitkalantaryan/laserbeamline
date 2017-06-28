@@ -81,7 +81,7 @@ laserbeamline_server:	IP500_Acromag.o IP501_Acromag.o IPModule.o IPUnidig.o lase
 						@mkdir -p ../../../sys/solaris/.objects
 						@mkdir -p ../../../sys/solaris/bin
 						@mv laserbeamline_server ../../../sys/solaris/bin/.
-						@mv *.o ../../../sys/solaris/.objects/.
+						@cp *.o ../../../sys/solaris/.objects/.
 						
 
 # Rule for generating object files from C++ source files
@@ -92,5 +92,5 @@ laserbeamline_server:	IP500_Acromag.o IP501_Acromag.o IPModule.o IPUnidig.o lase
 	#$(CXX) -c $(CXXFLAGS) $(INCPATH) -o "$@" "$<"
 
 clean:	
-	@rm -f ../../../sys/solaris/bin/laserbeamline_server ../../../sys/solaris/.objects/*.o
+	@rm -f ../../../sys/solaris/bin/laserbeamline_server ../../../sys/solaris/.objects/*.o *.o
 
