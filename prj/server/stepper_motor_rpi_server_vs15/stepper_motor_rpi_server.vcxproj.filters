@@ -49,5 +49,13 @@
     <Filter Include="other">
       <UniqueIdentifier>{91952e8a-477e-4b1b-9fe2-c2dcaab8ee31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="doc">
+      <UniqueIdentifier>{fa592dc1-747a-437f-bf1a-f5677514e93c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\doc\stepper_motor_rpi_server_low.scr3.txt">
+      <Filter>doc</Filter>
+    </Text>
   </ItemGroup>
 </Project>

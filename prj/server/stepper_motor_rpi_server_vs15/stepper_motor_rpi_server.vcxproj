@@ -48,6 +48,9 @@
     </None>
     <None Include="..\..\..\src\server\pitz_rpi_comporteqfct.impl.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\doc\stepper_motor_rpi_server_low.scr3.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BCAF5407-15EB-4C69-AD96-2753227F11FF}</ProjectGuid>
     <SccProjectName>SAK</SccProjectName>
