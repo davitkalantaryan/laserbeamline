@@ -51,10 +51,11 @@ protected:
 class ComPortEqFct : public EqFct
 {
 public:
-	ComPortEqFct();
+	ComPortEqFct(const char* comName);
 	virtual ~ComPortEqFct();
 
 	int WriteStringWithEnding(char* string, int str_len);
+	int WriteByteStream(const void* byteStream, int dataLen);
 	virtual int CallbackFunction(
 		D_fct* a_this, COMMAND_TYPET command,
 		EqAdr * dcsAdr, EqData *fromUser, EqData * toUser, EqFct * fct);
@@ -68,6 +69,8 @@ protected:
 	New_D_types<D_string>		m_anyCommand;
 	D_string					m_comPortName;
 	D_int						m_baudRate;
+
+	std::string					m_strComName;
 };
 
 
@@ -93,7 +96,7 @@ protected:
 }}
 
 
-#include "pitz_rpi_comporteqfct.tos"
+#include "pitz_rpi_comporteqfct.impl.hpp"
 
 
 #endif // #ifndef __pitz_rpi_comporteqfct_hpp__

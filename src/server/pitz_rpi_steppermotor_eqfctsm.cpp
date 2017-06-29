@@ -14,15 +14,17 @@
 
 pitz::rpi::StepperMotor::EqFctSM::EqFctSM()
 	:
-	m_stepsToMoveNm(COMMAND_TYPE::DOUBLE_CMD1, reinterpret_cast<TypeCallback>(&EqFctSM::CallbackFunctionSM),
-			"MOVE.WITH.NM executes any command provided", this),
-	m_stepsToMoveNrR(COMMAND_TYPE::DOUBLE_CMD2, reinterpret_cast<TypeCallback>(&EqFctSM::CallbackFunctionSM),
-		"MOVE.WITH.NR.R executes any command provided", this),
-	m_stepsToMoveNrL(COMMAND_TYPE::DOUBLE_CMD3, reinterpret_cast<TypeCallback>(&EqFctSM::CallbackFunctionSM),
-		"MOVE.WITH.NR.L executes any command provided", this),
-	m_stepsToMoveNcal(COMMAND_TYPE::VOID_CMD1, reinterpret_cast<TypeCallback>(&EqFctSM::CallbackFunctionSM),
-		"GO.LEFT.END executes any command provided", this),
-	m_motorNumber("MOTOR.NUMBER number of motor Number of motor in dasy chain, starts from 1",this)
+	m_discretPos("DISCRET.POS (0)->(0), (1)->(20), (-1)->(-20)", this),
+	m_doIt(COMMAND_TYPE::YAG_CAMERA_SET,reinterpret_cast<TypeCallback>(&EqFctSM::CallbackFunctionSM),
+		"DO.SET.POS sets the position from DISCRET.POS property", this),
+	m_motorNumber("MOTOR.NUMBER motor number in the desy chain [1-16]", this),
+	m_valueZero("EXPERT.VALUE.ZERO",this),
+	m_valueMinus20("EXPERT.VALUE.MINUS20", this),
+	m_valuePlus20("EXPERT.VALUE.PLUS20", this),
+	m_goLeft(COMMAND_TYPE::GO_LEFT, reinterpret_cast<TypeCallback>(&EqFctSM::CallbackFunctionSM),
+		"OTHER.GO.LEFT moves to the left end", this),
+	m_goRight(COMMAND_TYPE::GO_RIGHT, reinterpret_cast<TypeCallback>(&EqFctSM::CallbackFunctionSM),
+		"OTHER.GO.RIGHT moves to the right end", this)
 {
 	m_motorNumber.set_ro_access();
 }
@@ -48,77 +50,59 @@ void pitz::rpi::StepperMotor::EqFctSM::post_init(void)
 int pitz::rpi::StepperMotor::EqFctSM::CallbackFunctionSM(D_fct* a_this, COMMAND_TYPET a_command, 
 	EqAdr * a_dcsAdr, EqData *a_fromUser, EqData * a_toUser, EqFct * a_fct)
 {
-	// To do
-	//__DEBUG_APP__(0, "mov=%f, &Data=%p ",(float)m_stepsToMoveNm.value(),a_command_arg);
+	int nWrite, nWrRet;
+	char vcString[512];
 
 	if (!m_pComPort) { return -3; }
 
 	switch (a_command)
 	{
-	case COMMAND_TYPE::DOUBLE_CMD1:
+	case COMMAND_TYPE::YAG_CAMERA_SET:
 	{
 		double lfValue;
-		int nWritten;
-		int nWrRet;
-		char vcString[512];
+		int nValue = m_discretPos.value();
 
-#if D_TYPE_IN_USE==double
-		lfValue = a_fromUser->get_double();
-#elif D_TYPE_IN_USE==float
-		lfValue = (double)a_fromUser->get_float();
-#else
-#error not handled type
-#endif
-
-		nWritten = snprintf(vcString,505,"%lf %d nm",lfValue,m_motorNumber.value());
-		nWrRet=m_pComPort->WriteStringWithEnding(vcString,nWritten);		
-		
-		__DEBUG_APP__(0,"nWritten=%d, nWrRet=%d, val=%lf, set=\"%s\"",nWritten,nWrRet,lfValue,vcString);
-		
-	}
+		switch (nValue)
+		{
+		case CAMERA_POS::YAG_DZ_MINUS20:
+			lfValue = (double)m_valueMinus20.value();
+			nWrite = snprintf(vcString, 505, "%lf %d nm", lfValue, m_motorNumber.value());
+			nWrRet = m_pComPort->WriteStringWithEnding(vcString, nWrite);
+			break;
+		case CAMERA_POS::YAG_0_POS:
+			lfValue = (double)m_valueZero.value();
+			nWrite = snprintf(vcString, 505, "%lf %d nm", lfValue, m_motorNumber.value());
+			nWrRet = m_pComPort->WriteStringWithEnding(vcString, nWrite);
+			break;
+		case CAMERA_POS::YAG_DZ_PLUS20:
+			lfValue = (double)m_valuePlus20.value();
+			nWrite = snprintf(vcString, 505, "%lf %d nm", lfValue, m_motorNumber.value());
+			nWrRet = m_pComPort->WriteStringWithEnding(vcString, nWrite);
+			break;
+		default:
+			snprintf(vcString,511,"error!");
+			break;
+		}
+	} // case COMMAND_TYPE::YAG_CAMERA_SET:
 	break;
 
-	case COMMAND_TYPE::DOUBLE_CMD2:
-	{
-		char vcString[512];
-		const TYPE_IN_USE lfValue = m_stepsToMoveNrR.value();
-		int nWritten = snprintf(vcString, 505, "%lf %d nm", (double)lfValue, m_motorNumber.value());
-		int nWrRet = m_pComPort->WriteStringWithEnding(vcString, nWritten);
+	case COMMAND_TYPE::GO_LEFT:
+		nWrite = snprintf(vcString, 505, "%d ncal \r\n",m_motorNumber.value());
+		m_pComPort->WriteByteStream(vcString, nWrite);
+		break;
 
-		__DEBUG_APP__(0, "nWritten=%d, nWrRet=%d, val=%lf, set=\"%s\"",
-			nWritten, nWrRet, lfValue, vcString);
-
-	}
-	break;
-
-	case COMMAND_TYPE::DOUBLE_CMD3:
-	{
-		char vcString[512];
-		const TYPE_IN_USE lfValue = m_stepsToMoveNrR.value();
-		int nWritten = snprintf(vcString, 505, "%lf %d nm", -((double)lfValue), m_motorNumber.value());
-		int nWrRet = m_pComPort->WriteStringWithEnding(vcString, nWritten);
-
-		__DEBUG_APP__(0, "nWritten=%d, nWrRet=%d, val=%lf, set=\"%s\"",
-			nWritten, nWrRet, lfValue, vcString);
-
-	}
-	break;
-
-	case COMMAND_TYPE::VOID_CMD1:
-	{
-		char vcString[512];
-		int nWritten = snprintf(vcString, 505, "%d ncal", m_motorNumber.value());
-		int nWrRet = m_pComPort->WriteStringWithEnding(vcString, nWritten);
-
-		__DEBUG_APP__(0, "nWritten=%d, nWrRet=%d, set=\"%s\"",
-			nWritten, nWrRet, vcString);
-
-	}
-	break;
+	case COMMAND_TYPE::GO_RIGHT:
+		nWrite = snprintf(vcString, 505, "%d nrm \r\n", m_motorNumber.value());
+		m_pComPort->WriteByteStream(vcString, nWrite);
+		break;
 
 	default:
-		return pitz::rpi::ComPortUser::CallbackFunction(a_this, a_command, a_command_arg, a_arg_len);
+		snprintf(vcString, 511, "default!");
+		return pitz::rpi::ComPortUserEqFct::CallbackFunctionU(
+			a_this, a_command, a_dcsAdr, a_fromUser, a_toUser, a_fct);
 	}
+
+	__DEBUG_APP__(0, "%s\n", vcString);
 
 	return 0;
 }

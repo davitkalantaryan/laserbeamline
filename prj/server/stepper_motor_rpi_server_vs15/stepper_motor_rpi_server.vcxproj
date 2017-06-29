@@ -46,7 +46,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
-    <None Include="..\..\..\src\server\pitz_rpi_comporteqfct.tos" />
+    <None Include="..\..\..\src\server\pitz_rpi_comporteqfct.impl.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BCAF5407-15EB-4C69-AD96-2753227F11FF}</ProjectGuid>

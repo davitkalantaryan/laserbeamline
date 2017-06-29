@@ -1,0 +1,15 @@
+SOURCEOBJ += $(OBJDIR)/StepperMotor.o
+CPPFLAGS	+=	-I$(MOTORLIBDIR)
+
+$(OBJDIR)/StepperMotor.o: $(MOTORLIBDIR)/StepperMotor.cc
+	@echo ---------- compiling $(MOTORLIBDIR)/StepperMotor.cc  --- 
+	$(CC) $(CCFLAGS) $(CPPFLAGS) \
+	      -c -o $(OBJDIR)/StepperMotor.o $(MOTORLIBDIR)/StepperMotor.cc
+	@-chmod g+w $(OBJDIR)/StepperMotor.o
+
+SOURCEOBJ += $(OBJDIR)/SMProfile.o
+$(OBJDIR)/SMProfile.o: $(MOTORLIBDIR)/SMProfile.cc
+	@echo ---------- compiling $(MOTORLIBDIR)/SMProfile.cc  --- 
+	$(CC) $(CCFLAGS) $(CPPFLAGS) \
+	      -c -o $(OBJDIR)/SMProfile.o $(MOTORLIBDIR)/SMProfile.cc
+	@-chmod g+w $(OBJDIR)/SMProfile.o

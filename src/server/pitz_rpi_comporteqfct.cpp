@@ -36,7 +36,7 @@ static PCWSTR StringFromDtrControl(DWORD DtrControl);
 static PCWSTR StringFromRtsControl(DWORD RtsControl);
 
 
-pitz::rpi::ComPortEqFct::ComPortEqFct()
+pitz::rpi::ComPortEqFct::ComPortEqFct(const char* a_comName)
 	:
 	EqFct("NAME = location"),
 	m_anyCommand(COMMAND_TYPE::ANY_COMMAND, 
@@ -45,15 +45,17 @@ pitz::rpi::ComPortEqFct::ComPortEqFct()
 	m_comPortName("COMPORT.NAME the name of com port", this),
 	m_baudRate("BAUD_RATE property holds baud rate",this)
 {
+	m_strComName = a_comName ? a_comName : "";
+
 	m_comPortName.set_ro_access();
 	m_baudRate.set_ro_access();
 }
+
 
 pitz::rpi::ComPortEqFct::~ComPortEqFct()
 {
 }
 
-typedef const char* ConstCharPtrType;
 
 int pitz::rpi::ComPortEqFct::WriteStringWithEnding(char* a_string, int a_str_len)
 {
@@ -66,27 +68,32 @@ int pitz::rpi::ComPortEqFct::WriteStringWithEnding(char* a_string, int a_str_len
 	return (int)dwWritten;
 }
 
+
+int pitz::rpi::ComPortEqFct::WriteByteStream(const void* a_byteStream, int a_dataLen)
+{
+	return (int)m_serial.Write(a_byteStream, a_dataLen);
+}
+
+
 int pitz::rpi::ComPortEqFct::CallbackFunction(D_fct* a_this, COMMAND_TYPET a_command, 
-	EqAdr * dcsAdr, EqData *fromUser, EqData * toUser, EqFct * fct)
+	EqAdr * dcsAdr, EqData *a_fromUser, EqData * toUser, EqFct * fct)
 {
 	switch (a_command)
 	{
 	case COMMAND_TYPE::ANY_COMMAND:
 	{
-#if 0
-		ConstCharPtrType* cpcCommandPtr = (ConstCharPtrType*)a_command_arg;
-		const char* cpcCommand = *cpcCommandPtr;
-		int nStrLen = (int)strlen(cpcCommand);
+		std::string strAnyCommand = a_fromUser->get_string();
+		int nStrLen(strAnyCommand.length());
 		char* pcNewCommand = (char*)alloca(nStrLen + 5);
-		memcpy(pcNewCommand, cpcCommand, nStrLen);
+		memcpy(pcNewCommand, strAnyCommand.c_str(), nStrLen);
 		WriteStringWithEnding(pcNewCommand, nStrLen);
-#endif
 	}
-	break;
+	return 0;
+
 	default:
 		break;
 	}
-	return 0;
+	return -1;
 }
 
 
@@ -99,16 +106,21 @@ int pitz::rpi::ComPortEqFct::fct_code()
 
 void pitz::rpi::ComPortEqFct::init(void)
 {
-
 	printf("--------------------- ComPortEqFct::init\n");
 
 	DCB actualDcb;
 	COMMTIMEOUTS aTimeouts;
 	int nRet;
 
+	if(m_strComName!=std::string("")){
+		m_comPortName.set_value(m_strComName.c_str());
+	}
+	else{
+		m_strComName = m_comPortName.value();
+	}
+
 	__DEBUG_APP__(1, "version 4 serial_name=\"%s\"",m_comPortName.value());
 
-	//if ((nRet = m_serial.OpenSerial(SERIAL_DEVICE_NAME)))
 	if ((nRet = m_serial.OpenSerial(m_comPortName.value())))
 	{
 		std::string errString = FindErrorString();
@@ -181,7 +193,7 @@ int pitz::rpi::ComPortUserEqFct::CallbackFunctionU(D_fct* a_this, COMMAND_TYPET 
 	EqAdr * a_dcsAdr, EqData *a_fromUser, EqData * a_toUser, EqFct * a_fct)
 {
 	if (m_pComPort) { 
-		m_pComPort->CallbackFunction(a_this,a_command,a_dcsAdr,a_fromUser,a_toUser,a_fct);
+		m_pComPort->CallbackFunction(a_this,a_command,a_dcsAdr,a_fromUser,a_toUser, a_fct);
 		return 0; 
 	}
 	return -2;

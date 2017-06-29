@@ -20,15 +20,14 @@ void post_init_prolog(void){}
 void	eq_init_prolog() 	{}
 
 
-EqFct* eq_create(int eq_code, void*)
+EqFct* eq_create(int a_eq_code, void* a_comPortName)
 {
 	EqFct* pRet = NULL;
-	// enum class EQ_FCT_CODES{GEN_COM_PORT=304, GEN_COM_PORT_USER = 305, SM_COM_USER = 306};
 
-	switch (eq_code)
+	switch (a_eq_code)
 	{
 	case ((int)pitz::rpi::EQ_FCT_CODES::GEN_COM_PORT):
-		pRet = new pitz::rpi::ComPortEqFct;
+		pRet = new pitz::rpi::ComPortEqFct((const char*)a_comPortName);
 		break;
 	case ((int)pitz::rpi::EQ_FCT_CODES::SM_COM_USER):
 		pRet = new pitz::rpi::StepperMotor::EqFctSM;

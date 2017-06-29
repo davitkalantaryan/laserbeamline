@@ -11,16 +11,15 @@
 
 #include "pitz_rpi_comporteqfct.hpp"
 
-#define D_TYPE_IN_USE	D_double
-//#define TYPE_IN_USE2	double
+#define VALUE_TYPE	D_float
 
 namespace pitz {namespace rpi{ 
 	
-namespace COMMAND_TYPE{enum {YAG_CAMERA_POS=ANY_COMMAND+1};}
+namespace COMMAND_TYPE{enum {YAG_CAMERA_SET=ANY_COMMAND+1,GO_LEFT,GO_RIGHT};}
 
 namespace StepperMotor{
 
-namespace CAMERA_POS{enum {YAG_0_POS,YAG_DZ_PLUS20,YAG_DZ_MINUS20};}
+namespace CAMERA_POS{enum {YAG_0_POS=0,YAG_DZ_MINUS20=-1,YAG_DZ_PLUS20=1};}
 
 class D_void : New_D_types<D_fct>
 {
@@ -46,6 +45,11 @@ protected:
 	D_int						m_discretPos;
 	D_void						m_doIt;
 	D_int						m_motorNumber;
+	VALUE_TYPE					m_valueZero;
+	VALUE_TYPE					m_valueMinus20;
+	VALUE_TYPE					m_valuePlus20;
+	D_void						m_goLeft;
+	D_void						m_goRight;
 };
 
 

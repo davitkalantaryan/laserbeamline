@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="test.sources">
+      <UniqueIdentifier>{375254d3-9a15-4756-9713-914b3f5a9c8a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\.others_codes\samples\AllJoyn\Samples\BACnetAdapter\bacnet-stack-0.8.2\ports\bdk-atxx4-mstp\avrosp\SerialPort.cpp">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\samples\AllJoyn\Samples\BACnetAdapter\bacnet-stack-0.8.2\demo\mstpcap\main.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\samples\AllJoyn\Samples\BACnetAdapter\bacnet-stack-0.8.2\ports\win32\rs485.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\samples\AllJoyn\Samples\ZWaveAdapter\open-zwave\cpp\hidapi\windows\hid.cpp">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\samples\SerialUART\CPP\MainPage.xaml.cpp">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\error.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\flush.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\immediat.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\initunlo.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\ioctl.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\isr.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\pnp.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\power.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\purge.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\qsfile.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\read.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\registry.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\utils.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\waitmask.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\wmi.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\write.c">
+      <Filter>test.sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tests\main_test_com_from_win.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tools\pitz_rpi_tools_serial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\.others_codes\samples\AllJoyn\Samples\BACnetAdapter\bacnet-stack-0.8.2\ports\bdk-atxx4-mstp\avrosp\SerialPort.hpp">
+      <Filter>test.sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\.others_codes\samples\SerialUART\CPP\MainPage.xaml.h">
+      <Filter>test.sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\.others_codes\bsp\drivers\uart\bcm2836\miniUart\pi_miniuart.inf" />
+  </ItemGroup>
+</Project>

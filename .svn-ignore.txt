@@ -1,0 +1,38 @@
+*.[oa]
+*~
+*.obj
+*.pro.user*
+*.o.cmd
+*.ko
+prj/*/*/*
+!prj/*/*/*.vcxproj
+!prj/*/*/*.sln
+!prj/*/*/*.pro
+!prj/*/*/*.pri
+!prj/*/*_mkfl/Makefile
+!prj/driver/*/*.rules
+sys/*/bin/*
+sys/*/mbin/*
+sys/*/.objects/*
+sys/drivers
+!sys/*/bin/setup_environment.bat
+moc_*.cpp
+workspaces
+.gitattributes
+.DS_Store
+.qmake.stash
+*.app
+*wallet.json
+*after-import-key-*.wallet
+*.so*
+prj/driver/x1timer_by_lyuto/
+drivers/src/x2timer/orig/x1timer.c~RF9d95785.TMP
+.git
+.git/
+.git/*
+.db
+.opendb
+.vs .
+CodeDB .
+VisualGDBCache .
+.VC.db
