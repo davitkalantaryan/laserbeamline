@@ -43,6 +43,29 @@ int pitz::rpi::tools::Serial::Read(void* a_buffer, int a_buf_len)
 }
 
 
+int pitz::rpi::tools::Serial::Read(void* a_buffer, int a_buf_len, long int a_lnTimeoutMS, long int a_lnSecondTimeoutMS)
+{
+	COMMTIMEOUTS atimeouts0, atimeouts;
+	DWORD dwReaded;
+	BOOL bRet;
+
+	if (!(::GetCommTimeouts(m_handle, &atimeouts0))) { return GetLastError(); }
+	atimeouts=atimeouts0;
+	atimeouts.ReadTotalTimeoutMultiplier=0;atimeouts.ReadTotalTimeoutConstant=a_lnTimeoutMS;
+	if (!SetCommTimeouts(m_handle, &atimeouts)) { return GetLastError(); }
+	bRet=ReadFile(m_handle, a_buffer, 1, &dwReaded, NULL);
+	if(bRet && (dwReaded>0) && (a_buf_len>1)){
+		atimeouts.ReadTotalTimeoutConstant=a_lnSecondTimeoutMS;
+		SetCommTimeouts(m_handle, &atimeouts);
+		bRet=ReadFile(m_handle, ((char*)a_buffer)+1, a_buf_len-1, &dwReaded, NULL);
+		if (bRet){++dwReaded;}
+	}
+	SetCommTimeouts(m_handle, &atimeouts0);
+	if (bRet) { return dwReaded; }
+	return -((int)GetLastError());
+}
+
+
 int pitz::rpi::tools::Serial::OpenSerial(const char* a_entry_name)
 {
 #ifdef WIN32

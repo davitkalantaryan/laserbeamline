@@ -46,6 +46,7 @@ public:
 
 	int Write(const void* data, int data_len);
 	int Read(void* buffer, int buf_len);
+	int Read(void* buffer, int buf_len, long int timeoutMS, long int secondTimeoutMS);
 
 	operator COM_HANDLE&();
 

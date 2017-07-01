@@ -1,0 +1,6 @@
+
+#ifndef __LASERLEAMLINE_STDAFX_H__
+#define __LASERLEAMLINE_STDAFX_H__
+
+
+#endif  // #ifndef __LASERLEAMLINE_STDAFX_H__
