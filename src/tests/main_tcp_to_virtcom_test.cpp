@@ -29,9 +29,13 @@ int main()
 	ASocketB::Initialize();
 
 	if (PrepareSerial(&serialProg, _VIRT_SERIAL_PORT_NAME_)) { return 1; }
-	if (aSocket.CreateClient(DEVICE_HOST, 9030)) { return 2; }
 
-	TwoComInOne(&serialProg,&aSocket);
+	while(1){
+		if (aSocket.CreateClient(DEVICE_HOST, 9030)) { return 2; }
+		TwoComInOne(&serialProg, &aSocket);
+		aSocket.Close();
+		Sleep(100);
+	}
 
 	serialProg.CloseCom();
 
@@ -46,39 +50,37 @@ int main()
 
 static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, ASocketTCP* a_device)
 {
-	const char* cpcFound;
-	std::string aStrToPrint;
-	int dwOffset(0), dwReadProg,dwReadDev, dwWriteToDev;
+	std::string aStrToPrintProg, aStrToPrintDev;
+	int dwReadProg,dwReadDev;
 	char vcBufferProg[PROG_BUFFER1+1], vcBufferDev[DEVICE_BUFFER1+1];
+	bool bFound;
 
 	while (1) {
-		dwReadProg = a_prog->Read(vcBufferProg + dwOffset, PROG_BUFFER1-dwOffset, 10000,25);
-		if (dwReadProg > 0) {
+		
+		dwReadProg = a_prog->Read(vcBufferProg, PROG_BUFFER1, 100000,"\r\n",2,&bFound);
+		if (dwReadProg > 2) {
 
-			printf("+++program readed_len= %d\n", dwReadProg);
-			
-			vcBufferProg[dwReadProg] = 0;
-			cpcFound = strstr(vcBufferProg, "\r\n");
-			while(cpcFound && (dwReadProg>0)){
-				dwOffset = 0;
-				dwWriteToDev = (DWORD)((size_t)(cpcFound - vcBufferProg)) + 2;
-				aStrToPrint = std::string(vcBufferProg, dwWriteToDev - 2);
-				printf("+++program: %s\n", aStrToPrint.c_str());
-				//a_device->Write(vcBufferProg, dwWriteToDev);
-				a_device->SendData(vcBufferProg, dwWriteToDev);
-				dwReadProg -= dwWriteToDev;
-				if(dwReadProg>0){memmove(vcBufferProg, vcBufferProg + dwWriteToDev, dwReadProg);}
-				//dwReadDev = a_device->Read(vcBufferDev, DEVICE_BUFFER1, 25,25);
-				dwReadDev = a_device->RecvData(vcBufferDev, DEVICE_BUFFER1, 125, 25);
-				if (dwReadDev > 0) {
+			aStrToPrintProg = std::string(vcBufferProg, dwReadProg - 2);
+			printf("+++++ program : %s\n", aStrToPrintProg.c_str());
+
+			a_device->SendData(vcBufferProg, dwReadProg);
+			dwReadDev = a_device->RecvData(vcBufferDev, DEVICE_BUFFER1, 100000, 10);
+			printf("----- device  : ");
+
+			if (dwReadDev > 0) {
+				if((dwReadDev==4) && (memcmp(vcBufferDev,"null",4)==0)){}
+				else{
+					aStrToPrintDev = std::string(vcBufferDev, dwReadDev);
+					printf("%s\n", aStrToPrintDev.c_str());
 					a_prog->Write(vcBufferDev, dwReadDev);
-					aStrToPrint = std::string(vcBufferDev, dwReadDev);
-					printf("---device : %s\n", aStrToPrint.c_str());
 				}
-				vcBufferProg[dwReadProg] = 0;
-				cpcFound = strstr(vcBufferProg, "\r\n");
-			} // while(cpcFound){
-			dwOffset += dwReadProg;
+			}
+			else if((dwReadDev != 0)&& (dwReadDev != _SOCKET_TIMEOUT_)){
+				fprintf(stderr,"server disconnected!\n");
+				break;
+			}
+			printf("\n");
+
 		}
 	} // while (1) {
 }

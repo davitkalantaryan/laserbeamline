@@ -49,10 +49,9 @@ int main()
 
 int ComServer::AddClient(class ASocketTCP& a_ClientSocket, struct sockaddr_in* a_bufForRemAddress)
 {
-	const char* cpcFound;
 	pitz::rpi::tools::Serial serialReal;
-	std::string aStrToPrint;
-	int dwOffset(0), dwReadProg, dwReadDev, dwWriteToDev;
+	std::string aStrToPrintProg, aStrToPrintDev;
+	int dwReadProg, dwReadDev;
 	char vcBufferProg[PROG_BUFFER1 + 1], vcBufferDev[DEVICE_BUFFER1 + 1];
 
 	ASocketB::GetHostName(a_bufForRemAddress, vcBufferProg, PROG_BUFFER1);
@@ -61,33 +60,23 @@ int ComServer::AddClient(class ASocketTCP& a_ClientSocket, struct sockaddr_in* a
 	if (PrepareSerial(&serialReal, _REAL_SERIAL_PORT_NAME_)) { a_ClientSocket.Close(); return 0; }
 
 	while (1) {
-		//dwReadProg = a_prog->Read(vcBufferProg + dwOffset, PROG_BUFFER1 - dwOffset, 10000, 10);
-		dwReadProg = a_ClientSocket.RecvData(vcBufferProg+dwOffset,PROG_BUFFER1-dwOffset,10000,20);
-		if (dwReadProg > 0) {
+		dwReadProg = a_ClientSocket.RecvData(vcBufferProg,PROG_BUFFER1,100000,10);
+		if (dwReadProg > 2) {
 
-			printf("+++program readed_len= %d\n", dwReadProg);
+			aStrToPrintProg = std::string(vcBufferProg, dwReadProg - 2);
+			printf("+++++ program : %s\n", aStrToPrintProg.c_str());
+			serialReal.Write(vcBufferProg, dwReadProg);
+			dwReadDev = serialReal.Read(vcBufferDev, DEVICE_BUFFER1, 50, 30);
+			printf("----- device  : ");
+			if (dwReadDev > 0) {
+				//a_prog->Write(vcBufferDev, dwReadDev);
+				a_ClientSocket.SendData(vcBufferDev, dwReadDev);
+				aStrToPrintDev = std::string(vcBufferDev, dwReadDev);
+				printf("%s", aStrToPrintDev.c_str());
+			}
+			else if(dwReadDev==0){ a_ClientSocket.SendData("null", 4); }
+			printf("\n");
 
-			vcBufferProg[dwReadProg] = 0;
-			cpcFound = strstr(vcBufferProg, "\r\n");
-			while (cpcFound && (dwReadProg>0)) {
-				dwOffset = 0;
-				dwWriteToDev = (DWORD)((size_t)(cpcFound - vcBufferProg)) + 2;
-				aStrToPrint = std::string(vcBufferProg, dwWriteToDev - 2);
-				printf("+++program: %s\n", aStrToPrint.c_str());
-				serialReal.Write(vcBufferProg, dwWriteToDev);
-				dwReadProg -= dwWriteToDev;
-				if (dwReadProg>0) { memmove(vcBufferProg, vcBufferProg + dwWriteToDev, dwReadProg); }
-				dwReadDev = serialReal.Read(vcBufferDev, DEVICE_BUFFER1, 50, 50);
-				if (dwReadDev > 0) {
-					//a_prog->Write(vcBufferDev, dwReadDev);
-					a_ClientSocket.SendData(vcBufferDev, dwReadDev);
-					aStrToPrint = std::string(vcBufferDev, dwReadDev);
-					printf("---device : %s\n", aStrToPrint.c_str());
-				}
-				vcBufferProg[dwReadProg] = 0;
-				cpcFound = strstr(vcBufferProg, "\r\n");
-			} // while(cpcFound){
-			dwOffset += dwReadProg;
 		} // if (dwReadProg > 0) {
 		else if (dwReadProg != _SOCKET_TIMEOUT_) 
 		{

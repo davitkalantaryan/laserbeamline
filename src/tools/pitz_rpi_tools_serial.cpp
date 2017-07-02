@@ -11,6 +11,9 @@
  */
 
 #include "pitz_rpi_tools_serial.hpp"
+#include <stdio.h>  
+#include <sys/timeb.h>  
+#include <time.h>
 
 
 pitz::rpi::tools::Serial::Serial()
@@ -64,6 +67,60 @@ int pitz::rpi::tools::Serial::Read(void* a_buffer, int a_buf_len, long int a_lnT
 	if (bRet) { return dwReaded; }
 	return -((int)GetLastError());
 }
+
+
+int pitz::rpi::tools::Serial::Read(void* a_buffer, int a_buf_len, long int a_lnTimeoutMS,
+	const void* a_terminationStr, int a_strLen, bool* a_bFound)
+{
+	char* pcBufferIn = (char*)a_buffer;
+	char* pcBuffer = pcBufferIn;
+	COMMTIMEOUTS atimeouts0, atimeouts;
+	long int lnTimePassed;
+	long int lnTimeoutRemained(a_lnTimeoutMS);
+	int dwReadedAll(0);
+	//int nBufLenToRead;
+	DWORD dwReadedSngl;
+	BOOL bRet;
+	struct timeb timeBufferIn, timeBufferFnl;
+
+	*a_bFound = false;
+	if (a_strLen>a_buf_len) { return -2; }
+
+	ftime(&timeBufferIn);
+	if (!(::GetCommTimeouts(m_handle, &atimeouts0))) { return GetLastError(); }
+	atimeouts = atimeouts0;
+	atimeouts.ReadTotalTimeoutMultiplier = 0;
+
+	atimeouts.ReadTotalTimeoutConstant = lnTimeoutRemained;
+	SetCommTimeouts(m_handle, &atimeouts);
+	bRet = ReadFile(m_handle, pcBuffer, a_strLen, &dwReadedSngl, NULL);
+
+	while (
+		bRet && (dwReadedSngl>0) &&
+		((dwReadedAll + ((int)dwReadedSngl))<a_buf_len) && (lnTimeoutRemained>0)) {
+
+		dwReadedAll += dwReadedSngl;
+		if (memcmp(pcBufferIn++, a_terminationStr, a_strLen) == 0) {
+			*a_bFound = true; break;
+		}
+
+		ftime(&timeBufferFnl);
+		lnTimePassed = 1000 * ((long int)(timeBufferFnl.time - timeBufferIn.time)) +
+			(((long int)timeBufferFnl.millitm) - ((long int)timeBufferIn.millitm));
+
+		lnTimeoutRemained = lnTimePassed>a_lnTimeoutMS ? 0 : (a_lnTimeoutMS - lnTimePassed);
+		atimeouts.ReadTotalTimeoutConstant = lnTimeoutRemained;
+
+		SetCommTimeouts(m_handle, &atimeouts);
+		pcBuffer += dwReadedSngl;
+		bRet = ReadFile(m_handle, pcBuffer, 1, &dwReadedSngl, NULL);
+	}
+
+	SetCommTimeouts(m_handle, &atimeouts0);
+	if (bRet) { return dwReadedAll; }
+	return -((int)GetLastError());
+}
+
 
 
 int pitz::rpi::tools::Serial::OpenSerial(const char* a_entry_name)
