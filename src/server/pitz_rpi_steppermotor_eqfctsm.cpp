@@ -24,7 +24,9 @@ pitz::rpi::StepperMotor::EqFctSM::EqFctSM()
 	m_goLeft(COMMAND_TYPE::GO_LEFT, reinterpret_cast<TypeCallback>(&EqFctSM::CallbackFunctionSM),
 		"OTHER.GO.LEFT moves to the left end", this),
 	m_goRight(COMMAND_TYPE::GO_RIGHT, reinterpret_cast<TypeCallback>(&EqFctSM::CallbackFunctionSM),
-		"OTHER.GO.RIGHT moves to the right end", this)
+		"OTHER.GO.RIGHT moves to the right end", this),
+	m_anyString(COMMAND_TYPE::ANY_COMMAND, reinterpret_cast<TypeCallback>(&EqFctSM::CallbackFunctionU),
+		"OTHER.ANY.COMMAND runs any command", this)
 {
 	m_motorNumber.set_ro_access();
 }

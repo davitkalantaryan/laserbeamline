@@ -97,6 +97,8 @@ static pitz::rpi::tools::Serial s_serialReal;
 
 static void VirtualComThread(void);
 static void RealComThread(void);
+static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, pitz::rpi::tools::Serial* a_device);
+static void TwoComInOne2(pitz::rpi::tools::Serial* a_prog, pitz::rpi::tools::Serial* a_device);
 
 int _tmain(int argc, wchar_t* argv[])
 {
@@ -202,11 +204,14 @@ int _tmain(int argc, wchar_t* argv[])
 		goto retiurnPoint;
 	}
 
-	aThreadVirt = std::thread(VirtualComThread);
-	aThreadReal = std::thread(RealComThread);
+	//aThreadVirt = std::thread(VirtualComThread);
+	//aThreadReal = std::thread(RealComThread);
 
-	aThreadReal.join();
-	aThreadVirt.join();
+	//aThreadReal.join();
+	//aThreadVirt.join();
+
+	TwoComInOne(&s_serialVirt, &s_serialReal);
+	//TwoComInOne2(&s_serialVirt, &s_serialReal);
 
 retiurnPoint:
 	
@@ -278,6 +283,72 @@ static void ComThread(pitz::rpi::tools::Serial* a_src, pitz::rpi::tools::Serial*
 				memmove(vcBuffer, vcBuffer + dwWrite, dwOffset);
 			}
 			else { dwOffset += dwRead; }
+		}
+	} // while (1) {
+}
+
+
+#define PROG_BUFFER1	511
+#define DEVICE_BUFFER1	511
+
+static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, pitz::rpi::tools::Serial* a_device)
+{
+	const char* cpcFound;
+	std::string aStrToPrint;
+	int dwOffset(0), dwReadProg,dwReadDev, dwWriteToDev;
+	char vcBufferProg[PROG_BUFFER1+1], vcBufferDev[DEVICE_BUFFER1+1];
+
+	while (1) {
+		dwReadProg = a_prog->Read(vcBufferProg + dwOffset, PROG_BUFFER1-dwOffset, 10000,10);
+		if (dwReadProg > 0) {
+
+			printf("+++program readed_len= %d\n", dwReadProg);
+			
+			vcBufferProg[dwReadProg] = 0;
+			cpcFound = strstr(vcBufferProg, "\r\n");
+			while(cpcFound && (dwReadProg>0)){
+				dwOffset = 0;
+				dwWriteToDev = (DWORD)((size_t)(cpcFound - vcBufferProg)) + 2;
+				aStrToPrint = std::string(vcBufferProg, dwWriteToDev - 2);
+				printf("+++program: %s\n", aStrToPrint.c_str());
+				a_device->Write(vcBufferProg, dwWriteToDev);
+				dwReadProg -= dwWriteToDev;
+				if(dwReadProg>0){memmove(vcBufferProg, vcBufferProg + dwWriteToDev, dwReadProg);}
+				dwReadDev = a_device->Read(vcBufferDev, DEVICE_BUFFER1, 25,25);
+				if (dwReadDev > 0) {
+					a_prog->Write(vcBufferDev, dwReadDev);
+					aStrToPrint = std::string(vcBufferDev, dwReadDev);
+					printf("---device : %s\n", aStrToPrint.c_str());
+				}
+				vcBufferProg[dwReadProg] = 0;
+				cpcFound = strstr(vcBufferProg, "\r\n");
+			} // while(cpcFound){
+			dwOffset += dwReadProg;
+		}
+	} // while (1) {
+}
+
+
+#define PROG_BUFFER2		1024
+#define DEVICE_BUFFER2	1024
+
+static void TwoComInOne2(pitz::rpi::tools::Serial* a_prog, pitz::rpi::tools::Serial* a_device)
+{
+	//std::string aStrToPrint;
+	int dwReadProg, dwReadDev;
+	char vcBufferProg[PROG_BUFFER2], vcBufferDev[DEVICE_BUFFER2];
+
+	while (1) {
+		dwReadProg = a_prog->Read(vcBufferProg, PROG_BUFFER2, 10000,10);
+		if (dwReadProg > 0) {
+			printf("+++ BytesFromProg=%d\n", dwReadProg);
+			a_device->Write(vcBufferProg, dwReadProg);
+			dwReadDev = a_device->Read(vcBufferDev, DEVICE_BUFFER2, 50,50);
+
+			if(dwReadDev>0){
+				printf("--- BytesFromDev =%d\n", dwReadDev);
+				a_prog->Write(vcBufferDev, dwReadDev);
+			}
 		}
 	} // while (1) {
 }

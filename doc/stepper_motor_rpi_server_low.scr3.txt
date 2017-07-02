@@ -1,4 +1,14 @@
 
 1. This server should handle the Stepper Motors for the 
    session LOW.SCR3
+2. Property list
+     a) DISCRET.POS (0)->(0), (1)->(20), (-1)->(-20)
+	 b) DO.SET.POS sets the position from DISCRET.POS property
+	 c) MOTOR.NUMBER motor number in the desy chain [1-16]
+	 d) EXPERT.VALUE.ZERO
+	 e) EXPERT.VALUE.MINUS20
+	 f) EXPERT.VALUE.PLUS20
+	 g) OTHER.GO.LEFT
+	 h) OTHER.GO.RIGHT
+	 i) OTHER.ANY.COMMAND
 

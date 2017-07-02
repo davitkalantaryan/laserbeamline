@@ -50,6 +50,7 @@ protected:
 	VALUE_TYPE					m_valuePlus20;
 	D_void						m_goLeft;
 	D_void						m_goRight;
+	New_D_types<D_string>		m_anyString;
 };
 
 
