@@ -10,68 +10,108 @@
  *
  */
 
-#include <asockettcp.h>
+#include <common_sockettcp.hpp>
 #include "pitz_rpi_tools_serial.hpp"
 #include <stdio.h>
 #include <string>
 #include "com_port_global_functions.h"
+#include "common_argument_parser.hpp"
 
-#define	_VIRT_SERIAL_PORT_NAME_	"\\.\\COM4"
-#define	DEVICE_HOST	"znpi02"
+#define	VIRT_SERIAL_PORT_NAME		"\\.\\COM4"
+#define	DEVICE_HOST2				"znpi02"
 
-static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, ASocketTCP* a_device);
+static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, common::SocketTCP* a_device);
 
-int main()
+static int s_nDebugLevel = 1;
+
+int main(int argc, char* argv[])
 {
-	ASocketTCP aSocket;
+	const char* cpcHostName;
+	const char* cpcSerialDeviceName= VIRT_SERIAL_PORT_NAME;
+	common::SocketTCP aSocket;
 	pitz::rpi::tools::Serial serialProg;
+	common::argument_parser aParser;
+	int nReturn(0);
 
-	ASocketB::Initialize();
+	common::SocketBase::Initialize();
 
-	if (PrepareSerial(&serialProg, _VIRT_SERIAL_PORT_NAME_)) { return 1; }
+	aParser.AddOption("--host-name", 1, DEVICE_HOST2).AddOption("--com-name",1, VIRT_SERIAL_PORT_NAME);
+	aParser.AddOption("-hn", 1, DEVICE_HOST2).AddOption("-cn", 1, VIRT_SERIAL_PORT_NAME);
+	aParser.AddOption("--debug-level",1,"1").AddOption("-dl",1,"1");
+
+	aParser.ParseCommandLine(argc - 1, argv + 1);
+
+	if((!aParser["--host-name"])&&(!aParser["-hn"])){
+		fprintf(stderr,
+			"Host name should be provided\n"
+			"Examples:\n"
+			"tcp_to_virtcom -hn znpi02\n");
+		nReturn = 1;
+		goto returnPoint;
+	}
+	else if(aParser["--host-name"]){cpcHostName = aParser["--host-name"];}
+	else { cpcHostName = aParser["-hn"]; }
+
+	if(aParser["--com-name"]){cpcSerialDeviceName=aParser["--com-name"];}
+	else if(aParser["-cn"]){ cpcSerialDeviceName = aParser["-cn"]; }
+
+	if (aParser["--debug-level"]) { s_nDebugLevel = atoi(aParser["--debug-level"]); }
+	else if (aParser["-dl"]) { s_nDebugLevel = atoi(aParser["-dl"]); }
+
+	if (PrepareSerial(&serialProg, cpcSerialDeviceName)) { 
+		nReturn = 1;
+		goto returnPoint;
+	}
 
 	while(1){
-		if (aSocket.CreateClient(DEVICE_HOST, 9030)) { return 2; }
+		if (aSocket.connectC(cpcHostName, 9030)) { continue; }
 		TwoComInOne(&serialProg, &aSocket);
-		aSocket.Close();
+		aSocket.closeC();
 		Sleep(100);
 	}
 
+returnPoint:
+	aSocket.closeC();
 	serialProg.CloseCom();
+	common::SocketBase::Cleanup();
 
-	ASocketB::Cleanup();
-
-	return 0;
+	return nReturn;
 }
 
 
 #define PROG_BUFFER1	511
 #define DEVICE_BUFFER1	511
 
-static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, ASocketTCP* a_device)
+static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, common::SocketTCP* a_device)
 {
 	std::string aStrToPrintProg, aStrToPrintDev;
 	int dwReadProg,dwReadDev;
 	char vcBufferProg[PROG_BUFFER1+1], vcBufferDev[DEVICE_BUFFER1+1];
-	bool bFound;
+	bool bWrite(true);
 
 	while (1) {
 		
-		dwReadProg = a_prog->Read(vcBufferProg, PROG_BUFFER1, 100000,"\r\n",2,&bFound);
-		if (dwReadProg > 2) {
+		dwReadProg = a_prog->Read4(vcBufferProg, PROG_BUFFER1, 100000,20);
+		if (dwReadProg > 0) {
 
-			aStrToPrintProg = std::string(vcBufferProg, dwReadProg - 2);
-			printf("+++++ program : %s\n", aStrToPrintProg.c_str());
+			if(s_nDebugLevel>0){
+				if (dwReadProg>2) {aStrToPrintProg=std::string(vcBufferProg,dwReadProg-2);}
+				else { aStrToPrintProg = "UnknownFormat"; }
+				printf("+++++ program : %s\n", aStrToPrintProg.c_str());
+			}
 
-			a_device->SendData(vcBufferProg, dwReadProg);
-			dwReadDev = a_device->RecvData(vcBufferDev, DEVICE_BUFFER1, 100000, 10);
-			printf("----- device  : ");
+			if (bWrite) { a_device->writeC(vcBufferProg, dwReadProg); }
+			dwReadDev = a_device->readC(vcBufferDev, DEVICE_BUFFER1, 20000);
+			if(s_nDebugLevel>0){printf("----- device  : ");}
 
 			if (dwReadDev > 0) {
-				if((dwReadDev==4) && (memcmp(vcBufferDev,"null",4)==0)){}
+				bWrite = true;
+				if((dwReadDev==1) && (vcBufferDev[0]==0)){ }
 				else{
-					aStrToPrintDev = std::string(vcBufferDev, dwReadDev);
-					printf("%s\n", aStrToPrintDev.c_str());
+					if(s_nDebugLevel>0){
+						aStrToPrintDev = std::string(vcBufferDev, dwReadDev);
+						printf("%s\n", aStrToPrintDev.c_str());
+					}
 					a_prog->Write(vcBufferDev, dwReadDev);
 				}
 			}
@@ -79,7 +119,8 @@ static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, ASocketTCP* a_device)
 				fprintf(stderr,"server disconnected!\n");
 				break;
 			}
-			printf("\n");
+			else { bWrite = false; }
+			if(s_nDebugLevel>0){printf("\n");}
 
 		}
 	} // while (1) {

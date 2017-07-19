@@ -37,7 +37,7 @@ int pitz::rpi::tools::Serial::Write(const void* a_data, int a_data_len)
 }
 
 
-int pitz::rpi::tools::Serial::Read(void* a_buffer, int a_buf_len)
+int pitz::rpi::tools::Serial::Read1(void* a_buffer, int a_buf_len)
 {
 	DWORD dwReaded;
 	BOOL bRet = ReadFile(m_handle, a_buffer, a_buf_len, &dwReaded, NULL);
@@ -46,7 +46,7 @@ int pitz::rpi::tools::Serial::Read(void* a_buffer, int a_buf_len)
 }
 
 
-int pitz::rpi::tools::Serial::Read(void* a_buffer, int a_buf_len, long int a_lnTimeoutMS, long int a_lnSecondTimeoutMS)
+int pitz::rpi::tools::Serial::Read2(void* a_buffer, int a_buf_len, long int a_lnTimeoutMS, long int a_lnSecondTimeoutMS)
 {
 	COMMTIMEOUTS atimeouts0, atimeouts;
 	DWORD dwReaded;
@@ -69,7 +69,7 @@ int pitz::rpi::tools::Serial::Read(void* a_buffer, int a_buf_len, long int a_lnT
 }
 
 
-int pitz::rpi::tools::Serial::Read(void* a_buffer, int a_buf_len, long int a_lnTimeoutMS,
+int pitz::rpi::tools::Serial::Read3(void* a_buffer, int a_buf_len, long int a_lnTimeoutMS,
 	const void* a_terminationStr, int a_strLen, bool* a_bFound)
 {
 	char* pcBufferIn = (char*)a_buffer;
@@ -121,6 +121,29 @@ int pitz::rpi::tools::Serial::Read(void* a_buffer, int a_buf_len, long int a_lnT
 	return -((int)GetLastError());
 }
 
+#define MAKE_MINUS(_x_) ((_x_)>0 ? -(_x_):(_x_))
+
+
+int pitz::rpi::tools::Serial::Read4(void* a_buffer,int a_nBufLen,int a_nTimeoutFirstMs,int a_nTimeoutBtwMs)
+{
+	COMMTIMEOUTS atimeouts0, atimeouts;
+	DWORD dwReaded;
+	BOOL bRet;
+
+	if (!(::GetCommTimeouts(m_handle, &atimeouts0))) { 
+		int nRet(GetLastError());
+		return MAKE_MINUS(nRet); 
+	}
+	atimeouts = atimeouts0;
+	atimeouts.ReadIntervalTimeout = a_nTimeoutBtwMs;
+	atimeouts.ReadTotalTimeoutConstant = a_nTimeoutFirstMs;
+	bRet = ReadFile(m_handle, a_buffer, a_nBufLen, &dwReaded, NULL);
+	if (!bRet) { 
+		int nRet(GetLastError());
+		return MAKE_MINUS(nRet);
+	}
+	return dwReaded;
+}
 
 
 int pitz::rpi::tools::Serial::OpenSerial(const char* a_entry_name)

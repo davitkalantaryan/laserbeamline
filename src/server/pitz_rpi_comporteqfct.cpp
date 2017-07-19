@@ -242,6 +242,24 @@ void pitz::rpi::ComPortUserEqFct::post_init(void)
 }
 
 
+/*///////////////////////////////////////////////////////////////*/
+pitz::rpi::D_void::D_void(
+	COMMAND_TYPET a_command, TypeCallback a_fpCallback,
+	const char* a_pn, EqFct* a_par)
+	:
+	New_D_types<D_fct>(a_command, a_fpCallback, a_pn, a_par)
+{
+}
+
+
+void pitz::rpi::D_void::write(fstream &ofile)
+{
+	char        buf[200];
+	snprintf(buf, sizeof(buf), "%s: \n", base_name.c_str());
+	flush(ofile, buf, 1);
+}
+
+
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 static std::string FindErrorString(void)

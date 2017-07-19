@@ -13,7 +13,6 @@
 #include "pitz_rpi_tools_serial.hpp"
 #include <stdio.h>
 #include <tchar.h>
-#include <aservertcp.h>
 #include <string>
 #include "com_port_global_functions.h"
 

@@ -45,10 +45,11 @@ public:
 	int GetCommStates(DCB* DcbPtr, COMMTIMEOUTS* timeouts);
 
 	int Write(const void* data, int data_len);
-	int Read(void* buffer, int buf_len);
-	int Read(void* buffer, int buf_len, long int timeoutMS, long int secondTimeoutMS);
-	int Read(void* a_buffer, int a_buf_len, long int a_lnTimeoutMS,
+	int Read1(void* buffer, int buf_len);
+	int Read2(void* buffer, int buf_len, long int timeoutMS, long int secondTimeoutMS);
+	int Read3(void* a_buffer, int a_buf_len, long int a_lnTimeoutMS,
 		const void* a_terminationStr, int a_strLen, bool* a_bFound);
+	int Read4(void* buffer, int bufLen, int timeoutFirstMs, int timeoutBtwMs);
 
 	operator COM_HANDLE&();
 

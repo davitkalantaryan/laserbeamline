@@ -12,7 +12,7 @@
 #include "pitz_rpi_tools_serial.hpp"
 #include <stdio.h>
 #include <tchar.h>
-#include <aservertcp.h>
+#include <common_servertcp.hpp>
 #include <string>
 #include "com_port_global_functions.h"
 
@@ -25,70 +25,71 @@
 #define PROG_BUFFER1	511
 #define DEVICE_BUFFER1	511
 
+int g_nDebugLevel = 1;
 
-class ComServer : public AServerTCP
+
+class ComServer : public common::ServerTCP
 {
-	int		AddClient(class ASocketTCP& a_ClientSocket, struct sockaddr_in* bufForRemAddress);
+	void AddClient(common::SocketTCP& a_ClientSocket, const sockaddr_in* bufForRemAddress);
 };
 
 int main()
 {
 	ComServer aServer;
-	sockaddr_in aSockAddr;
 
-	ASocketB::Initialize();
-
-	printf("version 2\n");
-
-	aServer.StartServer(9030, 1000,true,&aSockAddr);
-
-	ASocketB::Cleanup();
+	common::SocketBase::Initialize();
+	printf("version 3\n");
+	aServer.StartServer(9030, 1000,false);
+	common::SocketBase::Cleanup();
 
 	return 0;
 }
 
-int ComServer::AddClient(class ASocketTCP& a_ClientSocket, struct sockaddr_in* a_bufForRemAddress)
+
+extern int g_nDebugLevel;
+
+void ComServer::AddClient(common::SocketTCP& a_ClientSocket, const sockaddr_in* a_bufForRemAddress)
 {
 	pitz::rpi::tools::Serial serialReal;
 	std::string aStrToPrintProg, aStrToPrintDev;
 	int dwReadProg, dwReadDev;
 	char vcBufferProg[PROG_BUFFER1 + 1], vcBufferDev[DEVICE_BUFFER1 + 1];
 
-	ASocketB::GetHostName(a_bufForRemAddress, vcBufferProg, PROG_BUFFER1);
+	GetHostName(a_bufForRemAddress, vcBufferProg, PROG_BUFFER1);
 	vcBufferProg[PROG_BUFFER1] = 0;
 	printf("+++++++++++ Connection from host \"%s\"\n", vcBufferProg);
-	if (PrepareSerial(&serialReal, _REAL_SERIAL_PORT_NAME_)) { a_ClientSocket.Close(); return 0; }
+	if (PrepareSerial(&serialReal, _REAL_SERIAL_PORT_NAME_)) { a_ClientSocket.closeC(); return; }
 
 	while (1) {
-		dwReadProg = a_ClientSocket.RecvData(vcBufferProg,PROG_BUFFER1,100000,10);
-		if (dwReadProg > 2) {
+		dwReadProg = a_ClientSocket.readC(vcBufferProg,PROG_BUFFER1,100000);
+		if (dwReadProg > 0) {
 
-			aStrToPrintProg = std::string(vcBufferProg, dwReadProg - 2);
-			printf("+++++ program : %s\n", aStrToPrintProg.c_str());
-			serialReal.Write(vcBufferProg, dwReadProg);
-			dwReadDev = serialReal.Read(vcBufferDev, DEVICE_BUFFER1, 50, 30);
-			printf("----- device  : ");
-			if (dwReadDev > 0) {
-				//a_prog->Write(vcBufferDev, dwReadDev);
-				a_ClientSocket.SendData(vcBufferDev, dwReadDev);
-				aStrToPrintDev = std::string(vcBufferDev, dwReadDev);
-				printf("%s", aStrToPrintDev.c_str());
+			if(g_nDebugLevel>0){
+				if(dwReadProg>2){aStrToPrintProg = std::string(vcBufferProg, dwReadProg - 2);}
+				else { aStrToPrintProg = "UnknownFowmat"; }
+				printf("+++++ program : %s\n", aStrToPrintProg.c_str());
 			}
-			else if(dwReadDev==0){ a_ClientSocket.SendData("null", 4); }
-			printf("\n");
+			serialReal.Write(vcBufferProg, dwReadProg);
+			dwReadDev = serialReal.Read4(vcBufferDev, DEVICE_BUFFER1, 200, 15);
+			if (g_nDebugLevel>0){printf("----- device  : ");}
+			if (dwReadDev > 0) {
+				a_ClientSocket.writeC(vcBufferDev, dwReadDev);
+				aStrToPrintDev = std::string(vcBufferDev, dwReadDev);
+				if (g_nDebugLevel>0){printf("%s", aStrToPrintDev.c_str());}
+			}
+			else if(dwReadDev==0){ a_ClientSocket.writeC("", 1); }
+			if (g_nDebugLevel>0){printf("\n");}
 
 		} // if (dwReadProg > 0) {
 		else if (dwReadProg != _SOCKET_TIMEOUT_) 
 		{
-			a_ClientSocket.Close();
+			a_ClientSocket.closeC();
 			break;
 		}
 	} // while (1) {
 	
-	ASocketB::GetHostName(a_bufForRemAddress, vcBufferProg, PROG_BUFFER1);
+	GetHostName(a_bufForRemAddress, vcBufferProg, PROG_BUFFER1);
 	vcBufferProg[PROG_BUFFER1] = 0;
 	printf("----------- Client from host \"%s\" disconnected\n", vcBufferProg);
 	serialReal.CloseCom();
-
-	return 0;
 }

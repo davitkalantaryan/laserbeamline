@@ -25,7 +25,11 @@ extern int g_nDebugApp;
 namespace pitz{ namespace rpi{
 
 //enum class EQ_FCT_CODES{GEN_COM_PORT=304, GEN_COM_PORT_USER = 305, SM_COM_USER = 306};
-namespace EQ_FCT_CODES{enum {GEN_COM_PORT=304, GEN_COM_PORT_USER = 305, SM_COM_USER = 306};}
+namespace EQ_FCT_CODES{enum {
+	GEN_COM_PORT=304, 
+	GEN_COM_PORT_USER = 305, 
+	SM_COM_USER = 306,
+	THZ_MOT_COM_USER = 307};}
 
 typedef int COMMAND_TYPET;
 namespace COMMAND_TYPE{enum {ANY_COMMAND};}
@@ -46,6 +50,14 @@ protected:
 protected:
 	TypeCallback	m_fCallback;
 	COMMAND_TYPET	m_command;
+};
+
+
+class D_void : New_D_types<D_fct>
+{
+public:
+	D_void(COMMAND_TYPET a_command, TypeCallback fpCallback, const char* pn, EqFct* par);
+	virtual void write(fstream &ofile);
 };
 
 class ComPortEqFct : public EqFct

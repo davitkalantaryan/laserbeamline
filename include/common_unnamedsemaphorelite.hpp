@@ -1,5 +1,5 @@
 /*
- *	File: unnamedsemaphorelite.hpp
+ *	File: common_unnamedsemaphorelite.hpp
  *
  *	Created on: 14 Dec 2016
  *	Created by: Davit Kalantaryan (Email: davit.kalantaryan@desy.de)
@@ -8,8 +8,8 @@
  *  This semaphore implemets only 2 functions wait() and post()
  *
  */
-#ifndef UNNAMEDSEMAPHORELITE_HPP
-#define UNNAMEDSEMAPHORELITE_HPP
+#ifndef COMMON_UNNAMEDSEMAPHORELITE_HPP
+#define COMMON_UNNAMEDSEMAPHORELITE_HPP
 
 #if defined(WIN32)
 #include <windows.h>
@@ -20,7 +20,7 @@
 #define SHARING_TYPE	0/* 0 means semaphores is shared between threads in same process */
 #endif
 
-namespace pitz{ namespace tools{
+namespace common{
 
 #ifndef TYPE_SEMA_defined
 #define TYPE_SEMA_defined
@@ -84,6 +84,6 @@ private:
     TYPE_SEMA m_Semaphore;
 };
 
-}}
+}
 
-#endif // UNNAMEDSEMAPHORELITE_HPP
+#endif // COMMON_UNNAMEDSEMAPHORELITE_HPP
