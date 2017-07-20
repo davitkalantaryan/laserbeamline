@@ -36,7 +36,7 @@ template<typename D_type>
 void pitz::rpi::New_D_types<D_type>::set(EqAdr * a_adr, EqData *a_fromUser, EqData * a_toUser, EqFct * a_fct)
 {
 	D_type::set(a_adr, a_fromUser, a_toUser, a_fct);
-	(a_fct->*m_fCallback)(this, m_command, a_adr,a_fromUser,a_toUser,a_fct);
+	(a_fct->*m_fCallback)(this, m_command, a_adr,a_fromUser,a_toUser,a_fct,NULL,0);
 }
 
 

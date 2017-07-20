@@ -10,7 +10,7 @@
 #include "pitz_rpi_comporteqfct.hpp"
 #include <map>
 
-int g_nDebugApp = 1;
+int g_nDebugLevel = 1;
 
 enum class SerialParity {
 	None,
@@ -36,14 +36,16 @@ static PCWSTR StringFromDtrControl(DWORD DtrControl);
 static PCWSTR StringFromRtsControl(DWORD RtsControl);
 
 
-pitz::rpi::ComPortEqFct::ComPortEqFct(const char* a_comName)
+pitz::rpi::ComPortEqFct::ComPortEqFct(const std::string& a_ending,const char* a_comName)
 	:
 	EqFct("NAME = location"),
-	m_anyCommand(COMMAND_TYPE::ANY_COMMAND, 
-		reinterpret_cast<TypeCallback>(&ComPortEqFct::CallbackFunction),
+	m_anyCommand(COMMAND_TYPE::SET_ANY_ASCII_STRING, 
+		reinterpret_cast<TypeCallback>(&ComPortEqFct::CallbackFunction2),
 		"STRING.COMMAND executes any command provided", this),
 	m_comPortName("COMPORT.NAME the name of com port", this),
-	m_baudRate("BAUD_RATE property holds baud rate",this)
+	m_baudRate("BAUD_RATE property holds baud rate",this),
+
+	m_asciiEnding(a_ending)
 {
 	m_strComName = a_comName ? a_comName : "";
 
@@ -57,43 +59,89 @@ pitz::rpi::ComPortEqFct::~ComPortEqFct()
 }
 
 
-int pitz::rpi::ComPortEqFct::WriteStringWithEnding(char* a_string, int a_str_len)
+int pitz::rpi::ComPortEqFct::WriteStringWithEnding2(char* a_string, int a_str_len)
 {
-	a_string[a_str_len] = 10;
-	a_string[a_str_len + 1] = 13;
-	a_string[a_str_len + 2] = 13;
-	a_string[a_str_len + 3] = 0;
-	a_string[a_str_len + 4] = 0;
-	DWORD dwWritten = m_serial.Write(a_string, a_str_len + 3);
-	return (int)dwWritten;
+	int dwWritten;
+
+	// ending for polux controller is "\r\n"
+	memcpy(a_string+ a_str_len,m_asciiEnding.c_str(),m_asciiEnding.length());
+
+	m_mutexForSerial.lock();
+	dwWritten = m_serial2.Write(a_string, a_str_len +m_asciiEnding.length());
+	m_mutexForSerial.unlock();
+
+	return dwWritten;
 }
 
 
 int pitz::rpi::ComPortEqFct::WriteByteStream(const void* a_byteStream, int a_dataLen)
 {
-	return (int)m_serial.Write(a_byteStream, a_dataLen);
+	int dwWritten;
+
+	m_mutexForSerial.lock();
+	dwWritten = m_serial2.Write(a_byteStream, a_dataLen);
+	m_mutexForSerial.unlock();
+
+	return dwWritten;
 }
 
 
-int pitz::rpi::ComPortEqFct::CallbackFunction(D_fct* a_this, COMMAND_TYPET a_command, 
-	EqAdr * dcsAdr, EqData *a_fromUser, EqData * toUser, EqFct * fct)
+int pitz::rpi::ComPortEqFct::CallbackFunction2(D_fct* a_this, COMMAND_TYPET a_command, 
+	EqAdr * dcsAdr, EqData *a_fromUser, EqData * toUser, EqFct * fct, 
+	void* a_pData, int a_nDataLen)
 {
+	int nReturn(-1);
+
 	switch (a_command)
 	{
-	case COMMAND_TYPE::ANY_COMMAND:
+	case COMMAND_TYPE::SET_DIRECT_ASCII:
+	{
+		char* pcAscii = (char*)a_pData;
+		int nStrLen((int)strlen(pcAscii));
+		char* pcNewCommand = (char*)alloca(nStrLen + m_asciiEnding.length() + 4);
+		memcpy(pcNewCommand, pcAscii, nStrLen);
+		nReturn = WriteStringWithEnding2(pcNewCommand, nStrLen);
+	}
+		return 0;
+	case COMMAND_TYPE::GET_DIRECT_ASCII:
+		return -2;
+	case COMMAND_TYPE::SET_DIRECT_BYTE_STREAM:
+		m_mutexForSerial.lock();
+		m_serial2.Write(a_pData, a_nDataLen);
+		m_mutexForSerial.unlock();
+		return 0;
+	case COMMAND_TYPE::GET_DIRECT_BYTE_STREAM:
+		m_mutexForSerial.lock();
+		m_serial2.Write(a_pData, a_nDataLen);
+		m_mutexForSerial.unlock();
+		return -2;
+	case COMMAND_TYPE::SET_ANY_ASCII_STRING:
 	{
 		std::string strAnyCommand = a_fromUser->get_string();
 		int nStrLen(strAnyCommand.length());
-		char* pcNewCommand = (char*)alloca(nStrLen + 5);
+		char* pcNewCommand = (char*)alloca(nStrLen + m_asciiEnding.length()+4);
 		memcpy(pcNewCommand, strAnyCommand.c_str(), nStrLen);
-		WriteStringWithEnding(pcNewCommand, nStrLen);
+		nReturn = WriteStringWithEnding2(pcNewCommand, nStrLen);
+	}
+	return 0;
+
+	case COMMAND_TYPE::SET_ANY_BYTE_STREAM:
+	{
+		u_char* pArray;
+		int nByteStreamLen;
+		a_fromUser->get_byte(&nByteStreamLen, &pArray);
+		if(nByteStreamLen>0){
+			m_mutexForSerial.lock();
+			m_serial2.Write(pArray, nByteStreamLen);
+			m_mutexForSerial.unlock();
+		}
 	}
 	return 0;
 
 	default:
 		break;
 	}
-	return -1;
+	return nReturn;
 }
 
 
@@ -121,7 +169,7 @@ void pitz::rpi::ComPortEqFct::init(void)
 
 	__DEBUG_APP__(1, "version 4 serial_name=\"%s\"",m_comPortName.value());
 
-	if ((nRet = m_serial.OpenSerial(m_comPortName.value())))
+	if ((nRet = m_serial2.OpenSerial(m_comPortName.value())))
 	{
 		std::string errString = FindErrorString();
 		set_error(nRet, errString, nRet);
@@ -129,7 +177,7 @@ void pitz::rpi::ComPortEqFct::init(void)
 		return;
 	}
 
-	if ((nRet = m_serial.GetCommStates(&actualDcb, &aTimeouts)))
+	if ((nRet = m_serial2.GetCommStates(&actualDcb, &aTimeouts)))
 	{
 		std::string errString = FindErrorString();
 		set_error(nRet, errString, nRet);
@@ -161,7 +209,7 @@ void pitz::rpi::ComPortEqFct::init(void)
 
 	//actualDcb.BaudRate = BOUD_RATE;
 	actualDcb.BaudRate = m_baudRate.value();
-	if ((nRet = m_serial.SetupCommState(&actualDcb, &aTimeouts)))
+	if ((nRet = m_serial2.SetupCommState(&actualDcb, &aTimeouts)))
 	{
 		std::string errString = FindErrorString();
 		set_error(nRet, errString, nRet);
@@ -170,6 +218,27 @@ void pitz::rpi::ComPortEqFct::init(void)
 	}
 
 	s_comPorts[m_comPortName.value()] = this;
+	m_comServer.SetMutex(&m_mutexForSerial);
+	m_comServer.SetSerial(&m_serial2);
+	m_threadForProxy = STDN::thread(&ComPortEqFct::ThreadForProxyFnc,this);
+}
+
+
+void pitz::rpi::ComPortEqFct::cancel(void)
+{
+	m_comServer.StopServer();
+	common::SocketTCP* pCurSocket= m_comServer.GetCurrentSocket();
+	if(pCurSocket){ pCurSocket ->closeC();}
+	m_threadForProxy.join();
+}
+
+
+void pitz::rpi::ComPortEqFct::ThreadForProxyFnc(void)
+{
+	printf("!!!!!!!!!!!!!! version 10\n");
+	m_comServer.SetSerial(&m_serial2); // not necessary
+	m_comServer.StartServer(9030, 1000, false);
+	m_comServer.SetSerial(NULL); // not necessary
 }
 
 
@@ -190,10 +259,14 @@ pitz::rpi::ComPortUserEqFct::~ComPortUserEqFct()
 
 
 int pitz::rpi::ComPortUserEqFct::CallbackFunctionU(D_fct* a_this, COMMAND_TYPET a_command,
-	EqAdr * a_dcsAdr, EqData *a_fromUser, EqData * a_toUser, EqFct * a_fct)
+	EqAdr * a_dcsAdr, EqData *a_fromUser, EqData * a_toUser, EqFct * a_fct,
+	void* a_pData, int a_nDataLen)
 {
 	if (m_pComPort) { 
-		m_pComPort->CallbackFunction(a_this,a_command,a_dcsAdr,a_fromUser,a_toUser, a_fct);
+		m_pComPort->CallbackFunction2(
+			a_this,a_command,
+			a_dcsAdr,a_fromUser,a_toUser, a_fct,
+			a_pData, a_nDataLen);
 		return 0; 
 	}
 	return -2;
@@ -252,11 +325,43 @@ pitz::rpi::D_void::D_void(
 }
 
 
+pitz::rpi::D_void::~D_void()
+{
+}
+
+
 void pitz::rpi::D_void::write(fstream &ofile)
 {
 	char        buf[200];
 	snprintf(buf, sizeof(buf), "%s: \n", base_name.c_str());
 	flush(ofile, buf, 1);
+}
+
+
+/*///////////////////////////////////////////////////////////////*/
+pitz::rpi::D_void_fix_string::D_void_fix_string(TypeCallback a_fpCallback,const char* a_pn, EqFct* a_par)
+	:
+	D_void(COMMAND_TYPE::SET_DIRECT_ASCII, a_fpCallback, a_pn, a_par)
+{
+}
+
+
+pitz::rpi::D_void_fix_string::~D_void_fix_string()
+{
+}
+
+
+void pitz::rpi::D_void_fix_string::SetFixedString(const std::string& a_fixString)
+{
+	m_fixString = a_fixString;
+}
+
+
+void pitz::rpi::D_void_fix_string::set(EqAdr*a_dcsAdr,EqData*a_fromUser,EqData*a_toUser,EqFct*a_fct)
+{
+	D_fct::set(a_dcsAdr, a_fromUser, a_toUser, a_fct);
+	(a_fct->*m_fCallback)(this, m_command, a_dcsAdr, a_fromUser, a_toUser, a_fct,
+		(void*)m_fixString.c_str(), (int)m_fixString.length());
 }
 
 

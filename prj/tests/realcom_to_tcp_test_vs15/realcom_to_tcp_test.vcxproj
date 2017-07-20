@@ -169,7 +169,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(TargetPath) \\znpi02\c$\tests\.</Command>
+      <Command>copy $(TargetPath) \\znpi02\c$\tests\new\.</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -227,7 +227,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(TargetPath) \\znpi02\c$\tests\.</Command>
+      <Command>copy $(TargetPath) \\znpi02\c$\tests\new\.</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -242,6 +242,7 @@
     <ClCompile Include="..\..\..\src\tests\main_realcom_to_tcp_test.cpp" />
     <ClCompile Include="..\..\..\src\tests\prepare_com_port_test_win.cpp" />
     <ClCompile Include="..\..\..\src\tools\pitz_rpi_tools_serial.cpp" />
+    <ClCompile Include="..\..\..\src\tools\tools_comportserver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\common_argument_parser.hpp" />
@@ -255,6 +256,7 @@
     <ClInclude Include="..\..\..\include\com_port_global_functions.h" />
     <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp" />
     <ClInclude Include="..\..\..\include\stdafx.h" />
+    <ClInclude Include="..\..\..\include\tools_comportserver.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

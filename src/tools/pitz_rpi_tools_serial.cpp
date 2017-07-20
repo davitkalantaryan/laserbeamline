@@ -137,11 +137,17 @@ int pitz::rpi::tools::Serial::Read4(void* a_buffer,int a_nBufLen,int a_nTimeoutF
 	atimeouts = atimeouts0;
 	atimeouts.ReadIntervalTimeout = a_nTimeoutBtwMs;
 	atimeouts.ReadTotalTimeoutConstant = a_nTimeoutFirstMs;
+	atimeouts.ReadTotalTimeoutMultiplier = 0;
+	if (!(::SetCommTimeouts(m_handle, &atimeouts))) {
+		int nRet(GetLastError());
+		return MAKE_MINUS(nRet);
+	}
 	bRet = ReadFile(m_handle, a_buffer, a_nBufLen, &dwReaded, NULL);
 	if (!bRet) { 
 		int nRet(GetLastError());
 		return MAKE_MINUS(nRet);
 	}
+	::SetCommTimeouts(m_handle, &atimeouts0);
 	return dwReaded;
 }
 

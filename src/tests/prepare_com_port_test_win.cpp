@@ -67,6 +67,21 @@ int PrepareSerial(pitz::rpi::tools::Serial* a_pSerial, const char* a_portName)
 		StringFromRtsControl(actualDcb.fRtsControl),
 		actualDcb.fDsrSensitivity ? L"on" : L"off");
 
+#ifdef DO_DEBUG
+	printf(
+		"\tReadIntervalTimeout         =%d\n"
+		"\tReadTotalTimeoutMultiplier  =%d\n"
+		"\tReadTotalTimeoutConstant    =%d\n"
+		"\tWriteTotalTimeoutMultiplier =%d\n"
+		"\tWriteTotalTimeoutConstant   =%d\n\n",
+		aTimeouts.ReadIntervalTimeout,
+		aTimeouts.ReadTotalTimeoutMultiplier,
+		aTimeouts.ReadTotalTimeoutConstant,
+		aTimeouts.WriteTotalTimeoutMultiplier,
+		aTimeouts.WriteTotalTimeoutConstant);
+	goto retiurnPoint;
+#endif
+
 	actualDcb.BaudRate = 19200;
 	aTimeouts.ReadTotalTimeoutMultiplier = 0;
 	aTimeouts.ReadTotalTimeoutConstant = 5;

@@ -4,10 +4,37 @@
     <ClInclude Include="..\..\..\src\server\pitz_rpi_comporteqfct.hpp">
       <Filter>src\server</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctsm.hpp">
+    <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctlowscr3.hpp">
       <Filter>src\server</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp">
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.hpp">
+      <Filter>src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.hpp">
+      <Filter>src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\tools_comportserver.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common_defination.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common_iodevice.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common_servertcp.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common_socketbase.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common_socketbase.impl.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common_sockettcp.hpp">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -15,14 +42,38 @@
     <ClCompile Include="..\..\..\src\server\pitz_rpi_comporteqfct.cpp">
       <Filter>src\server</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctsm.cpp">
-      <Filter>src\server</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\tools\pitz_rpi_tools_serial.cpp">
       <Filter>src\tools</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\server\rpc_stepper_motor_rpi_server.cpp">
       <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctlowscr3.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tools\tools_comportserver.cpp">
+      <Filter>src\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_functionalities.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_iodevice.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_servertcp.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_socketbase.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_sockettcp.cpp">
+      <Filter>src\common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +102,9 @@
     </Filter>
     <Filter Include="doc">
       <UniqueIdentifier>{fa592dc1-747a-437f-bf1a-f5677514e93c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common">
+      <UniqueIdentifier>{b4100b2f-312d-4119-b79a-85e22d965343}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

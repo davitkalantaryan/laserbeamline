@@ -27,15 +27,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\common_defination.h" />
+    <ClInclude Include="..\..\..\include\common_iodevice.hpp" />
+    <ClInclude Include="..\..\..\include\common_servertcp.hpp" />
+    <ClInclude Include="..\..\..\include\common_socketbase.hpp" />
+    <ClInclude Include="..\..\..\include\common_socketbase.impl.hpp" />
+    <ClInclude Include="..\..\..\include\common_sockettcp.hpp" />
     <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp" />
+    <ClInclude Include="..\..\..\include\tools_comportserver.hpp" />
     <ClInclude Include="..\..\..\src\server\pitz_rpi_comporteqfct.hpp" />
-    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctsm.hpp" />
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.hpp" />
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctlowscr3.hpp" />
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\common\common_functionalities.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_iodevice.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_servertcp.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_socketbase.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_sockettcp.cpp" />
     <ClCompile Include="..\..\..\src\server\pitz_rpi_comporteqfct.cpp" />
-    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctsm.cpp" />
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.cpp" />
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctlowscr3.cpp" />
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.cpp" />
     <ClCompile Include="..\..\..\src\server\rpc_stepper_motor_rpi_server.cpp" />
     <ClCompile Include="..\..\..\src\tools\pitz_rpi_tools_serial.cpp" />
+    <ClCompile Include="..\..\..\src\tools\tools_comportserver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\doocs\sources\win_additional_sources\win_doocs.def">
@@ -197,7 +214,7 @@
       <AdditionalLibraryDirectories>../../../../sysafs/arm_win/lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(TargetPath) \\znpi02\c$\export\doocs\server\stepper_motor_rpi_server.exe\.</Command>
+      <Command>copy $(TargetPath) \\znpi02\c$\export\doocs\server\$(TargetFileName)\.</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -262,7 +279,7 @@
       <AdditionalLibraryDirectories>../../../../../sysafs/arm_win/lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(TargetPath) \\znpi02\c$\export\doocs\server\stepper_motor_rpi_server.exe\.</Command>
+      <Command>copy $(TargetPath) \\znpi02\c$\export\doocs\server\$(TargetFileName)\.</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

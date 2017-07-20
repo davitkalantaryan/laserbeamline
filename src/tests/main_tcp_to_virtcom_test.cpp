@@ -17,10 +17,11 @@
 #include "com_port_global_functions.h"
 #include "common_argument_parser.hpp"
 
-#define	VIRT_SERIAL_PORT_NAME		"\\.\\COM4"
+#define	VIRT_SERIAL_PORT_NAME		"\\.\\COM5"
 #define	DEVICE_HOST2				"znpi02"
 
 static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, common::SocketTCP* a_device);
+static bool PrintProgramStrings3(int a_nLength, const char* a_string);
 
 static int s_nDebugLevel = 1;
 
@@ -35,11 +36,21 @@ int main(int argc, char* argv[])
 
 	common::SocketBase::Initialize();
 
+	printf("version 4!\n");
+
 	aParser.AddOption("--host-name", 1, DEVICE_HOST2).AddOption("--com-name",1, VIRT_SERIAL_PORT_NAME);
 	aParser.AddOption("-hn", 1, DEVICE_HOST2).AddOption("-cn", 1, VIRT_SERIAL_PORT_NAME);
 	aParser.AddOption("--debug-level",1,"1").AddOption("-dl",1,"1");
 
 	aParser.ParseCommandLine(argc - 1, argv + 1);
+
+	if (aParser["--com-name"]) { cpcSerialDeviceName = aParser["--com-name"]; }
+	else if (aParser["-cn"]) { cpcSerialDeviceName = aParser["-cn"]; }
+
+#ifdef DO_DEBUG
+	PrepareSerial(&serialProg, cpcSerialDeviceName);
+	return 0;
+#endif
 
 	if((!aParser["--host-name"])&&(!aParser["-hn"])){
 		fprintf(stderr,
@@ -51,9 +62,6 @@ int main(int argc, char* argv[])
 	}
 	else if(aParser["--host-name"]){cpcHostName = aParser["--host-name"];}
 	else { cpcHostName = aParser["-hn"]; }
-
-	if(aParser["--com-name"]){cpcSerialDeviceName=aParser["--com-name"];}
-	else if(aParser["-cn"]){ cpcSerialDeviceName = aParser["-cn"]; }
 
 	if (aParser["--debug-level"]) { s_nDebugLevel = atoi(aParser["--debug-level"]); }
 	else if (aParser["-dl"]) { s_nDebugLevel = atoi(aParser["-dl"]); }
@@ -84,10 +92,11 @@ returnPoint:
 
 static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, common::SocketTCP* a_device)
 {
-	std::string aStrToPrintProg, aStrToPrintDev;
+	std::string aStrToPrintDev;
 	int dwReadProg,dwReadDev;
 	char vcBufferProg[PROG_BUFFER1+1], vcBufferDev[DEVICE_BUFFER1+1];
 	bool bWrite(true);
+	bool bPrint;
 
 	while (1) {
 		
@@ -95,20 +104,18 @@ static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, common::SocketTCP* a_d
 		if (dwReadProg > 0) {
 
 			if(s_nDebugLevel>0){
-				if (dwReadProg>2) {aStrToPrintProg=std::string(vcBufferProg,dwReadProg-2);}
-				else { aStrToPrintProg = "UnknownFormat"; }
-				printf("+++++ program : %s\n", aStrToPrintProg.c_str());
+				bPrint=PrintProgramStrings3(dwReadProg, vcBufferProg);
 			}
 
 			if (bWrite) { a_device->writeC(vcBufferProg, dwReadProg); }
-			dwReadDev = a_device->readC(vcBufferDev, DEVICE_BUFFER1, 20000);
-			if(s_nDebugLevel>0){printf("----- device  : ");}
+			dwReadDev = a_device->readC(vcBufferDev, DEVICE_BUFFER1, 500);
+			if((s_nDebugLevel>0)&&bPrint){printf("----- device (received:%d)  : ",dwReadDev);}
 
 			if (dwReadDev > 0) {
 				bWrite = true;
 				if((dwReadDev==1) && (vcBufferDev[0]==0)){ }
 				else{
-					if(s_nDebugLevel>0){
+					if((s_nDebugLevel>0) && bPrint){
 						aStrToPrintDev = std::string(vcBufferDev, dwReadDev);
 						printf("%s\n", aStrToPrintDev.c_str());
 					}
@@ -120,8 +127,26 @@ static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, common::SocketTCP* a_d
 				break;
 			}
 			else { bWrite = false; }
-			if(s_nDebugLevel>0){printf("\n");}
+			if((s_nDebugLevel>0) && bPrint){printf("\n");}
 
 		}
 	} // while (1) {
+}
+
+
+static bool PrintProgramStrings3(int a_nLength, const char* a_vcBufferProg)
+{
+	static std::map<std::string, int> sExist;
+	std::string aStrToPrintProg;
+
+	if (a_nLength>2) { aStrToPrintProg = std::string(a_vcBufferProg, a_nLength - 2); }
+	else { aStrToPrintProg = "UnknownFormat"; }
+
+	if(sExist.count(aStrToPrintProg)){return false;}
+	sExist.insert(std::pair<std::string,int>(aStrToPrintProg,1));
+	printf("+++++ program (length=%d): %s\n", a_nLength, aStrToPrintProg.c_str());
+	if(a_nLength>0){printf("code={%d",(int)a_vcBufferProg[0]);}
+	for(int i(1);i<a_nLength;++i){printf(",%d", a_vcBufferProg[i]);}
+	if(a_nLength>0){printf("}\n");}
+	return true;
 }
