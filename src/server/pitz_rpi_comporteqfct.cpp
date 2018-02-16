@@ -10,7 +10,7 @@
 #include "pitz_rpi_comporteqfct.hpp"
 #include <map>
 
-int g_nDebugLevel = 1;
+int g_nDebugLevel = 0;
 
 enum class SerialParity {
 	None,
@@ -59,6 +59,26 @@ pitz::rpi::ComPortEqFct::~ComPortEqFct()
 }
 
 
+#if 0
+const ::common::serial::ComPort& pitz::rpi::ComPortEqFct::ComPort()const
+{
+	return m_serial3;
+}
+#endif
+
+
+int pitz::rpi::ComPortEqFct::ReadComRaw(void* a_buffer, int a_nBufLen)
+{
+	return m_serial3.readC(a_buffer, a_nBufLen);
+}
+
+
+int pitz::rpi::ComPortEqFct::ReadComRaw(void* a_buffer, int a_nBufLen, int a_nTimeoutMs)
+{
+	return m_serial3.readC(a_buffer, a_nBufLen, a_nTimeoutMs);
+}
+
+
 int pitz::rpi::ComPortEqFct::WriteStringWithEnding2(char* a_string, int a_str_len)
 {
 	int dwWritten;
@@ -67,7 +87,7 @@ int pitz::rpi::ComPortEqFct::WriteStringWithEnding2(char* a_string, int a_str_le
 	memcpy(a_string+ a_str_len,m_asciiEnding.c_str(),m_asciiEnding.length());
 
 	m_mutexForSerial.lock();
-	dwWritten = m_serial2.Write(a_string, a_str_len +m_asciiEnding.length());
+	dwWritten = m_serial3.writeC(a_string, a_str_len +m_asciiEnding.length());
 	m_mutexForSerial.unlock();
 
 	return dwWritten;
@@ -79,7 +99,7 @@ int pitz::rpi::ComPortEqFct::WriteByteStream(const void* a_byteStream, int a_dat
 	int dwWritten;
 
 	m_mutexForSerial.lock();
-	dwWritten = m_serial2.Write(a_byteStream, a_dataLen);
+	dwWritten = m_serial3.writeC(a_byteStream, a_dataLen);
 	m_mutexForSerial.unlock();
 
 	return dwWritten;
@@ -107,12 +127,12 @@ int pitz::rpi::ComPortEqFct::CallbackFunction2(D_fct* a_this, COMMAND_TYPET a_co
 		return -2;
 	case COMMAND_TYPE::SET_DIRECT_BYTE_STREAM:
 		m_mutexForSerial.lock();
-		m_serial2.Write(a_pData, a_nDataLen);
+		m_serial3.writeC(a_pData, a_nDataLen);
 		m_mutexForSerial.unlock();
 		return 0;
 	case COMMAND_TYPE::GET_DIRECT_BYTE_STREAM:
 		m_mutexForSerial.lock();
-		m_serial2.Write(a_pData, a_nDataLen);
+		m_serial3.writeC(a_pData, a_nDataLen);
 		m_mutexForSerial.unlock();
 		return -2;
 	case COMMAND_TYPE::SET_ANY_ASCII_STRING:
@@ -132,7 +152,7 @@ int pitz::rpi::ComPortEqFct::CallbackFunction2(D_fct* a_this, COMMAND_TYPET a_co
 		a_fromUser->get_byte(&nByteStreamLen, &pArray);
 		if(nByteStreamLen>0){
 			m_mutexForSerial.lock();
-			m_serial2.Write(pArray, nByteStreamLen);
+			m_serial3.writeC(pArray, nByteStreamLen);
 			m_mutexForSerial.unlock();
 		}
 	}
@@ -169,7 +189,7 @@ void pitz::rpi::ComPortEqFct::init(void)
 
 	__DEBUG_APP__(1, "version 4 serial_name=\"%s\"",m_comPortName.value());
 
-	if ((nRet = m_serial2.OpenSerial(m_comPortName.value())))
+	if ((nRet = m_serial3.OpenCom(m_comPortName.value())))
 	{
 		std::string errString = FindErrorString();
 		set_error(nRet, errString, nRet);
@@ -177,7 +197,7 @@ void pitz::rpi::ComPortEqFct::init(void)
 		return;
 	}
 
-	if ((nRet = m_serial2.GetCommStates(&actualDcb, &aTimeouts)))
+	if ((nRet = m_serial3.GetCommStates(&actualDcb, &aTimeouts)))
 	{
 		std::string errString = FindErrorString();
 		set_error(nRet, errString, nRet);
@@ -207,38 +227,38 @@ void pitz::rpi::ComPortEqFct::init(void)
 		StringFromRtsControl(actualDcb.fRtsControl),
 		actualDcb.fDsrSensitivity ? L"on" : L"off");
 
+#if 1
 	//actualDcb.BaudRate = BOUD_RATE;
 	actualDcb.BaudRate = m_baudRate.value();
-	if ((nRet = m_serial2.SetupCommState(&actualDcb, &aTimeouts)))
+	if ((nRet = m_serial3.SetupCommState(&actualDcb, &aTimeouts)))
 	{
 		std::string errString = FindErrorString();
 		set_error(nRet, errString, nRet);
 		__DEBUG_APP_BASE__(0, stderr, "error during openning !\n");
 		return;
 	}
+#endif
 
 	s_comPorts[m_comPortName.value()] = this;
-	m_comServer.SetMutex(&m_mutexForSerial);
-	m_comServer.SetSerial(&m_serial2);
+	m_proxyServer.SetMutex(&m_mutexForSerial);
+	m_proxyServer.SetIoDevice(&m_serial3);
 	m_threadForProxy = STDN::thread(&ComPortEqFct::ThreadForProxyFnc,this);
 }
 
 
 void pitz::rpi::ComPortEqFct::cancel(void)
 {
-	m_comServer.StopServer();
-	common::SocketTCP* pCurSocket= m_comServer.GetCurrentSocket();
-	if(pCurSocket){ pCurSocket ->closeC();}
+	m_proxyServer.StopServerN();
 	m_threadForProxy.join();
 }
 
 
 void pitz::rpi::ComPortEqFct::ThreadForProxyFnc(void)
 {
-	printf("!!!!!!!!!!!!!! version 10\n");
-	m_comServer.SetSerial(&m_serial2); // not necessary
-	m_comServer.StartServer(9030, 1000, false);
-	m_comServer.SetSerial(NULL); // not necessary
+	printf("!!!!!!!!!!!!!! version 11\n");
+	m_proxyServer.SetIoDevice(&m_serial3); // not necessary
+	m_proxyServer.StartServerN();
+	m_proxyServer.SetIoDevice(NULL); // not necessary
 }
 
 

@@ -50,7 +50,7 @@ protected:
 
 private:
 	// closed functions
-	int		readC(void*, int, int) { return 0; }
+	int		readC(void*, int, int)const { return 0; }
 	int		writeC(const void*, int) { return 0; }
 
 protected:

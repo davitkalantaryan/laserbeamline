@@ -21,7 +21,7 @@ pitz::rpi::StepperMotor::EqFctThz::EqFctThz()
 		"POSITION.CMD sets the position ", this),
 	m_moveRelative("DISPLACEMENT.SP moves  the motor relative to the current pos", this),
 	m_changeBy(
-		COMMAND_TYPE::ACTUALIZE_POSITION, 
+		COMMAND_TYPE::CHANGE_BY, 
 		reinterpret_cast<TypeCallback>(&EqFctThz::CallbackFunctionTHz),
 		"DISPLACEMENT.CMD changes the position relative to the current position", this),
 	m_velocitySP("VELOCITY.SP",this),
@@ -50,7 +50,7 @@ int pitz::rpi::StepperMotor::EqFctThz::fct_code()
 
 void pitz::rpi::StepperMotor::EqFctThz::post_init(void)
 {
-	pitz::rpi::ComPortUserEqFct::post_init();
+	EqFctBase::post_init();
 
 	// To do
 #if 1
@@ -60,10 +60,12 @@ void pitz::rpi::StepperMotor::EqFctThz::post_init(void)
 		int nStrLen;
 		char vcBuffer[256];
 		
-		nStrLen = snprintf(vcBuffer, 255, "0 %d nm", nMotorNum);
+		//nStrLen = snprintf(vcBuffer, 255, "0 %d nm", nMotorNum);
+		nStrLen = snprintf(vcBuffer, 255, "%d ncal \r\n", nMotorNum);
 		vcBuffer[nStrLen] = 0;
 		m_homeCmd.SetFixedString(vcBuffer);
 	}
+
 #endif
 }
 
@@ -86,6 +88,7 @@ int pitz::rpi::StepperMotor::EqFctThz::CallbackFunctionTHz(
 		double lfMax = (double)m_upperLimit.value();
 		double lfMin = (double)m_lowerLimit.value();
 		double lfValue = (double)m_moveAbsolute.value();
+		
 		if(lfValue>lfMax){lfValue= lfMax;}
 		else if(lfValue<lfMin){lfValue= lfMin;}
 		nWrite = (int)snprintf(vcString,505,"%lf %d nm",lfValue,m_motorNumber.value());
@@ -96,16 +99,22 @@ int pitz::rpi::StepperMotor::EqFctThz::CallbackFunctionTHz(
 	
 	case COMMAND_TYPE::CHANGE_BY:
 	{
+#if 0
 		double lfMax = (double)m_upperLimit.value();
 		double lfMin = (double)m_lowerLimit.value();
 		double lfCur=(double)m_currentPos.value();
+#endif
 		double lfValue = (double)m_moveRelative.value();
+#if 0
 		if(abs(lfValue)>(lfMax- lfMin)){/*setError*/return -3;}
 		if ((lfValue+lfCur)>lfMax){lfValue=(lfMax-lfCur); }
 		else if((lfValue+lfCur)<lfMin){lfValue=(lfMin-lfCur); }
+#endif
 		nWrite = (int)snprintf(vcString, 505, "%lf %d nr", lfValue, m_motorNumber.value());
 		m_pComPort->WriteStringWithEnding2(vcString, nWrite);
+#if 0
 		m_currentPos.set_value((RAW_VALUE_TYPE)(lfValue + lfCur));
+#endif
 	}
 		break;
 

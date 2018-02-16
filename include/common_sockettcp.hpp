@@ -15,7 +15,7 @@ public:
 	virtual ~SocketTCP();
 
 	virtual int		connectC(const char *svrName, int port, int connectionTimeoutMs = 1000);
-	virtual int		readC(void* buffer, int bufferLen, int timeoutMS);
+	virtual int		readC(void* buffer, int bufferLen, int timeoutMS)const;
 	virtual int		writeC(const void* buffer, int bufferLen);
 
 protected:

@@ -37,6 +37,9 @@
     <ClInclude Include="..\..\..\include\common_sockettcp.hpp">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\common_serial_comport.hpp" />
+    <ClInclude Include="..\..\..\include\tools_ioproxy_common_header.h" />
+    <ClInclude Include="..\..\..\include\tools_ioproxyserver.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\server\pitz_rpi_comporteqfct.cpp">
@@ -75,6 +78,8 @@
     <ClCompile Include="..\..\..\src\common\common_sockettcp.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_serial_comport.cpp" />
+    <ClCompile Include="..\..\..\src\tools\tools_ioproxyserver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\src\server\pitz_rpi_comporteqfct.impl.hpp">

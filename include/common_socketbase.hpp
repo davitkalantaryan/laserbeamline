@@ -115,7 +115,7 @@ public:
 
 	static int  Initialize();
 	static void Cleanup();
-	long int SleepN(long long int nanoSec);
+	static int SleepN(long long int nanoSec);
 
 #ifdef _SELECT_NEEDED_
 	struct STypeAndIndex { int index; char whichd; char reserver[3]; };

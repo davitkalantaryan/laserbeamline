@@ -2,7 +2,8 @@
 // tools_comportserver.cpp
 // 2017 Jul 20
 
-#include "tools_comportserver.hpp"
+#include "tools_ioproxyserver.hpp"
+#include "tools_ioproxy_common_header.h"
 #include <stddef.h>
 
 #define PROG_BUFFER1	511
@@ -14,41 +15,47 @@ extern int g_nDebugLevel;
 
 static bool PrintProgramString(char* a_vcBufferProg, int a_nReceived);
 
-tools::ComServer::ComServer()
+tools::IoProxyServer::IoProxyServer()
 {
-	m_pSerial = NULL;
+	m_pIoDevice = NULL;
 	m_pMutex = NULL;
 }
 
 
-tools::ComServer::~ComServer()
+tools::IoProxyServer::~IoProxyServer()
 {
 }
 
 
-void tools::ComServer::SetSerial(pitz::rpi::tools::Serial* a_pSerial)
+void tools::IoProxyServer::StartServerN(void)
 {
-	m_pSerial = a_pSerial;
+	common::ServerTCP::StartServer(IO_PROXY_PORT_NAME,2000,false);
 }
 
 
-void tools::ComServer::SetMutex(STDN::mutex* a_pMutex)
+void tools::IoProxyServer::StopServerN(void)
+{
+	common::ServerTCP::StopServer();
+	if(m_pCurSocket){m_pCurSocket->closeC();}
+}
+
+
+void tools::IoProxyServer::SetIoDevice(common::IODevice* a_pIoDevice)
+{
+	m_pIoDevice = a_pIoDevice;
+}
+
+
+void tools::IoProxyServer::SetMutex(STDN::mutex* a_pMutex)
 {
 	m_pMutex = a_pMutex;
 }
 
 
-common::SocketTCP* tools::ComServer::GetCurrentSocket(void)
-{
-	return m_pCurSocket;
-}
-
-
-void tools::ComServer::AddClient(common::SocketTCP& a_ClientSocket, const sockaddr_in* a_bufForRemAddress)
+void tools::IoProxyServer::AddClient(common::SocketTCP& a_ClientSocket, const sockaddr_in* a_bufForRemAddress)
 {
 
-	if(!m_pSerial){return;}
-	pitz::rpi::tools::Serial& serialReal=*m_pSerial;
+	if(!m_pIoDevice){return;}
 	std::string aStrToPrintProg, aStrToPrintDev;
 	int dwReadProg, dwReadDev;
 	char vcBufferProg[PROG_BUFFER1 + 1], vcBufferDev[DEVICE_BUFFER1 + 1];
@@ -67,8 +74,8 @@ void tools::ComServer::AddClient(common::SocketTCP& a_ClientSocket, const sockad
 				bDebug = PrintProgramString(vcBufferProg, dwReadProg);
 			}
 			LOCK_IF(m_pMutex);
-			serialReal.Write(vcBufferProg, dwReadProg);
-			dwReadDev = serialReal.Read4(vcBufferDev, DEVICE_BUFFER1, 50, 8);
+			m_pIoDevice->writeC(vcBufferProg, dwReadProg);
+			dwReadDev = m_pIoDevice->readC(vcBufferDev, DEVICE_BUFFER1);
 			UNLOCK_IF(m_pMutex);
 			if ((g_nDebugLevel>0) && bDebug) { printf("----- device  : "); }
 			if (dwReadDev > 0) {

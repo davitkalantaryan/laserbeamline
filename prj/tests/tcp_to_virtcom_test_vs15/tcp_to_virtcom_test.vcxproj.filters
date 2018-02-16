@@ -39,6 +39,9 @@
     <ClCompile Include="..\..\..\src\common\common_sockettcp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_serial_comport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\com_port_global_functions.h">
@@ -66,6 +69,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\common_sockettcp.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common_serial_comport.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

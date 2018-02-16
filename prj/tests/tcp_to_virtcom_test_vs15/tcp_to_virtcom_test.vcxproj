@@ -226,6 +226,7 @@
     <ClCompile Include="..\..\..\src\common\common_argument_parser.cpp" />
     <ClCompile Include="..\..\..\src\common\common_functionalities.cpp" />
     <ClCompile Include="..\..\..\src\common\common_iodevice.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_serial_comport.cpp" />
     <ClCompile Include="..\..\..\src\common\common_socketbase.cpp" />
     <ClCompile Include="..\..\..\src\common\common_sockettcp.cpp" />
     <ClCompile Include="..\..\..\src\tests\main_tcp_to_virtcom_test.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="..\..\..\include\common_argument_parser.impl.hpp" />
     <ClInclude Include="..\..\..\include\common_defination.h" />
     <ClInclude Include="..\..\..\include\common_iodevice.hpp" />
+    <ClInclude Include="..\..\..\include\common_serial_comport.hpp" />
     <ClInclude Include="..\..\..\include\common_socketbase.hpp" />
     <ClInclude Include="..\..\..\include\common_socketbase.impl.hpp" />
     <ClInclude Include="..\..\..\include\common_sockettcp.hpp" />

@@ -185,7 +185,7 @@ int common::SocketTCP::connectC(const char *a_svrName, int a_port, int a_connect
 #endif
 
 
-int common::SocketTCP::readC(void* a_pBuffer, int a_nSize, int a_lnSelectTm)
+int common::SocketTCP::readC(void* a_pBuffer, int a_nSize, int a_lnSelectTm)const
 {
 	char* pcBuffer = (char*)a_pBuffer;
 	struct timeval*		pTimeout;
@@ -241,7 +241,7 @@ int common::SocketTCP::readC(void* a_pBuffer, int a_nSize, int a_lnSelectTm)
 	nReceivedAll = recv(m_socket, pcBuffer, a_nSize, 0);
 
 	while ((nReceivedSngl>=0) < (nReceivedAll<a_nSize)) {
-		common::SocketBase::SleepN(1);
+		//common::SocketBase::SleepN(1);
 		nReceivedSngl=recv(m_socket, pcBuffer+ nReceivedAll, a_nSize- nReceivedAll, 0);
 		nReceivedAll += nReceivedSngl;
 	}

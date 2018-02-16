@@ -10,7 +10,6 @@
  *
  */
 
-#include "pitz_rpi_tools_serial.hpp"
 #include <stdio.h>
 #include <tchar.h>
 #include <string>
@@ -25,20 +24,21 @@ static PCWSTR StringFromRtsControl(DWORD a_rtsControl);
 //int MakeErrorReport(void);
 //int PrepareSerial(pitz::rpi::tools::Serial* a_pSerial, const char* a_portName);
 
-int PrepareSerial(pitz::rpi::tools::Serial* a_pSerial, const char* a_portName)
+//int PrepareSerial(pitz::rpi::tools::Serial* a_pSerial, const char* a_portName)
+int PrepareSerial2(common::serial::ComPort* a_pSerial, const char* a_portName)
 {
 	DCB actualDcb;
 	COMMTIMEOUTS aTimeouts;
 	int nRet(0);
 
-	if (a_pSerial->OpenSerial(a_portName)) {
+	if (a_pSerial->OpenCom(a_portName)) {
 		nRet = MakeErrorReport();
-		goto retiurnPoint;
+		goto returnPoint;
 	}
 
 	if (a_pSerial->GetCommStates(&actualDcb, &aTimeouts)) {
 		nRet = MakeErrorReport();
-		goto retiurnPoint;
+		goto returnPoint;
 	}
 	printf(
 		"\n"
@@ -89,10 +89,83 @@ int PrepareSerial(pitz::rpi::tools::Serial* a_pSerial, const char* a_portName)
 	aTimeouts.WriteTotalTimeoutConstant = 5;
 	if (a_pSerial->SetupCommState(&actualDcb, &aTimeouts)) {
 		nRet = MakeErrorReport();
-		goto retiurnPoint;
+		goto returnPoint;
 	}
 
-retiurnPoint:
+returnPoint:
+	if (nRet) { a_pSerial->closeC(); }
+	return nRet;
+}
+
+
+int PrepareSerial(pitz::rpi::tools::Serial* a_pSerial, const char* a_portName)
+{
+	DCB actualDcb;
+	COMMTIMEOUTS aTimeouts;
+	int nRet(0);
+
+	if (a_pSerial->OpenSerial(a_portName)) {
+		nRet = MakeErrorReport();
+		goto returnPoint;
+	}
+
+	if (a_pSerial->GetCommStates(&actualDcb, &aTimeouts)) {
+		nRet = MakeErrorReport();
+		goto returnPoint;
+	}
+	printf(
+		"\n"
+		"                portName = %s\n",
+		a_portName);
+
+	wprintf(
+		L"                    baud = %d\n"
+		L"                  parity = %s\n"
+		L"               data bits = %d\n"
+		L"               stop bits = %s\n"
+		L"   XON/XOFF flow control = %s\n"
+		L" output DSR flow control = %s\n"
+		L" output CTS flow control = %s\n"
+		L"             DTR control = %s\n"
+		L"             RTS control = %s\n"
+		L" DSR circuit sensitivity = %s\n",
+		actualDcb.BaudRate,
+		StringFromSerialParity(actualDcb.Parity),
+		actualDcb.ByteSize,
+		StringFromSerialStopBits(actualDcb.StopBits),
+		(actualDcb.fInX && actualDcb.fOutX) ? L"on" : L"off",
+		actualDcb.fOutxDsrFlow ? L"on" : L"off",
+		actualDcb.fOutxCtsFlow ? L"on" : L"off",
+		StringFromDtrControl(actualDcb.fDtrControl),
+		StringFromRtsControl(actualDcb.fRtsControl),
+		actualDcb.fDsrSensitivity ? L"on" : L"off");
+
+#ifdef DO_DEBUG
+	printf(
+		"\tReadIntervalTimeout         =%d\n"
+		"\tReadTotalTimeoutMultiplier  =%d\n"
+		"\tReadTotalTimeoutConstant    =%d\n"
+		"\tWriteTotalTimeoutMultiplier =%d\n"
+		"\tWriteTotalTimeoutConstant   =%d\n\n",
+		aTimeouts.ReadIntervalTimeout,
+		aTimeouts.ReadTotalTimeoutMultiplier,
+		aTimeouts.ReadTotalTimeoutConstant,
+		aTimeouts.WriteTotalTimeoutMultiplier,
+		aTimeouts.WriteTotalTimeoutConstant);
+	goto retiurnPoint;
+#endif
+
+	actualDcb.BaudRate = 19200;
+	aTimeouts.ReadTotalTimeoutMultiplier = 0;
+	aTimeouts.ReadTotalTimeoutConstant = 5;
+	aTimeouts.WriteTotalTimeoutMultiplier = 0;
+	aTimeouts.WriteTotalTimeoutConstant = 5;
+	if (a_pSerial->SetupCommState(&actualDcb, &aTimeouts)) {
+		nRet = MakeErrorReport();
+		goto returnPoint;
+	}
+
+returnPoint:
 	if (nRet) { a_pSerial->CloseCom(); }
 	return nRet;
 }

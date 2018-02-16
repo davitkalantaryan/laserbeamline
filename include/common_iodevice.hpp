@@ -20,7 +20,8 @@ public:
 	virtual bool	isOpenC(void)const { return false; }
 	virtual void	closeC(void);
 
-	virtual int		readC (void* buffer, int bufferLen, int timeoutMS) = 0;
+	virtual int		readC (void* buffer, int bufferLen, int timeoutMS)const = 0;
+	virtual int		readC(void* buffer, int bufferLen)const;
 	virtual int		writeC(const void* buffer, int bufferLen)=0;
 
 	common::IODevice& operator=(const common::IODevice& aM);

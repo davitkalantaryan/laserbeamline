@@ -10,8 +10,8 @@
 #define __pitz_rpi_comporteqfct_hpp__
 
 #include <eq_fct.h>
-#include "pitz_rpi_tools_serial.hpp"
-#include "tools_comportserver.hpp"
+#include "common_serial_comport.hpp"
+#include "tools_ioproxyserver.hpp"
 
 extern int g_nDebugLevel;
 
@@ -99,21 +99,27 @@ public:
 		EqAdr * dcsAdr, EqData *fromUser, EqData * toUser, EqFct * fctLoc,
 		void* data, int dataLen);
 
+	//const ::common::serial::ComPort& ComPort()const;
+	int ReadComRaw(void* buffer,int bufLen);
+	int ReadComRaw(void* buffer, int bufLen, int timeoutMs);
+
+	common::serial::ComPort* comPtr() {return &m_serial3;}
+
 protected:
-	virtual int  fct_code();
+	virtual int  fct_code(void);
 	virtual void init(void);
 	virtual void cancel(void)override;
 	void ThreadForProxyFnc(void);
 
 protected:
-	pitz::rpi::tools::Serial	m_serial2;
+	common::serial::ComPort		m_serial3;
 	New_D_types<D_string>		m_anyCommand;
 	D_string					m_comPortName;
 	D_int						m_baudRate;
 
 	std::string					m_strComName;
 	std::string					m_asciiEnding;
-	::tools::ComServer			m_comServer;
+	::tools::IoProxyServer		m_proxyServer;
 	STDN::mutex					m_mutexForSerial;
 	STDN::thread				m_threadForProxy;
 };

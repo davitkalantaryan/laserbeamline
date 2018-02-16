@@ -148,7 +148,7 @@ void common::SocketBase::Cleanup()
 }
 
 
-long int common::SocketBase::SleepN(long long int a_nanoSec)
+int common::SocketBase::SleepN(long long int a_nanoSec)
 {
 #ifdef WIN32
 	struct timeval tv;

@@ -29,12 +29,15 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\include\common_defination.h" />
     <ClInclude Include="..\..\..\include\common_iodevice.hpp" />
+    <ClInclude Include="..\..\..\include\common_serial_comport.hpp" />
     <ClInclude Include="..\..\..\include\common_servertcp.hpp" />
     <ClInclude Include="..\..\..\include\common_socketbase.hpp" />
     <ClInclude Include="..\..\..\include\common_socketbase.impl.hpp" />
     <ClInclude Include="..\..\..\include\common_sockettcp.hpp" />
     <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp" />
     <ClInclude Include="..\..\..\include\tools_comportserver.hpp" />
+    <ClInclude Include="..\..\..\include\tools_ioproxyserver.hpp" />
+    <ClInclude Include="..\..\..\include\tools_ioproxy_common_header.h" />
     <ClInclude Include="..\..\..\src\server\pitz_rpi_comporteqfct.hpp" />
     <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.hpp" />
     <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctlowscr3.hpp" />
@@ -43,6 +46,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\common\common_functionalities.cpp" />
     <ClCompile Include="..\..\..\src\common\common_iodevice.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_serial_comport.cpp" />
     <ClCompile Include="..\..\..\src\common\common_servertcp.cpp" />
     <ClCompile Include="..\..\..\src\common\common_socketbase.cpp" />
     <ClCompile Include="..\..\..\src\common\common_sockettcp.cpp" />
@@ -53,6 +57,7 @@
     <ClCompile Include="..\..\..\src\server\rpc_stepper_motor_rpi_server.cpp" />
     <ClCompile Include="..\..\..\src\tools\pitz_rpi_tools_serial.cpp" />
     <ClCompile Include="..\..\..\src\tools\tools_comportserver.cpp" />
+    <ClCompile Include="..\..\..\src\tools\tools_ioproxyserver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\doocs\sources\win_additional_sources\win_doocs.def">
@@ -211,7 +216,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;remote_function_call.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../../sysafs/arm_win/lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../../../sysafs/arm_win/lib;../../../../sys/rasp_win/lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy $(TargetPath) \\znpi02\c$\export\doocs\server\$(TargetFileName)\.</Command>
@@ -276,7 +281,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;remote_function_call.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../../../sysafs/arm_win/lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../../../sysafs/arm_win/lib;../../../../sys/rasp_win/lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy $(TargetPath) \\znpi02\c$\export\doocs\server\$(TargetFileName)\.</Command>

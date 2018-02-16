@@ -16,8 +16,9 @@
 #include <string>
 #include "com_port_global_functions.h"
 #include "common_argument_parser.hpp"
+#include "tools_ioproxy_common_header.h"
 
-#define	VIRT_SERIAL_PORT_NAME		"\\.\\COM5"
+#define	VIRT_SERIAL_PORT_NAME		"\\.\\COM4"
 #define	DEVICE_HOST2				"znpi02"
 
 static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, common::SocketTCP* a_device);
@@ -72,7 +73,7 @@ int main(int argc, char* argv[])
 	}
 
 	while(1){
-		if (aSocket.connectC(cpcHostName, 9030)) { continue; }
+		if (aSocket.connectC(cpcHostName, IO_PROXY_PORT_NAME)) { continue; }
 		TwoComInOne(&serialProg, &aSocket);
 		aSocket.closeC();
 		Sleep(100);
@@ -108,7 +109,7 @@ static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, common::SocketTCP* a_d
 			}
 
 			if (bWrite) { a_device->writeC(vcBufferProg, dwReadProg); }
-			dwReadDev = a_device->readC(vcBufferDev, DEVICE_BUFFER1, 500);
+			dwReadDev = a_device->readC(vcBufferDev, DEVICE_BUFFER1, 100);
 			if((s_nDebugLevel>0)&&bPrint){printf("----- device (received:%d)  : ",dwReadDev);}
 
 			if (dwReadDev > 0) {
@@ -142,11 +143,11 @@ static bool PrintProgramStrings3(int a_nLength, const char* a_vcBufferProg)
 	if (a_nLength>2) { aStrToPrintProg = std::string(a_vcBufferProg, a_nLength - 2); }
 	else { aStrToPrintProg = "UnknownFormat"; }
 
-	if(sExist.count(aStrToPrintProg)){return false;}
-	sExist.insert(std::pair<std::string,int>(aStrToPrintProg,1));
+	//if(sExist.count(aStrToPrintProg)){return false;}
+	//sExist.insert(std::pair<std::string,int>(aStrToPrintProg,1));
 	printf("+++++ program (length=%d): %s\n", a_nLength, aStrToPrintProg.c_str());
-	if(a_nLength>0){printf("code={%d",(int)a_vcBufferProg[0]);}
-	for(int i(1);i<a_nLength;++i){printf(",%d", a_vcBufferProg[i]);}
-	if(a_nLength>0){printf("}\n");}
+	//if(a_nLength>0){printf("code={%d",(int)a_vcBufferProg[0]);}
+	//for(int i(1);i<a_nLength;++i){printf(",%d", a_vcBufferProg[i]);}
+	//if(a_nLength>0){printf("}\n");}
 	return true;
 }

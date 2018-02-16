@@ -234,6 +234,8 @@
     <ClCompile Include="..\..\..\src\common\common_argument_parser.cpp" />
     <ClCompile Include="..\..\..\src\common\common_functionalities.cpp" />
     <ClCompile Include="..\..\..\src\common\common_iodevice.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_iodevicelerner.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_serial_comport.cpp" />
     <ClCompile Include="..\..\..\src\common\common_servertcp.cpp" />
     <ClCompile Include="..\..\..\src\common\common_socketbase.cpp" />
     <ClCompile Include="..\..\..\src\common\common_sockettcp.cpp" />
@@ -243,12 +245,17 @@
     <ClCompile Include="..\..\..\src\tests\prepare_com_port_test_win.cpp" />
     <ClCompile Include="..\..\..\src\tools\pitz_rpi_tools_serial.cpp" />
     <ClCompile Include="..\..\..\src\tools\tools_comportserver.cpp" />
+    <ClCompile Include="..\..\..\src\tools\tools_ioproxyserver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\common_argument_parser.hpp" />
     <ClInclude Include="..\..\..\include\common_argument_parser.impl.hpp" />
     <ClInclude Include="..\..\..\include\common_defination.h" />
+    <ClInclude Include="..\..\..\include\common_hashtbl.hpp" />
+    <ClInclude Include="..\..\..\include\common_hashtbl.impl.hpp" />
     <ClInclude Include="..\..\..\include\common_iodevice.hpp" />
+    <ClInclude Include="..\..\..\include\common_iodevicelerner.hpp" />
+    <ClInclude Include="..\..\..\include\common_serial_comport.hpp" />
     <ClInclude Include="..\..\..\include\common_servertcp.hpp" />
     <ClInclude Include="..\..\..\include\common_socketbase.hpp" />
     <ClInclude Include="..\..\..\include\common_socketbase.impl.hpp" />
@@ -257,6 +264,8 @@
     <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp" />
     <ClInclude Include="..\..\..\include\stdafx.h" />
     <ClInclude Include="..\..\..\include\tools_comportserver.hpp" />
+    <ClInclude Include="..\..\..\include\tools_ioproxyserver.hpp" />
+    <ClInclude Include="..\..\..\include\tools_ioproxy_common_header.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -62,3 +62,9 @@ common::IODevice* common::IODevice::Clone()const
 {
 	return NULL;
 }
+
+
+int common::IODevice::readC(void* a_buffer, int a_bufferLen)const
+{
+	return readC(a_buffer, a_bufferLen, -1);
+}

@@ -9,13 +9,16 @@
  *
  *
  */
-#include "pitz_rpi_tools_serial.hpp"
+//#include "pitz_rpi_tools_serial.hpp"
+#include "common_serial_comport.hpp"
 #include <stdio.h>
 #include <tchar.h>
 #include <common_servertcp.hpp>
 #include <string>
 #include "com_port_global_functions.h"
 #include "tools_comportserver.hpp"
+#include "common_hashtbl.hpp"
+#include "tools_ioproxyserver.hpp"
 
 #ifdef __ARM
 #define	_REAL_SERIAL_PORT_NAME_	"\\\\?\\ACPI#BCM2836#0#{86e0d1e0-8089-11d0-9ce4-08003e301f73}"
@@ -29,15 +32,31 @@ int g_nDebugLevel = 1;
 
 int main()
 {
-	pitz::rpi::tools::Serial aSerial;
-	tools::ComServer aServer;
+#if 0
+	common::HashTbl<int> aHash(100);
+	int nResultt;
+
+	aHash.AddEntry("Hallo", 5, 1);
+	aHash.AddEntry("Hallo2", 6, 2);
+
+	aHash.FindEntry("Hallo", 5, &nResultt);
+	printf("nResultt=%d\n", nResultt);
+
+	return 0;
+#endif
+
+	//pitz::rpi::tools::Serial aSerial;
+	common::serial::ComPort aSerial;
+	//tools::ComServer aServer;
+	tools::IoProxyServer aServer;
 
 	common::SocketBase::Initialize();
-	PrepareSerial(&aSerial, _REAL_SERIAL_PORT_NAME_);
-	printf("version 10\n");
-	aServer.SetSerial(&aSerial);
-	aServer.StartServer(9030, 1000,false);
-	aSerial.CloseCom();
+	PrepareSerial2(&aSerial, _REAL_SERIAL_PORT_NAME_);
+	aSerial.SetReadTimeouts(45, 8);
+	printf("version 12\n");
+	aServer.SetIoDevice(&aSerial);
+	aServer.StartServerN();
+	aSerial.closeC();
 	common::SocketBase::Cleanup();
 
 	return 0;

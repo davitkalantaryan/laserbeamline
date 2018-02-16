@@ -13,8 +13,44 @@
 #ifndef RAW_VALUE_TYPE
 #define RAW_VALUE_TYPE float
 #endif
+#ifndef GET_FNC
+#define GET_FNC get_float
+#endif
 
 namespace pitz{ namespace rpi{
+
+class ControllerRaw
+{
+public:
+	ControllerRaw();
+	virtual ~ControllerRaw() {}
+	void SetComPortAndAddress(common::serial::ComPort* a_com, int address);
+
+protected:
+	common::serial::ComPort* m_com;
+	int m_nControllerAddress;
+};
+
+class D_curPos : public VALUE_TYPE, public ControllerRaw
+{
+public:
+	D_curPos(const char* propName, EqFct* loc);
+
+	void set(EqAdr * dcsAdr, EqData *fromUser, EqData * toUser, EqFct * fct)override;
+	void get(EqAdr * dcsAdr, EqData *fromUser, EqData * toUser, EqFct * fct)override;
+	void ApplyCurPos();
+	double GetPosFromDeviceRaw();
+};
+
+
+class D_isBusy : public D_int, public ControllerRaw
+{
+public:
+	D_isBusy(const char* propName, EqFct* loc);
+
+	void get(EqAdr * dcsAdr, EqData *fromUser, EqData * toUser, EqFct * fct)override;
+	int  GetIsBusyRaw();
+};
 
 namespace STP_MTR_EQ_FCT_CODES {
 	enum {
@@ -33,6 +69,7 @@ public:
 	EqFctBase();
 	virtual ~EqFctBase();
 
+	virtual void post_init(void) override;
 	virtual int CallbackFunctionSM(D_fct* a_this, COMMAND_TYPET command,
 		EqAdr * dcsAdr, EqData *fromUser, EqData * toUser, EqFct * fct,
 		void* aata, int dataLen);
@@ -43,12 +80,14 @@ protected:
 	D_void						m_goRight;
 	VALUE_TYPE					m_upperLimit;
 	VALUE_TYPE					m_lowerLimit;
-	VALUE_TYPE					m_currentPos;
+	D_curPos					m_currentPos;
 	New_D_types<D_string>		m_anyString;
 	D_int						m_statusInt;
 	D_string					m_statusStr;
 	D_void_fix_string			m_abortCmd;
 	VALUE_TYPE					m_velocity;
+	D_isBusy					m_isBusy;
+
 };
 
 } // namespace StepperMotor{
