@@ -40,6 +40,7 @@
     <ClInclude Include="..\..\..\include\common_serial_comport.hpp" />
     <ClInclude Include="..\..\..\include\tools_ioproxy_common_header.h" />
     <ClInclude Include="..\..\..\include\tools_ioproxyserver.hpp" />
+    <ClInclude Include="..\..\..\include\first_include_to_supress_doocs_warnings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\server\pitz_rpi_comporteqfct.cpp">

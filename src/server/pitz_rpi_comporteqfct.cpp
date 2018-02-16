@@ -30,10 +30,10 @@ enum class SerialStopBits {
 static std::map<std::string, pitz::rpi::ComPortEqFct*>	s_comPorts;
 
 static std::string FindErrorString(void);
-static PCWSTR StringFromSerialParity(SerialParity Parity);
-static PCWSTR StringFromSerialStopBits(SerialStopBits StopBits);
-static PCWSTR StringFromDtrControl(DWORD DtrControl);
-static PCWSTR StringFromRtsControl(DWORD RtsControl);
+static const char* StringFromSerialParity(SerialParity Parity);
+static const char* StringFromSerialStopBits(SerialStopBits StopBits);
+static const char* StringFromDtrControl(DWORD DtrControl);
+static const char* StringFromRtsControl(DWORD RtsControl);
 
 
 pitz::rpi::ComPortEqFct::ComPortEqFct(const std::string& a_ending,const char* a_comName)
@@ -220,12 +220,12 @@ void pitz::rpi::ComPortEqFct::init(void)
 		StringFromSerialParity(SerialParity(actualDcb.Parity)),
 		actualDcb.ByteSize,
 		StringFromSerialStopBits(SerialStopBits(actualDcb.StopBits)),
-		(actualDcb.fInX && actualDcb.fOutX) ? L"on" : L"off",
-		actualDcb.fOutxDsrFlow ? L"on" : L"off",
-		actualDcb.fOutxCtsFlow ? L"on" : L"off",
+		(actualDcb.fInX && actualDcb.fOutX) ? "on" : "off",
+		actualDcb.fOutxDsrFlow ? "on" : "off",
+		actualDcb.fOutxCtsFlow ? "on" : "off",
 		StringFromDtrControl(actualDcb.fDtrControl),
 		StringFromRtsControl(actualDcb.fRtsControl),
-		actualDcb.fDsrSensitivity ? L"on" : L"off");
+		actualDcb.fDsrSensitivity ? "on" : "off");
 
 #if 1
 	//actualDcb.BaudRate = BOUD_RATE;
@@ -411,46 +411,46 @@ static std::string FindErrorString(void)
 
 
 
-static PCWSTR StringFromSerialParity(SerialParity Parity)
+static const char* StringFromSerialParity(SerialParity Parity)
 {
 	switch (Parity) {
-	case SerialParity::None: return L"none";
-	case SerialParity::Odd: return L"odd";
-	case SerialParity::Even: return L"even";
-	case SerialParity::Mark: return L"mark";
-	case SerialParity::Space: return L"space";
-	default: return L"[invalid parity]";
+	case SerialParity::None: return "none";
+	case SerialParity::Odd: return "odd";
+	case SerialParity::Even: return "even";
+	case SerialParity::Mark: return "mark";
+	case SerialParity::Space: return "space";
+	default: return "[invalid parity]";
 	}
 }
 
-static PCWSTR StringFromSerialStopBits(SerialStopBits StopBits)
+static const char* StringFromSerialStopBits(SerialStopBits StopBits)
 {
 	switch (StopBits) {
-	case SerialStopBits::One: return L"1";
-	case SerialStopBits::OnePointFive: return L"1.5";
-	case SerialStopBits::Two: return L"2";
-	default: return L"[invalid serial stop bits]";
+	case SerialStopBits::One: return "1";
+	case SerialStopBits::OnePointFive: return "1.5";
+	case SerialStopBits::Two: return "2";
+	default: return "[invalid serial stop bits]";
 	}
 }
 
-static PCWSTR StringFromDtrControl(DWORD DtrControl)
+static const char* StringFromDtrControl(DWORD DtrControl)
 {
 	switch (DtrControl) {
-	case DTR_CONTROL_ENABLE: return L"on";
-	case DTR_CONTROL_DISABLE: return L"off";
-	case DTR_CONTROL_HANDSHAKE: return L"handshake";
-	default: return L"[invalid DtrControl value]";
+	case DTR_CONTROL_ENABLE: return "on";
+	case DTR_CONTROL_DISABLE: return "off";
+	case DTR_CONTROL_HANDSHAKE: return "handshake";
+	default: return "[invalid DtrControl value]";
 	}
 }
 
 
-static PCWSTR StringFromRtsControl(DWORD RtsControl)
+static const char* StringFromRtsControl(DWORD RtsControl)
 {
 	switch (RtsControl) {
-	case RTS_CONTROL_ENABLE: return L"on";
-	case RTS_CONTROL_DISABLE: return L"off";
-	case RTS_CONTROL_HANDSHAKE: return L"handshake";
-	case RTS_CONTROL_TOGGLE: return L"toggle";
-	default: return L"[invalid RtsControl value]";
+	case RTS_CONTROL_ENABLE: return "on";
+	case RTS_CONTROL_DISABLE: return "off";
+	case RTS_CONTROL_HANDSHAKE: return "handshake";
+	case RTS_CONTROL_TOGGLE: return "toggle";
+	default: return "[invalid RtsControl value]";
 	}
 }
