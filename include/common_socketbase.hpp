@@ -27,8 +27,10 @@
 #define INADDR_NONE     0xffffffff
 #endif
 
-#ifdef	WIN32
-//#include <Windows.h>
+#ifdef	_WIN32
+#include <WinSock2.h>
+#include <WS2tcpip.h>
+#include <Windows.h>
 #ifndef SOCKET_INPROGRESS
 #define	SOCKET_INPROGRESS(e)	(WSAGetLastError() == WSAEWOULDBLOCK)
 #endif
@@ -71,9 +73,9 @@
 
 #define MAX_HOSTNAME_LENGTH     64
 
-#ifdef WIN32
+#ifdef _WIN32
 #ifndef socklen_t
-#define	socklen_t	int
+//#define	socklen_t	int
 #endif/* #ifndef socklen_t */
 #ifndef snprintf
 //#define snprintf _snprintf

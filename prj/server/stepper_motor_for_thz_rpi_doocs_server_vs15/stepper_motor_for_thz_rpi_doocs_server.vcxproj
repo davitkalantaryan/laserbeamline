@@ -53,11 +53,13 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp" />
     <ClInclude Include="..\..\..\src\server\pitz_rpi_comporteqfct.hpp" />
-    <ClInclude Include="..\..\..\src\server\pitz_rpi_thzmotor_eqfctsm.hpp" />
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.hpp" />
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\server\pitz_rpi_comporteqfct.cpp" />
-    <ClCompile Include="..\..\..\src\server\pitz_rpi_thzmotor_eqfctsm.cpp" />
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.cpp" />
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.cpp" />
     <ClCompile Include="..\..\..\src\server\rpc_thzmotor_rpi_server.cpp" />
     <ClCompile Include="..\..\..\src\tools\pitz_rpi_tools_serial.cpp" />
   </ItemGroup>

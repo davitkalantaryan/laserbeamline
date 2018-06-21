@@ -7,7 +7,10 @@
     <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\server\pitz_rpi_thzmotor_eqfctsm.hpp">
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.hpp">
+      <Filter>src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.hpp">
       <Filter>src\server</Filter>
     </ClInclude>
   </ItemGroup>
@@ -18,10 +21,13 @@
     <ClCompile Include="..\..\..\src\tools\pitz_rpi_tools_serial.cpp">
       <Filter>src\tools</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\server\pitz_rpi_thzmotor_eqfctsm.cpp">
+    <ClCompile Include="..\..\..\src\server\rpc_thzmotor_rpi_server.cpp">
       <Filter>src\server</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\server\rpc_thzmotor_rpi_server.cpp">
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.cpp">
       <Filter>src\server</Filter>
     </ClCompile>
   </ItemGroup>

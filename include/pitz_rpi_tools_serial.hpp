@@ -4,7 +4,7 @@
  *	Created on: 11 Mar, 2017
  *	Author    : Davit Kalantaryan (Email: davit.kalantaryan@desy.de)
  *
- *  This file implements all functions connected to posix threading
+ *  This file implements ...
  *		1) 
  *
  *
@@ -12,7 +12,9 @@
 #ifndef __pitz_rpi_tools_serial_hpp__
 #define __pitz_rpi_tools_serial_hpp__
 
-#ifdef WIN32
+#ifdef _WIN32
+#include <WinSock2.h>
+//#include <WS2tcpip.h>
 #include <windows.h>
 typedef HANDLE	COM_HANDLE;
 #define	INVALID_COM_HANDLE	 INVALID_HANDLE_VALUE 

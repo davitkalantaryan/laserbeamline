@@ -18,7 +18,7 @@
 #include "common_argument_parser.hpp"
 #include "tools_ioproxy_common_header.h"
 
-#define	VIRT_SERIAL_PORT_NAME		"\\.\\COM4"
+#define	VIRT_SERIAL_PORT_NAME		"\\.\\COM6"
 #define	DEVICE_HOST2				"znpi02"
 
 static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, common::SocketTCP* a_device);
