@@ -1,0 +1,9 @@
+
+
+There are 2 controller boxes in the PITZ rack room
+
+Following abreviations are used:
+Lbl1  -> label 1 (yellow label on controller)
+Lbl2  -> label 2 (yellow label in the back side of controller box)
+BA    -> Bus Address (device number in dasy chain)
+TMS   -> Test Motor Status (shows whether controller runs test motor properly '+' is good, '-' is bad)
