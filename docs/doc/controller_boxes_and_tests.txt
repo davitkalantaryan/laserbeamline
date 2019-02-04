@@ -30,7 +30,7 @@ ICB   -> Is Connector on controller Big
  |------------------------------------------------------------------|
  
  Controllers below is missing or broken, but from back side of the box
- there are cables with labels. Should them plugged to working controllers???
+ there are cables with labels. Should them be plugged to working controllers???
  |------------------------------------|
  | Missing (brocken) controllers      |
  |------------------------------------|
