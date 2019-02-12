@@ -1,4 +1,5 @@
 
+#include <WinSock2.h>
 #include <windows.h>
 #include <conio.h>
 #include <stdio.h>
@@ -270,7 +271,7 @@ static void ComThread(pitz::rpi::tools::Serial* a_src, pitz::rpi::tools::Serial*
 	char vcBuffer[128];
 
 	while (1) {
-		dwRead = a_src->Read(vcBuffer + dwOffset, 127 - dwOffset);
+		dwRead = a_src->Read1(vcBuffer + dwOffset, 127 - dwOffset);
 		if (dwRead > 0) {
 			cpcFound = strstr(vcBuffer, "\r\n");
 
@@ -299,7 +300,7 @@ static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, pitz::rpi::tools::Seri
 	char vcBufferProg[PROG_BUFFER1+1], vcBufferDev[DEVICE_BUFFER1+1];
 
 	while (1) {
-		dwReadProg = a_prog->Read(vcBufferProg + dwOffset, PROG_BUFFER1-dwOffset, 10000,10);
+		dwReadProg = a_prog->Read2(vcBufferProg + dwOffset, PROG_BUFFER1-dwOffset, 10000,10);
 		if (dwReadProg > 0) {
 
 			printf("+++program readed_len= %d\n", dwReadProg);
@@ -314,7 +315,7 @@ static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, pitz::rpi::tools::Seri
 				a_device->Write(vcBufferProg, dwWriteToDev);
 				dwReadProg -= dwWriteToDev;
 				if(dwReadProg>0){memmove(vcBufferProg, vcBufferProg + dwWriteToDev, dwReadProg);}
-				dwReadDev = a_device->Read(vcBufferDev, DEVICE_BUFFER1, 25,25);
+				dwReadDev = a_device->Read2(vcBufferDev, DEVICE_BUFFER1, 25,25);
 				if (dwReadDev > 0) {
 					a_prog->Write(vcBufferDev, dwReadDev);
 					aStrToPrint = std::string(vcBufferDev, dwReadDev);
@@ -339,11 +340,11 @@ static void TwoComInOne2(pitz::rpi::tools::Serial* a_prog, pitz::rpi::tools::Ser
 	char vcBufferProg[PROG_BUFFER2], vcBufferDev[DEVICE_BUFFER2];
 
 	while (1) {
-		dwReadProg = a_prog->Read(vcBufferProg, PROG_BUFFER2, 10000,10);
+		dwReadProg = a_prog->Read2(vcBufferProg, PROG_BUFFER2, 10000,10);
 		if (dwReadProg > 0) {
 			printf("+++ BytesFromProg=%d\n", dwReadProg);
 			a_device->Write(vcBufferProg, dwReadProg);
-			dwReadDev = a_device->Read(vcBufferDev, DEVICE_BUFFER2, 50,50);
+			dwReadDev = a_device->Read2(vcBufferDev, DEVICE_BUFFER2, 50,50);
 
 			if(dwReadDev>0){
 				printf("--- BytesFromDev =%d\n", dwReadDev);

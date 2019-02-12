@@ -1,0 +1,10 @@
+
+ 1. net user doocsadm p1t2.pitz /add
+ 2. net localgroup administrators doocsadm /add
+ 3. wmic useraccount where "Name='doocsadm'" set PasswordExpires=false
+ 4. Open firewall for DOOCS and debugger server ports
+      a) netsh advfirewall firewall add rule name="DOOCS and debug" dir=in  protocol=tcp localport=50-5000 action=allow 
+	  b) netsh advfirewall firewall add rule name="DOOCS and debug" dir=out protocol=tcp localport=50-5000 action=allow 
+	  c) netsh advfirewall firewall add rule name="DOOCS and debug" dir=in  protocol=udp localport=50-5000 action=allow 
+	  d) netsh advfirewall firewall add rule name="DOOCS and debug" dir=out protocol=udp localport=50-5000 action=allow 
+ 
