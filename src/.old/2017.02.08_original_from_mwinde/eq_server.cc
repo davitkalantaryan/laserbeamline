@@ -15,7 +15,7 @@
 	27. Jan. 2004   workaround for increasing number of opened files added
  */
 
-/** 
+/*
  *  @mainpage
  *  
  *  @section intro Introduction
