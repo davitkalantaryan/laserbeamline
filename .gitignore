@@ -3,6 +3,10 @@
 *.obj
 *.pro.user*
 .tmp/*
+
+docs/doxy/*
+!docs/doxy/html
+
 contrib/sys/*/*/*/*
 contrib/sys/*/lib/*
 contrib/sys/*/dll/*
