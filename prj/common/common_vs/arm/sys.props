@@ -7,7 +7,7 @@
     <MatlabIncludeDir>..\..\..\contrib\matlab\include</MatlabIncludeDir>
     <MexExtension>mexwarm</MexExtension>
     <ProcessorArch>ARM</ProcessorArch>
-    <DebugHost>znpi05</DebugHost>
+    <DebugHost>znpi06</DebugHost>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />

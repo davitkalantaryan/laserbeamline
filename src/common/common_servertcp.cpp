@@ -1,83 +1,181 @@
-#include "stdafx.h"
-#define SRC_USAGE
-#include "common_servertcp.hpp"
+//
+//
+//
 
+#include "common/common_servertcp.hpp"
 
-#ifdef WIN32
-	#include <WinSock2.h>
+#include <signal.h>
+
+#ifdef _WIN32
+#include <WinSock2.h>
+#include <WS2tcpip.h>
+#define gettidNew	GetCurrentThreadId
 #else
-	#include <sys/socket.h>
-	#include <unistd.h>
-	#include <netdb.h>
-	#include <fcntl.h>
-	#include <memory.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <netdb.h>
+#include <fcntl.h>
+#include <memory.h>
+#include <sys/syscall.h>
+#define gettidNew(...)	syscall(SYS_gettid)
+static void SigActionFunction (int a_nSigNum, siginfo_t * , void *);
 #endif
 
-#ifndef LINKAGE_SRC
-#define LINKAGE_SRC
-#endif
 
-using namespace common;
-
-#include <stdio.h>
+namespace WORK_STATUSES {enum{STOPPED=0,TRYING_TO_STOP,RUN,INITED2};}
 
 
-
-int ServerTCP::StartServer(
-	int a_nPort, long int a_lnTimeout,
-	bool a_bReuse, bool a_bLoopback)
+common::ServerTCP::ServerTCP()
+	:
+	m_nWorkStatus(WORK_STATUSES::STOPPED),
+	m_nServerThreadId(0)
 {
+}
 
+
+common::ServerTCP::~ServerTCP()
+{
+	StopServer();
+}
+
+
+int common::ServerTCP::StartServerS(
+	TypeAccept a_fpAddClient, void* a_owner,
+    int a_nPort, bool a_bReuse, bool a_bLoopback, int a_lnTimeout, int* a_pnRetCode)
+{
 	int nError;
+	int& nRetCode = a_pnRetCode ? *a_pnRetCode : nError;
+
+	if(m_nWorkStatus != WORK_STATUSES::STOPPED){return -1;}
+
+#ifndef _WIN32
+    struct sigaction newAction;
+
+    m_serverThread = pthread_self();
+
+    newAction.sa_flags = SA_SIGINFO;
+    sigemptyset(&newAction.sa_mask);
+    newAction.sa_restorer = NULL;
+    newAction.sa_sigaction = SigActionFunction;
+
+    sigaction(SIGPIPE,&newAction,NULL);
+#endif
 
 #ifdef _CD_VERSION__
-	nError = CreateServer( a_nPort, a_bReuse,true );
+	nRetCode = CreateServer( a_nPort, a_bReuse,true );
 #else
-	nError = CreateServer( a_nPort,a_bReuse, a_bLoopback) ;
+	nRetCode = CreateServer( a_nPort,a_bReuse, a_bLoopback) ;
 #endif
 
-	if( nError != 0 )
-	{
+	if(nRetCode != 0 ){
 		closeC();
-		return nError;
+		return nRetCode;
 	}
 
-	RunServer(a_lnTimeout);
+	RunServer(a_lnTimeout,a_fpAddClient,a_owner);
 	return 0;
 }
 
 
+int common::ServerTCP::InitServer(int a_nPort, bool a_bReuse, bool a_bLoopback)
+{
+    int nRetCode;
 
-void ServerTCP::RunServer(int a_lnTimeout)
+    if(m_nWorkStatus != WORK_STATUSES::STOPPED){return 0;}
+
+#ifndef _WIN32
+    struct sigaction newAction;
+
+    m_serverThread = pthread_self();
+
+    newAction.sa_flags = SA_SIGINFO;
+    sigemptyset(&newAction.sa_mask);
+    newAction.sa_restorer = NULL;
+    newAction.sa_sigaction = SigActionFunction;
+
+    sigaction(SIGPIPE,&newAction,NULL);
+#endif
+
+#ifdef _CD_VERSION__
+    nRetCode = CreateServer( a_nPort, a_bReuse,true );
+#else
+    nRetCode = CreateServer( a_nPort,a_bReuse, a_bLoopback) ;
+#endif
+
+    if(nRetCode != 0 ){
+        closeC();
+        return nRetCode;
+    }
+
+    m_nServerThreadId = static_cast<int>(gettidNew());
+    m_nWorkStatus = WORK_STATUSES::INITED2;
+
+    return 0;
+}
+
+
+int common::ServerTCP::WaitForConnection(int a_nTimeoutMs, sockaddr_in* a_pRemoteAddr)
+{
+    int nError, nClientSocket;
+
+    if ((nError=ServerAccept(nClientSocket,a_nTimeoutMs,a_pRemoteAddr)) == 1){
+        return nClientSocket;
+    }
+
+    if(nError<0){return nError;}
+    return 0;
+}
+
+
+
+void common::ServerTCP::RunServer(int a_lnTimeout, TypeAccept a_fpAddClient, void* a_owner)
 {
 	sockaddr_in remoteAddress;
-	common::SocketTCP aClientSocket;
+	SocketTCP aClientSocket;
 	int nError, nClientSocket;
 
-	m_nQUIT_FLAG = 0;
+    m_nServerThreadId = static_cast<int>(gettidNew());
+	m_nWorkStatus = WORK_STATUSES::RUN;
 
-	while( !m_nQUIT_FLAG )
-	{
-
-		if ((nError = ServerAccept(nClientSocket, a_lnTimeout, &remoteAddress)) == 1)
-		{
-			aClientSocket.SetSockDescriptor( nClientSocket );
-			AddClient(aClientSocket, &remoteAddress);
+	while(m_nWorkStatus== WORK_STATUSES::RUN){
+		if ((nError=ServerAccept(nClientSocket,a_lnTimeout,&remoteAddress)) == 1){
+			aClientSocket.SetNewSocketDescriptor( nClientSocket );
+			(*a_fpAddClient)(a_owner,aClientSocket,&remoteAddress);
 			aClientSocket.closeC();
 		}
+
+		if(nError<0){break;}
 
 #ifndef _CD_VERSION__
 #endif
 	}
 
 	closeC();
+	m_nWorkStatus = WORK_STATUSES::STOPPED;
+	m_nServerThreadId = 0;
 }
 
 
 
-void ServerTCP::StopServer(void)
+void common::ServerTCP::StopServer(void)
 {
-	m_nQUIT_FLAG = 1;
+    int nCurrentThreadId(static_cast<int>(gettidNew()));
+    if((m_nWorkStatus != WORK_STATUSES::RUN)||(m_nWorkStatus != WORK_STATUSES::INITED2)){return;}
+	
+	if(nCurrentThreadId!=m_nServerThreadId){
+		m_nWorkStatus = WORK_STATUSES::TRYING_TO_STOP;
+		closeC();
+#ifndef _WIN32
+        pthread_kill(m_serverThread,SIGPIPE);
+#endif
+        while((m_nWorkStatus != WORK_STATUSES::INITED2) && (m_nWorkStatus== WORK_STATUSES::TRYING_TO_STOP)){SWITCH_SCHEDULING(1);}
+        m_nWorkStatus = WORK_STATUSES::STOPPED;
+	}
+	else {
+		m_nWorkStatus = WORK_STATUSES::STOPPED;
+		m_nServerThreadId = 0;
+		closeC();
+	}
 }
 
 
@@ -91,11 +189,13 @@ void ServerTCP::StopServer(void)
  *   	0:	timeout
  *	1:	ok
  */
-int ServerTCP::ServerAccept(int& a_nClientSocket, int a_lnTimeout, sockaddr_in* a_bufForRemAddress)
+int common::ServerTCP::ServerAccept(int& a_nClientSocket, int a_lnTimeout, sockaddr_in* a_bufForRemAddress)
 {
-
+	struct timeval*		pTimeout;
+	struct timeval		aTimeout2;
+	struct sockaddr_in addr;
 	fd_set rfds;
-
+	socklen_t addr_len;
 	int maxsd = 0;
 	int rtn = 0;
 
@@ -104,28 +204,11 @@ int ServerTCP::ServerAccept(int& a_nClientSocket, int a_lnTimeout, sockaddr_in* 
 	
 	maxsd = m_socket + 1;
 
-	// In not windows cases pselect instead of select can be considered
-	// The reason that in pselect m_Timout remains constant
-	// But here we choose other solution
-	struct timeval		aTimeout2;
-	struct timeval*		pTimeout;
-
-
-	if( a_lnTimeout >= 0 )
-	{
-#ifdef WIN32
+	if( a_lnTimeout >= 0 ){
 		aTimeout2.tv_sec = a_lnTimeout/1000L;
 		aTimeout2.tv_usec = (a_lnTimeout%1000L)*1000L ;
-#else
-		aTimeout2.tv_sec = (time_t)(a_lnTimeout/1000L);
-		aTimeout2.tv_usec = (suseconds_t)((a_lnTimeout%1000L)*1000L) ;
-#endif
 		pTimeout = &aTimeout2;
-	}
-	else
-	{
-		pTimeout = NULL;
-	}
+	}else{pTimeout = NULL;}
 
 	rtn = select(maxsd, &rfds, (fd_set *) 0, (fd_set *) 0, pTimeout);
 
@@ -133,114 +216,73 @@ int ServerTCP::ServerAccept(int& a_nClientSocket, int a_lnTimeout, sockaddr_in* 
 	{
 		case 0:	/* time out */
 			return 0;
-#ifdef	WIN32
-		case SOCKET_ERROR:
-#else
-		case -1:
-#endif
-			if( errno == EINTR )
-			{
-				/* interrupted by signal */
-				return 2;
-			}
-
+		case SOCKET_ERROR_NEW:
+			if( errno == EINTR ){/*interrupted by signal*/return 2;}
 			return(E_SELECT);
 		default:
 			break;
 	}
 
-	if( !FD_ISSET( m_socket, &rfds ) )
-		return(E_FATAL);
+	if( !FD_ISSET( m_socket, &rfds ) ){return(E_FATAL);}
 
-
-	struct sockaddr_in addr;
-
-#ifdef	WIN32
-	int addr_len = sizeof(addr);
-#else
-	socklen_t addr_len = sizeof(addr);
-#endif
+	addr_len = sizeof(addr);
 	a_nClientSocket = (int)accept( m_socket, (struct sockaddr *)&addr, &addr_len);
 
+	if(CHECK_FOR_SOCK_INVALID(a_nClientSocket) ){return 0;}
 
-#ifdef	WIN32
-	if( a_nClientSocket == INVALID_SOCKET )
-#else
-	if( a_nClientSocket < 0)
-#endif
+#ifdef MAKE_SOCKET_NONBLOCK
+#ifdef	_WIN32
 	{
-		return 0;
-	}
-
-#ifdef	WIN32
-	{
-		u_long non = 1;
+		u_long non = 0;
 		ioctlsocket( a_nClientSocket, FIONBIO, &non);
 	}
-#else
+#else  // #ifdef	_WIN32
 	int status;
 	if( (status = fcntl( a_nClientSocket, F_GETFL, 0 )) != -1)
 	{
 		status |= O_NONBLOCK;
 		fcntl( a_nClientSocket, F_SETFL, status );
 	}
-#endif
+#endif // #ifdef	_WIN32
+#endif // #ifdef MAKE_SOCKET_NONBLOCK
 
-	if (a_bufForRemAddress)
-	{
+	if (a_bufForRemAddress){
 		//struct sockaddr_in* pIncAddr = (struct sockaddr_in*)a_pIncAddr;
 		*a_bufForRemAddress = addr;
 	}
-
 
 	return 1;
 }
 
 
 
-int ServerTCP::CreateServer(int a_nPort, bool a_bReuse,bool a_bLoopback)
+int common::ServerTCP::CreateServer(int a_nPort, bool a_bReuse,bool a_bLoopback)
 {
+	struct sockaddr_in addr;
+	int rtn = -1,addr_len;
 	char l_host[MAX_HOSTNAME_LENGTH];
-	int rtn = -1;
-
-	closeC();
 
     m_socket = (int)socket( AF_INET, SOCK_STREAM, 0 );
-	if (m_socket < 0) { return m_socket; }
-	if(a_bReuse){
-		int i = 1;
-		setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, (char*)&i, sizeof(i));
-	}
+	if (CHECK_FOR_SOCK_INVALID(m_socket)) { return(E_NO_SOCKET); }
+	
+	if(a_bReuse){int i(1);setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, (char*)&i, sizeof(i));}
 
-#ifdef	WIN32
-	if( m_socket == INVALID_SOCKET)
-#else
-	if( m_socket < 0 )
-#endif
-		return(E_NO_SOCKET);
+	if (gethostname(l_host, MAX_HOSTNAME_LENGTH) < 0){return E_UNKNOWN_HOST;}
 
-
-	if( gethostname( l_host, MAX_HOSTNAME_LENGTH ) < 0 )
-		return E_UNKNOWN_HOST;
-
-
-	struct sockaddr_in addr;
 	memset( (char *)&addr, 0, sizeof(struct sockaddr_in));
 	addr.sin_family	= AF_INET;
-#ifdef	WIN32
-	addr.sin_port = htons((u_short)a_nPort);
-#else
 	addr.sin_port = htons( a_nPort );
-#endif
 
 	addr.sin_addr.s_addr = htonl( (a_bLoopback ? INADDR_LOOPBACK : INADDR_ANY ) );
+	//addr.sin_addr.s_addr = htonl((a_bLoopback ? INADDR_LOOPBACK : INADDR_ANY));
 
-#ifdef	WIN32
+#ifdef MAKE_SOCKET_NONBLOCK
+#ifdef	_WIN32
 	{
 		u_long non = 1;
 		ioctlsocket( m_socket, FIONBIO, &non);
 	}
-#else
+#else  // #ifdef	_WIN32
 	int status;
 	if( (status = fcntl( m_socket, F_GETFL, 0 )) != -1)
 	{
@@ -248,25 +290,22 @@ int ServerTCP::CreateServer(int a_nPort, bool a_bReuse,bool a_bLoopback)
 		fcntl( m_socket, F_SETFL, status );
 	}
 #endif
+#endif  // #ifdef MAKE_SOCKET_NONBLOCK
 
-	int addr_len = sizeof(addr);
+	addr_len = sizeof(addr);
 	rtn = bind( m_socket, (struct sockaddr *) &addr, addr_len );
+	if( CHECK_FOR_SOCK_ERROR(rtn) ){return(E_NO_BIND);}
 
-#ifdef	WIN32
-	if( rtn == SOCKET_ERROR )
-#else
-	if( rtn < 0 )
-#endif
-		return(E_NO_BIND);
-
-	rtn = listen( m_socket, 64);
-
-#ifdef	WIN32
-	if( rtn == SOCKET_ERROR )
-#else
-	if( rtn < 0 )
-#endif
-		return(E_NO_LISTEN);
+	rtn = ::listen( m_socket, 64);
+	if (CHECK_FOR_SOCK_ERROR(rtn)) { return(E_NO_LISTEN); }
 
 	return 0;
 }
+
+
+#ifndef _WIN32
+static void SigActionFunction (int, siginfo_t * , void *)
+{
+    //
+}
+#endif  // #ifndef _WIN32

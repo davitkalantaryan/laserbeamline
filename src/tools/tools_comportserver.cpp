@@ -54,13 +54,13 @@ void tools::ComServer::AddClient(common::SocketTCP& a_ClientSocket, const sockad
 	char vcBufferProg[PROG_BUFFER1 + 1], vcBufferDev[DEVICE_BUFFER1 + 1];
 	bool bDebug;
 
-	GetHostName(a_bufForRemAddress, vcBufferProg, PROG_BUFFER1);
+	::common::socketN::GetHostName(a_bufForRemAddress, vcBufferProg, PROG_BUFFER1);
 	vcBufferProg[PROG_BUFFER1] = 0;
 	printf("+++++++++++ Connection from host \"%s\"\n", vcBufferProg);
 	m_pCurSocket = &a_ClientSocket;
 
 	while (1) {
-		dwReadProg = a_ClientSocket.readC(vcBufferProg, PROG_BUFFER1, -1);
+		dwReadProg = a_ClientSocket.readAny(vcBufferProg, PROG_BUFFER1);
 		if (dwReadProg > 0) {
 
 			if (g_nDebugLevel>0) {
@@ -88,7 +88,7 @@ void tools::ComServer::AddClient(common::SocketTCP& a_ClientSocket, const sockad
 	} // while (1) {
 
 	m_pCurSocket = NULL;
-	GetHostName(a_bufForRemAddress, vcBufferProg, PROG_BUFFER1);
+	::common::socketN::GetHostName(a_bufForRemAddress, vcBufferProg, PROG_BUFFER1);
 	vcBufferProg[PROG_BUFFER1] = 0;
 	printf("----------- Client from host \"%s\" disconnected\n", vcBufferProg);
 }

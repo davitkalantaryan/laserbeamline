@@ -5,7 +5,7 @@
 #ifndef __tools_comportserver_hpp__
 #define __tools_comportserver_hpp__
 
-#include "common_servertcp.hpp"
+#include "common/common_servertcp.hpp"
 #include "pitz_rpi_tools_serial.hpp"
 #include "mutex_cpp11.hpp"
 

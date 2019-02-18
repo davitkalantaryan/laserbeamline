@@ -5,8 +5,8 @@
 #ifndef __tools_ioproxyserver_hpp__
 #define __tools_ioproxyserver_hpp__
 
-#include "common_servertcp.hpp"
-#include "common_iodevice.hpp"
+#include <common/common_servertcp.hpp>
+#include <common/common_iodevice.hpp>
 #include "mutex_cpp11.hpp"
 
 namespace tools{

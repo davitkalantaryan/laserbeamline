@@ -24,8 +24,8 @@
 
 #define	_REAL_SERIAL_PORT_NAME_	L"\\.\\COM1"
 
-#ifdef __ARM
-#define	_SERIAL_PORT_NAME_	"\\\\?\\ACPI#BCM2836#0#{86e0d1e0-8089-11d0-9ce4-08003e301f73}"
+#ifdef _M_ARM
+#define	_SERIAL_PORT_NAME_	L"\\\\?\\ACPI#BCM2836#0#{86e0d1e0-8089-11d0-9ce4-08003e301f73}"
 #else  // #ifdef __ARM
 //#define	_SERIAL_PORT_NAME_	"COM1"
 #define	_SERIAL_PORT_NAME_	L"\\.\\COM4"
@@ -216,12 +216,13 @@ int _tmain(int argc, wchar_t* argv[])
 
 retiurnPoint:
 	
-#ifndef __ARM
-	//Sleep(100000);
 	s_serialVirt.CloseCom();
 	s_serialReal.CloseCom();
+#ifndef __NO_GETCH
+	//Sleep(100000);
 	printf("Press any key to exit!"); fflush(stdout);
 	_getch();
+	printf("\n");
 #endif
 
 	return 0;

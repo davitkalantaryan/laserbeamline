@@ -5,6 +5,12 @@
 #ifndef __common_iodevice_hpp__
 #define __common_iodevice_hpp__
 
+#if defined(_MSC_VER) & (_MSC_VER>=1913)
+#ifndef CINTERFACE
+#define CINTERFACE
+#endif
+#endif
+
 #include <stddef.h>
 
 namespace common{
@@ -20,9 +26,10 @@ public:
 	virtual bool	isOpenC(void)const { return false; }
 	virtual void	closeC(void);
 
-	virtual int		readC (void* buffer, int bufferLen, int timeoutMS)const = 0;
-	virtual int		readC(void* buffer, int bufferLen)const;
+	virtual int		readC(void* buffer, int bufferLen)const=0;
 	virtual int		writeC(const void* buffer, int bufferLen)=0;
+
+	virtual int		setTimeout(int timeoutMS) = 0;
 
 	common::IODevice& operator=(const common::IODevice& aM);
 	virtual common::IODevice* Clone()const;

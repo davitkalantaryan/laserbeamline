@@ -2,7 +2,7 @@
 // common_iodevicelerner.cpp
 // 2017 Jul 21
 
-#include "common_iodevicelerner.hpp"
+#include "common/common_iodevicelerner.hpp"
 #include <malloc.h>
 #include <memory.h>
 
@@ -39,7 +39,7 @@ void common::IoDeviceLerner::SetAndGet(const ::common::SMem& a_input, ::common::
 		m_table.AddEntry(a_input.mem, a_input.size, pEntry);
 	}
 	*a_pnSet = m_pDevice->writeC(a_input.mem, a_input.size);
-	*a_pnGet = m_pDevice->readC(a_pOutput->mem, a_pOutput->size,pEntry->timeoutMs);
+	*a_pnGet = m_pDevice->readC(a_pOutput->mem, a_pOutput->size);
 
 	// recalculate timeout
 	if(*a_pnGet>0){

@@ -5,6 +5,7 @@
 #ifndef __tools_ioproxy_common_header_h__
 #define __tools_ioproxy_common_header_h__
 
-#define IO_PROXY_PORT_NAME	9040
+//#define IO_PROXY_PORT_NAME	9040
+#define IO_PROXY_PORT_NAME	4040
 
 #endif  // #ifndef __tools_ioproxy_common_header_h__

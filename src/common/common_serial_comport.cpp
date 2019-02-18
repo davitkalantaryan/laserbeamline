@@ -10,7 +10,7 @@
  *
  */
 
-#include "common_serial_comport.hpp"
+#include "common/common_serial_comport.hpp"
 
 #define MAKE_MINUS(_x_) ((_x_)>0 ? -(_x_):(_x_))
 

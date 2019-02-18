@@ -18,8 +18,7 @@
 #include "common_argument_parser.hpp"
 #include "tools_ioproxy_common_header.h"
 
-#define	VIRT_SERIAL_PORT_NAME		"\\.\\COM6"
-#define	DEVICE_HOST2				"znpi02"
+#define	VIRT_SERIAL_PORT_NAME		"\\.\\COM2"
 
 static void TwoComInOne(pitz::rpi::tools::Serial* a_prog, common::SocketTCP* a_device);
 static bool PrintProgramStrings3(int a_nLength, const char* a_string);
@@ -39,8 +38,8 @@ int main(int argc, char* argv[])
 
 	printf("version 4!\n");
 
-	aParser.AddOption("--host-name", 1, DEVICE_HOST2).AddOption("--com-name",1, VIRT_SERIAL_PORT_NAME);
-	aParser.AddOption("-hn", 1, DEVICE_HOST2).AddOption("-cn", 1, VIRT_SERIAL_PORT_NAME);
+	aParser.AddOption("--host-name", 1, " ").AddOption("--com-name",1, VIRT_SERIAL_PORT_NAME);
+	aParser.AddOption("-hn", 1, " ").AddOption("-cn", 1, VIRT_SERIAL_PORT_NAME);
 	aParser.AddOption("--debug-level",1,"1").AddOption("-dl",1,"1");
 
 	aParser.ParseCommandLine(argc - 1, argv + 1);

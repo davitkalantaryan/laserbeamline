@@ -40,26 +40,50 @@
 #endif  // #ifndef __CPP11_DEFINED__
 #endif  // #ifndef __NOT_USE_CPP11__
 
+// Is C++14
+#ifndef __NOT_USE_CPP14__
+#ifndef __CPP14_DEFINED__
+#if defined(_MSC_VER)
+#if __cplusplus >= 199711L
+#define __CPP14_DEFINED__
+#endif // #if __cplusplus >= 199711L
+#elif defined(__GNUC__) // #if defined(_MSC_VER)
+#if __cplusplus > 201103L
+#define __CPP14_DEFINED__
+#endif // #if __cplusplus > 199711L
+#else // #if defined(_MSC_VER)
+#error this compiler is not supported
+#endif // #if defined(_MSC_VER)
+#endif  // #ifndef __CPP14_DEFINED__
+#endif  // #ifndef __NOT_USE_CPP14__
+
 // This should be done after check
 #ifdef __CPP11_DEFINED__
 #define __OVERRIDE__	override
+#define __FINAL__	final
 #else
 #define __OVERRIDE__
+#define __FINAL__
 #endif
-
-#ifdef __CPP11_DEFINED__
-#ifndef STDN
-#define STDN std
-#endif
-#endif  // #ifdef __CPP11_DEFINED__
 
 #include <stdarg.h>
+
+#ifdef __cplusplus
+template <typename FncType>
+static inline void* FUNCTION_POINTER_TO_VOID_POINTER(FncType _a_fnc_)
+{
+    FncType aFnc = _a_fnc_;
+    void** ppFnc = (void**)&aFnc;
+    void* pRet = *ppFnc;
+    return pRet;
+}
+#endif // #ifdef __cplusplus
 
 #ifdef __cplusplus
 extern "C"{
 #endif
 
-extern void* GetFuncPointer_common(int,...);
+//extern void* GetFuncPointer_common(int,...);
 
 #ifdef __cplusplus
 }

@@ -13,7 +13,7 @@
 #define __com_port_global_functions_h__
 
 #include "pitz_rpi_tools_serial.hpp"
-#include "common_serial_comport.hpp"
+#include "common/common_serial_comport.hpp"
 
 typedef int SerialParityT;
 namespace SerialParity{

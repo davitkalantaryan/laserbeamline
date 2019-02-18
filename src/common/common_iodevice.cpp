@@ -2,7 +2,7 @@
 // common_iodevice.cpp
 // 2017 Jul 6
 
-#include "common_iodevice.hpp"
+#include "common/common_iodevice.hpp"
 
 common::IODevice::IODevice()
 	:
@@ -61,10 +61,4 @@ void common::IODevice::cloneFromOther(const common::IODevice& a_cM)
 common::IODevice* common::IODevice::Clone()const
 {
 	return NULL;
-}
-
-
-int common::IODevice::readC(void* a_buffer, int a_bufferLen)const
-{
-	return readC(a_buffer, a_bufferLen, -1);
 }

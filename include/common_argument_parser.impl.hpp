@@ -23,6 +23,7 @@
 #ifdef __cplusplus
 
 
+#if 0
 template <typename TypeArgc, typename TypeArgv>
 void common::argument_parser::ParseCommandLine(TypeArgc a_argc, TypeArgv a_argv[])
 {
@@ -54,6 +55,7 @@ void common::argument_parser::ParseCommandLine(TypeArgc a_argc, TypeArgv a_argv[
 		}
 	}// for (int i(0); i<a_argc;)
 }
+#endif  //  #if 0
 
 
 #else   // #ifdef __cplusplus

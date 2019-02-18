@@ -31,7 +31,9 @@ public:
 
 	int				Read2(void* buffer, int bufLen, int timeoutFirstMs, int timeoutBtwMs);
 	int				OpenCom(const char* comPortName);
+
 	int				SetReadTimeouts(int timeoutFirstMs, int timeoutBtwMs);
+	int				setTimeout(int a_timeoutMS) {return SetReadTimeouts(a_timeoutMS, a_timeoutMS);}
 
 	int SetupCommState(const DCB* DcbPtr, const COMMTIMEOUTS* timeouts = NULL,
 		int inQueue = 512, int outQueue = 512);

@@ -10,10 +10,10 @@
  *
  */
 //#include "pitz_rpi_tools_serial.hpp"
-#include "common_serial_comport.hpp"
+#include "common/common_serial_comport.hpp"
 #include <stdio.h>
 #include <tchar.h>
-#include <common_servertcp.hpp>
+#include <common/common_servertcp.hpp>
 #include <string>
 #include "com_port_global_functions.h"
 #include "tools_comportserver.hpp"
@@ -50,14 +50,14 @@ int main()
 	//tools::ComServer aServer;
 	tools::IoProxyServer aServer;
 
-	common::SocketBase::Initialize();
+	common::socketN::Initialize();
 	PrepareSerial2(&aSerial, _REAL_SERIAL_PORT_NAME_);
 	aSerial.SetReadTimeouts(45, 8);
 	printf("version 12\n");
 	aServer.SetIoDevice(&aSerial);
 	aServer.StartServerN();
 	aSerial.closeC();
-	common::SocketBase::Cleanup();
+	common::socketN::Cleanup();
 
 	return 0;
 }

@@ -12,14 +12,17 @@
 #ifndef MUTEX_CPP11_HPP
 #define MUTEX_CPP11_HPP
 
-#include <common_defination.h>
+#include "common/common_defination.h"
 
 #ifdef __CPP11_DEFINED__
 #include <mutex>
+namespace STDN {
+typedef std::mutex  mutex;
+}
 #else  // #ifdef __CPP11_DEFINED__
 
 #include <stddef.h>
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 #else
 #include <pthread.h>
@@ -27,7 +30,7 @@
 
 namespace STDN{
 
-#ifdef WIN32
+#ifdef _WIN32
 typedef ::HANDLE  mutex_native_handle;
 #else
 typedef ::pthread_mutex_t mutex_native_handle;

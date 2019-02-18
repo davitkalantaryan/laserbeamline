@@ -17,33 +17,47 @@
 
 #include <string>
 #include <map>
+#include <vector>
+
+#define SHORTCUTS_DELIM_SYMBOL2	','
+#define INFO_START_DELIM		':'
+
+typedef class CInputBase*		TInputBase;
+//typedef char*					TcharPtr;
+struct InfoAndCleanPair;
 
 namespace common
 {
+	namespace argumentParser{namespace argType { enum Type { noArg, rightArg, leftArg, bougthArg }; }}
 	class argument_parser
 	{
 	public:
 		argument_parser();
 		virtual ~argument_parser();
 
-		argument_parser& AddOption(const std::string& optionName,int isArg, const std::string& defValue); // adding new option
+		argument_parser& AddOption(
+			const std::string& optionName, 
+			argumentParser::argType::Type isArg= argumentParser::argType::rightArg,
+			const char* defRight=NULL, const char* defLeft = NULL); // adding new option
 		argument_parser& operator<<(const std::string& optionName); // adding new option
-        const char* operator[](const char* option_name); // find option value
-		template <typename TypeArgc, typename TypeArgv>
-		void	ParseCommandLine(TypeArgc argc, TypeArgv argv[]);
+        const char* operator[](const char* option_name); // find option Right 
+		const char* valueLeft(const char* option_name); // find option Left value
+		void	ParseCommandLine(int& argc, char** argv);
         std::string	HelpString()const;
+		void Clear();
+
+    protected:
+        void SetRightOptionValueIfNeeded(TInputBase a_pOption, const char* a_value);
 
 	private:
-		struct SInput{ int isArg; std::string defaultValue; };
-
-	private:
-        std::map<std::string,std::string>	m_htOptionsFound;
-        std::map<std::string, SInput>		m_htOptionsIn2;
+		size_t								m_unMaxForHelp;
+        std::map<std::string,TInputBase>	m_htOptionsInAndOut;
+		std::vector<InfoAndCleanPair>		m_vectForHelp;
 	};
 
 }
 
-#include "common_argument_parser.impl.hpp"
+//#include "common_argument_parser.impl.hpp"
 
 
 #else   // #ifdef __cplusplus
