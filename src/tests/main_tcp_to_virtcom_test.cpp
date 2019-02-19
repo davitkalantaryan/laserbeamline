@@ -23,9 +23,11 @@
 
 typedef ::common::tools::SDataForReadAndTransfer TDataForOverlappeedReadCom, TDataForOverlappeedReadSock;
 
-//static bool PrintProgramStrings3(int a_nLength, const char* a_string);
 
 static int s_nDebugLevel = 1;
+
+static void FromCom(void*, const char*, int);
+static void FromSock(void*, const char* a_Buffer, int a_size);
 
 int main(int a_argc, char* a_argv[])
 {
@@ -41,8 +43,8 @@ int main(int a_argc, char* a_argv[])
 	char vcBufferCom[PROG_BUFFER1 + 1], vcBufferSock[PROG_BUFFER1 + 1];
 
 #ifdef _WIN32
-	TDataForOverlappeedReadSock ovrReadSock(NULL,vcBufferSock, PROG_BUFFER1,&serialProg,NULL);
-	TDataForOverlappeedReadCom ovrReadCom(NULL,vcBufferCom, PROG_BUFFER1,&aSocket,NULL);
+	TDataForOverlappeedReadSock ovrReadSock(NULL,vcBufferSock, PROG_BUFFER1,&serialProg,NULL, FromSock);
+	TDataForOverlappeedReadCom ovrReadCom(NULL,vcBufferCom, PROG_BUFFER1,&aSocket,NULL, FromCom);
 	BOOL bRetByReadEx;
 #else
 #endif
@@ -127,21 +129,14 @@ returnPoint:
 }
 
 
-#if 0
-static bool PrintProgramStrings3(int a_nLength, const char* a_vcBufferProg)
+static void FromCom(void*, const char* a_Buffer, int a_size)
 {
-	static std::map<std::string, int> sExist;
-	std::string aStrToPrintProg;
-
-	if (a_nLength>2) { aStrToPrintProg = std::string(a_vcBufferProg, a_nLength - 2); }
-	else { aStrToPrintProg = "UnknownFormat"; }
-
-	//if(sExist.count(aStrToPrintProg)){return false;}
-	//sExist.insert(std::pair<std::string,int>(aStrToPrintProg,1));
-	printf("+++++ program (length=%d): %s\n", a_nLength, aStrToPrintProg.c_str());
-	//if(a_nLength>0){printf("code={%d",(int)a_vcBufferProg[0]);}
-	//for(int i(1);i<a_nLength;++i){printf(",%d", a_vcBufferProg[i]);}
-	//if(a_nLength>0){printf("}\n");}
-	return true;
+	if(a_size){
+		fwrite(a_Buffer, 1, a_size, stdout);
+	}
 }
-#endif  // #if 0
+
+
+static void FromSock(void*, const char* , int )
+{
+}

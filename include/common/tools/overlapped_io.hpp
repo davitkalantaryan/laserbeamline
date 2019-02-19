@@ -17,6 +17,8 @@
 
 namespace common{ namespace tools{
 
+typedef void(*ClbkType)(void*,const char*,int);
+
 #ifdef _WIN32
 
 VOID WINAPI OVERLAPPED_READ_COMPLETION_ROUTINE_GEN(
@@ -32,12 +34,13 @@ struct SDataForReadAndTransfer
 	size_t				bufSize;
 	IODevice*			pToSend;
 	void*				pCallBack;
+	ClbkType			clbkFunc;
 	volatile uint32_t	run	: 1;
 	uint32_t			sendOk : 1;
 	int32_t				error : 20;
 
 public:  // this
-	SDataForReadAndTransfer(HANDLE a_handle, char* a_buffer, size_t bufSize, IODevice* a_pToSend, void* pCallBack);
+	SDataForReadAndTransfer(HANDLE a_handle, char* a_buffer, size_t bufSize, IODevice* a_pToSend, void* pCallBack, ClbkType a_fpClbk);
 };
 #else
 #endif

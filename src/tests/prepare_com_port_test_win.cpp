@@ -83,8 +83,8 @@ int PrepareSerial2(common::serial::ComPort* a_pSerial, const char* a_portName)
 #endif
 
 	actualDcb.BaudRate = 19200;
-	aTimeouts.ReadTotalTimeoutMultiplier = 0;
-	aTimeouts.ReadTotalTimeoutConstant = 5;
+	aTimeouts.ReadTotalTimeoutMultiplier = 10;
+	aTimeouts.ReadTotalTimeoutConstant = 50000;
 	aTimeouts.WriteTotalTimeoutMultiplier = 0;
 	aTimeouts.WriteTotalTimeoutConstant = 5;
 	if (a_pSerial->SetupCommState(&actualDcb, &aTimeouts)) {

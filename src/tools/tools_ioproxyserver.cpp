@@ -12,12 +12,14 @@
 
 extern int g_nDebugLevel;
 
-static bool PrintProgramString(char* a_vcBufferProg, int a_nReceived);
+static void FromSock(void*, const char*, int);
+static void FromCom(void*, const char* a_Buffer, int a_size);
+
 
 tools::IoProxyServer::IoProxyServer()
 #ifdef _WIN32
 	:
-		m_overlappedCom(NULL,m_vcBuffrForIo, PROG_BUFFER1,NULL,this)
+		m_overlappedCom(NULL,m_vcBuffrForIo, PROG_BUFFER1,NULL,this, FromCom)
 #endif
 {
 	m_pIoDevice = NULL;
@@ -92,7 +94,7 @@ void tools::IoProxyServer::AddClient(common::SocketTCP& a_ClientSocket, const so
 
 	if(!m_pIoDevice){return;}
 #ifdef _WIN32
-	TDataForOverlappeedReadSock ovrReadSock((HANDLE)a_ClientSocket.handle(),vcBufferProg, PROG_BUFFER1,m_pIoDevice,this);
+	TDataForOverlappeedReadSock ovrReadSock((HANDLE)a_ClientSocket.handle(),vcBufferProg, PROG_BUFFER1,m_pIoDevice,this, FromSock);
 	BOOL bRetByReadEx;
 #else
 #endif
@@ -138,21 +140,14 @@ returnPoint:
 }
 
 
-static bool PrintProgramString(char* a_vcBufferProg, int a_nReceived)
+static void FromSock(void*, const char* , int )
 {
-#if 0
-	return false;
-#else
-	static const char* scpcFilter = "getswst";
-	std::string aStrToPrintProg;
+}
 
-	if (a_nReceived>2) { aStrToPrintProg = std::string(a_vcBufferProg, a_nReceived - 2); }
-	else { aStrToPrintProg = "UnknownFowmat"; }
 
-	//if (!strstr(aStrToPrintProg.c_str(), scpcFilter)) { return false; }
-
-	printf("+++++ program : %s\n", aStrToPrintProg.c_str());
-
-	return true;
-#endif
+static void FromCom(void*, const char* a_Buffer, int a_size)
+{
+	if (a_size) {
+		fwrite(a_Buffer, 1, a_size, stdout);
+	}
 }

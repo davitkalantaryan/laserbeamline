@@ -8,13 +8,14 @@
 #define lblcontainer_of(_ptr,_type,_member) (_type*)(  ((char*)(_ptr)) + (size_t)( (char*)(&((_type *)0)->_member) )  )
 #endif
 
-::common::tools::SDataForReadAndTransfer::SDataForReadAndTransfer(HANDLE a_handle, char* a_buffer, size_t a_bufSize, IODevice* a_pToSend, void* a_pCallBack)
+::common::tools::SDataForReadAndTransfer::SDataForReadAndTransfer(HANDLE a_handle, char* a_buffer, size_t a_bufSize, IODevice* a_pToSend, void* a_pCallBack, ClbkType a_fpClbk)
 	:
 	handle(a_handle),
 	pcBuffer(a_buffer),
 	bufSize(a_bufSize),
 	pToSend(a_pToSend),
-	pCallBack(a_pCallBack)
+	pCallBack(a_pCallBack),
+	clbkFunc(a_fpClbk)
 {
 	this->ovrlp = { 0 };
 	this->error = 0;
@@ -38,6 +39,7 @@ VOID WINAPI OVERLAPPED_READ_COMPLETION_ROUTINE_GEN(
 		BOOL bRetByReadEx;
 		if(  (pReadStr->pToSend&&a_dwNumberOfBytesTransfered)&&(pReadStr->pToSend->writeC(pReadStr->pcBuffer,a_dwNumberOfBytesTransfered)>0)  ){ pReadStr->sendOk=1;}
 		else {pReadStr->sendOk = 0;}
+		(*pReadStr->clbkFunc)(pReadStr->pCallBack,pReadStr->pcBuffer,a_dwNumberOfBytesTransfered);
 		bRetByReadEx = ReadFileEx(
 			pReadStr->handle,
 			pReadStr->pcBuffer,
