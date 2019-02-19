@@ -10,7 +10,7 @@
 #ifdef _WIN32
 #include <WinSock2.h>
 #include <WS2tcpip.h>
-#include <windows.h>
+#include <Windows.h>
 typedef HANDLE	COM_HANDLE;
 #define	INVALID_COM_HANDLE	 INVALID_HANDLE_VALUE 
 #else
@@ -28,6 +28,7 @@ public:
 	virtual int		writeC(const void* buffer, int bufferLen);
 	virtual int		readC(void* buffer, int bufferLen, int timeoutMS)const;
 	virtual int		readC(void* buffer, int bufferLen)const;
+	ptrdiff_t		handle() {return (ptrdiff_t)m_handle;}
 
 	int				Read2(void* buffer, int bufLen, int timeoutFirstMs, int timeoutBtwMs);
 	int				OpenCom(const char* comPortName);

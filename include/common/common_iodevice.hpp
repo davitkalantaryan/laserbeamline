@@ -12,6 +12,7 @@
 #endif
 
 #include <stddef.h>
+#include <stdint.h>
 
 namespace common{
 
@@ -23,13 +24,14 @@ public:
 	IODevice(const common::IODevice& cM);
 	virtual ~IODevice();
 
-	virtual bool	isOpenC(void)const { return false; }
-	virtual void	closeC(void);
+	virtual bool		isOpenC(void)const { return false; }
+	virtual void		closeC(void);
 
-	virtual int		readC(void* buffer, int bufferLen)const=0;
-	virtual int		writeC(const void* buffer, int bufferLen)=0;
+	virtual int			readC(void* buffer, int bufferLen)const=0;
+	virtual int			writeC(const void* buffer, int bufferLen)=0;
 
-	virtual int		setTimeout(int timeoutMS) = 0;
+	virtual int			setTimeout(int timeoutMS) = 0;
+	virtual ptrdiff_t	handle()=0;
 
 	common::IODevice& operator=(const common::IODevice& aM);
 	virtual common::IODevice* Clone()const;

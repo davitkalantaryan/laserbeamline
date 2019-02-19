@@ -263,6 +263,7 @@
     <ClCompile Include="..\..\..\src\common\common_servertcp.cpp" />
     <ClCompile Include="..\..\..\src\common\common_socketbase.cpp" />
     <ClCompile Include="..\..\..\src\common\common_sockettcp.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_tools_overlapped_io.cpp" />
     <ClCompile Include="..\..\..\src\cpp11\mutex_cpp11.cpp" />
     <ClCompile Include="..\..\..\src\cpp11\thread_cpp11.cpp" />
     <ClCompile Include="..\..\..\src\tests\main_realcom_to_tcp_test.cpp" />
@@ -272,6 +273,7 @@
     <ClCompile Include="..\..\..\src\tools\tools_ioproxyserver.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\common\tools\overlapped_io.hpp" />
     <ClInclude Include="..\..\..\include\common_argument_parser.hpp" />
     <ClInclude Include="..\..\..\include\common_argument_parser.impl.hpp" />
     <ClInclude Include="..\..\..\include\common_hashtbl.hpp" />

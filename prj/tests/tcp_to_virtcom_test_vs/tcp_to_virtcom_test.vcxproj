@@ -253,6 +253,7 @@
     <ClCompile Include="..\..\..\src\common\common_serial_comport.cpp" />
     <ClCompile Include="..\..\..\src\common\common_socketbase.cpp" />
     <ClCompile Include="..\..\..\src\common\common_sockettcp.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_tools_overlapped_io.cpp" />
     <ClCompile Include="..\..\..\src\tests\main_tcp_to_virtcom_test.cpp" />
     <ClCompile Include="..\..\..\src\tests\prepare_com_port_test_win.cpp" />
     <ClCompile Include="..\..\..\src\tools\pitz_rpi_tools_serial.cpp" />

@@ -7,9 +7,16 @@
 
 #include <common/common_servertcp.hpp>
 #include <common/common_iodevice.hpp>
+#include <common/tools/overlapped_io.hpp>
 #include "mutex_cpp11.hpp"
 
+#define PROG_BUFFER1	511
+
 namespace tools{
+
+class IoProxyServer;
+
+typedef ::common::tools::SDataForReadAndTransfer TDataForOverlappeedReadCom, TDataForOverlappeedReadSock;
 
 
 class IoProxyServer : protected common::ServerTCP
@@ -18,18 +25,26 @@ public:
 	IoProxyServer();
 	virtual ~IoProxyServer();
 
-	void SetIoDevice(common::IODevice* serial);
+	int  SetIoDevice(common::IODevice* serial);
 	void SetMutex(STDN::mutex* mutex);
 	void StartServerN(void);
 	void StopServerN(void);
+
+	// new
+	int SendToCom(const char* a_cpcBuffer, int a_nBufLen);
+	int SendToClient(const char* a_cpcBuffer, int a_nBufLen);
 
 protected:
 	virtual void AddClient(common::SocketTCP& clientSocket, const sockaddr_in* bufForRemAddress);
 
 protected:
+#ifdef _WIN32
+	TDataForOverlappeedReadCom	m_overlappedCom;
+#endif
 	common::IODevice*			m_pIoDevice;
 	STDN::mutex*				m_pMutex;
 	common::SocketTCP*			m_pCurSocket;
+	char						m_vcBuffrForIo[PROG_BUFFER1+1];
 };
 
 }

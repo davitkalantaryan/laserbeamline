@@ -130,6 +130,7 @@ public:
 	virtual bool isOpenC(void)const;
 	virtual void closeC(void);
 	virtual int  setTimeout(int timeoutMs);
+	virtual ptrdiff_t	handle() {return (ptrdiff_t)m_socket;}
 	
 	common::SocketBase& operator=(const common::SocketBase& a_nSocket);
 

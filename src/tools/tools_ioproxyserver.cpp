@@ -6,8 +6,7 @@
 #include "tools_ioproxy_common_header.h"
 #include <stddef.h>
 
-#define PROG_BUFFER1	511
-#define DEVICE_BUFFER1	511
+//#define DEVICE_BUFFER1	511
 #define LOCK_IF(_mutex_ptr_)	if((_mutex_ptr_)){(_mutex_ptr_)->lock();}
 #define UNLOCK_IF(_mutex_ptr_)	if((_mutex_ptr_)){(_mutex_ptr_)->unlock();}
 
@@ -16,6 +15,10 @@ extern int g_nDebugLevel;
 static bool PrintProgramString(char* a_vcBufferProg, int a_nReceived);
 
 tools::IoProxyServer::IoProxyServer()
+#ifdef _WIN32
+	:
+		m_overlappedCom(NULL,m_vcBuffrForIo, PROG_BUFFER1,NULL,this)
+#endif
 {
 	m_pIoDevice = NULL;
 	m_pMutex = NULL;
@@ -40,9 +43,40 @@ void tools::IoProxyServer::StopServerN(void)
 }
 
 
-void tools::IoProxyServer::SetIoDevice(common::IODevice* a_pIoDevice)
+int tools::IoProxyServer::SendToCom(const char* a_cpcBuffer, int a_nBufLen)
+{
+	if((!m_pIoDevice)||(!m_pIoDevice->isOpenC())){return -1;}
+	return m_pIoDevice->writeC(a_cpcBuffer, a_nBufLen);
+}
+
+
+int tools::IoProxyServer::SendToClient(const char* a_cpcBuffer, int a_nBufLen)
+{
+	if ((!m_pCurSocket) || (!m_pCurSocket->isOpenC())) { return -1; }
+	return m_pCurSocket->writeC(a_cpcBuffer, a_nBufLen);
+}
+
+
+int tools::IoProxyServer::SetIoDevice(common::IODevice* a_pIoDevice)
 {
 	m_pIoDevice = a_pIoDevice;
+#if 0
+#ifdef _WIN32
+	BOOL bRetByReadEx;
+
+	m_overlappedCom.handle = (HANDLE)a_pIoDevice->handle();
+	m_overlappedCom.run = 1;
+	bRetByReadEx = ReadFileEx(
+		m_overlappedCom.handle,
+		m_vcBuffrForIo,
+		PROG_BUFFER1,
+		&m_overlappedCom.ovrlp,
+		&common::tools::OVERLAPPED_READ_COMPLETION_ROUTINE_GEN );
+	if (!bRetByReadEx) { m_overlappedCom.run=0;return -1; }
+#else
+#endif
+#endif
+	return 0;
 }
 
 
@@ -54,46 +88,49 @@ void tools::IoProxyServer::SetMutex(STDN::mutex* a_pMutex)
 
 void tools::IoProxyServer::AddClient(common::SocketTCP& a_ClientSocket, const sockaddr_in* a_bufForRemAddress)
 {
+	char vcBufferProg[PROG_BUFFER1 + 1];
 
 	if(!m_pIoDevice){return;}
-	std::string aStrToPrintProg, aStrToPrintDev;
-	int dwReadProg, dwReadDev;
-	char vcBufferProg[PROG_BUFFER1 + 1], vcBufferDev[DEVICE_BUFFER1 + 1];
-	bool bDebug;
+#ifdef _WIN32
+	TDataForOverlappeedReadSock ovrReadSock((HANDLE)a_ClientSocket.handle(),vcBufferProg, PROG_BUFFER1,m_pIoDevice,this);
+	BOOL bRetByReadEx;
+#else
+#endif
 
 	::common::socketN::GetHostName(a_bufForRemAddress, vcBufferProg, PROG_BUFFER1);
 	vcBufferProg[PROG_BUFFER1] = 0;
 	printf("+++++++++++ Connection from host \"%s\"\n", vcBufferProg);
 	m_pCurSocket = &a_ClientSocket;
 
-	while (1) {
-		dwReadProg = a_ClientSocket.readAny(vcBufferProg, PROG_BUFFER1);
-		if (dwReadProg > 0) {
+#ifdef _WIN32
 
-			if (g_nDebugLevel>0) {
-				bDebug = PrintProgramString(vcBufferProg, dwReadProg);
-			}
-			LOCK_IF(m_pMutex);
-			m_pIoDevice->writeC(vcBufferProg, dwReadProg);
-			dwReadDev = m_pIoDevice->readC(vcBufferDev, DEVICE_BUFFER1);
-			UNLOCK_IF(m_pMutex);
-			if ((g_nDebugLevel>0) && bDebug) { printf("----- device  : "); }
-			if (dwReadDev > 0) {
-				a_ClientSocket.writeC(vcBufferDev, dwReadDev);
-				aStrToPrintDev = std::string(vcBufferDev, dwReadDev);
-				if ((g_nDebugLevel>0) && bDebug) { printf("%s (length=%d)\n", aStrToPrintDev.c_str(), dwReadDev); }
-			}
-			else if (dwReadDev == 0) { a_ClientSocket.writeC("", 1); }
-			if ((g_nDebugLevel>0) && bDebug) { printf("\n"); }
+	m_overlappedCom.handle = (HANDLE)m_pIoDevice->handle();
+	m_overlappedCom.run = 1;
+	bRetByReadEx = ReadFileEx(
+		m_overlappedCom.handle,
+		m_vcBuffrForIo,
+		PROG_BUFFER1,
+		&m_overlappedCom.ovrlp,
+		&common::tools::OVERLAPPED_READ_COMPLETION_ROUTINE_GEN);
+	if (!bRetByReadEx) { m_overlappedCom.run = 0; goto returnPoint; }
 
-		} // if (dwReadProg > 0) {
-		else if (dwReadProg != _SOCKET_TIMEOUT_)
-		{
-			a_ClientSocket.closeC();
-			break;
-		}
-	} // while (1) {
+	bRetByReadEx = ReadFileEx(
+		ovrReadSock.handle,
+		vcBufferProg,
+		PROG_BUFFER1,
+		&ovrReadSock.ovrlp,
+		&common::tools::OVERLAPPED_READ_COMPLETION_ROUTINE_GEN );
+	if (!bRetByReadEx) { goto returnPoint; }
 
+	while(ovrReadSock.run && m_overlappedCom.run){
+		SleepEx(INFINITE, TRUE);
+	}
+
+#else   // #ifdef _WIN32
+#endif  // #ifdef _WIN32
+	
+returnPoint:
+	a_ClientSocket.closeC();
 	m_pCurSocket = NULL;
 	::common::socketN::GetHostName(a_bufForRemAddress, vcBufferProg, PROG_BUFFER1);
 	vcBufferProg[PROG_BUFFER1] = 0;

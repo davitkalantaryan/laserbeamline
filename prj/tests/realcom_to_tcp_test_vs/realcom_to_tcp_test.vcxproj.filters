@@ -60,6 +60,9 @@
     <ClCompile Include="..\..\..\src\common\common_iodevicelerner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_tools_overlapped_io.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp">
@@ -90,6 +93,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\tools_ioproxy_common_header.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\tools\overlapped_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

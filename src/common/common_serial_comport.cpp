@@ -142,7 +142,7 @@ int common::serial::ComPort::OpenCom(const char* a_comPortName)
 		0,
 		0,
 		OPEN_EXISTING,
-		0,
+		FILE_FLAG_OVERLAPPED,
 		0);
 
 	return m_handle != INVALID_HANDLE_VALUE ? 0 : -((int)GetLastError());

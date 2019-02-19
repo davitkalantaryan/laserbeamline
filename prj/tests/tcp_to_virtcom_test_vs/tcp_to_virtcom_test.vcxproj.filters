@@ -42,6 +42,9 @@
     <ClCompile Include="..\..\..\src\common\common_serial_comport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_tools_overlapped_io.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\com_port_global_functions.h">
