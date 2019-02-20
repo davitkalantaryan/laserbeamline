@@ -30,7 +30,8 @@ struct SDataForReadAndTransfer
 {
 	OVERLAPPED			ovrlp;
 	HANDLE				handle;
-	char*const			pcBuffer;
+	//char*const			pcBuffer;
+	char*			pcBuffer;
 	size_t				bufSize;
 	IODevice*			pToSend;
 	void*				pCallBack;

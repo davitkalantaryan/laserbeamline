@@ -11,8 +11,10 @@
  */
 //#include "pitz_rpi_tools_serial.hpp"
 #include "common/common_serial_comport.hpp"
+#include <common/common_argument_parser.hpp>
 #include <stdio.h>
 #include <tchar.h>
+#include <iostream>
 #include <common/common_servertcp.hpp>
 #include <string>
 #include "com_port_global_functions.h"
@@ -21,17 +23,21 @@
 #include "tools_ioproxyserver.hpp"
 
 #ifdef __ARM
-#define	_REAL_SERIAL_PORT_NAME_	"\\\\?\\ACPI#BCM2836#0#{86e0d1e0-8089-11d0-9ce4-08003e301f73}"
+//#define	_REAL_SERIAL_PORT_NAME_	"\\\\?\\ACPI#BCM2836#0#{86e0d1e0-8089-11d0-9ce4-08003e301f73}"
 #else  // #ifdef __ARM
-#define	_REAL_SERIAL_PORT_NAME_	"\\.\\COM1"
+//#define	_REAL_SERIAL_PORT_NAME_	"\\.\\COM1"
 #endif // #ifdef __ARM
 
 
 
 int g_nDebugLevel = 1;
 
-int main()
+int main(int a_argc, char* a_argv[])
 {
+	int argc = a_argc - 1;
+	char** argv = a_argv + 1;
+	const char* cpcSerialDeviceName;
+	::common::argument_parser aParser;
 #if 0
 	common::HashTbl<int> aHash(100);
 	int nResultt;
@@ -45,14 +51,37 @@ int main()
 	return 0;
 #endif
 
+	printf("version 4!\n");
+
+	aParser.AddOption("--com-name,-cn:Name of virtual com port").AddOption("--help,-h:Print this help");
+
+	aParser.ParseCommandLine(argc, argv);
+
+	if (aParser["--help"]) {
+		::std::cout << aParser.HelpString() << ::std::endl;
+		return 0;
+	}
+
+	cpcSerialDeviceName = aParser["--com-name"];
+	if(!cpcSerialDeviceName){
+		::std::cerr<<"Com name is not provided!"<< ::std::endl;
+		::std::cout << aParser.HelpString() << ::std::endl;
+		return -1;
+	}
+	printf("ComPortName=%s\n", cpcSerialDeviceName);
+
 	//pitz::rpi::tools::Serial aSerial;
 	common::serial::ComPort aSerial;
 	//tools::ComServer aServer;
 	tools::IoProxyServer aServer;
 
 	common::socketN::Initialize();
-	PrepareSerial2(&aSerial, _REAL_SERIAL_PORT_NAME_);
-	aSerial.SetReadTimeouts(45, 8);
+	if(aSerial.OpenCom(cpcSerialDeviceName)){
+		::std::cerr << "Unable to open serial "<< cpcSerialDeviceName << ::std::endl;
+		return -2;
+	}
+	MakeStatisticForCom(&aSerial);
+	//aSerial.SetReadTimeouts(45, 8);
 	printf("version 12\n");
 	aServer.SetIoDevice(&aSerial);
 	aServer.StartServerN();

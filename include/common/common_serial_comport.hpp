@@ -8,12 +8,15 @@
 #include "common_iodevice.hpp"
 
 #ifdef _WIN32
+
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <Windows.h>
+#ifndef INVALID_COM_HANDLE
 typedef HANDLE	COM_HANDLE;
 #define	INVALID_COM_HANDLE	 INVALID_HANDLE_VALUE 
-#else
+#endif
+#else   // #ifdef _WIN32
 #endif
 
 namespace common{ namespace serial{

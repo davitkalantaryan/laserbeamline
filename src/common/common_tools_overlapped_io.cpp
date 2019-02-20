@@ -33,13 +33,18 @@ VOID WINAPI OVERLAPPED_READ_COMPLETION_ROUTINE_GEN(
 {
 	HANDLE hOther;
 	SDataForReadAndTransfer* pReadStr = lblcontainer_of(a_lpOverlapped, SDataForReadAndTransfer, ovrlp);
+
+	(*pReadStr->clbkFunc)(pReadStr->pCallBack, pReadStr->pcBuffer, a_dwNumberOfBytesTransfered);
 	
 	if ((!a_dwErrorCode)||(a_dwErrorCode==ERROR_MORE_DATA)){
 		// if ((a_dwErrorCode == 0) && (a_dwNumberOfBytesTransfered != 0)){
 		BOOL bRetByReadEx;
-		if(  (pReadStr->pToSend&&a_dwNumberOfBytesTransfered)&&(pReadStr->pToSend->writeC(pReadStr->pcBuffer,a_dwNumberOfBytesTransfered)>0)  ){ pReadStr->sendOk=1;}
+		if (pReadStr->pToSend&&a_dwNumberOfBytesTransfered) { 
+			if (pReadStr->pToSend->writeC(pReadStr->pcBuffer, a_dwNumberOfBytesTransfered) > 0){pReadStr->sendOk = 1; }
+		}
+		//if(  (pReadStr->pToSend&&a_dwNumberOfBytesTransfered)&&(pReadStr->pToSend->writeC(pReadStr->pcBuffer,a_dwNumberOfBytesTransfered)>0)  ){ pReadStr->sendOk=1;}
 		else {pReadStr->sendOk = 0;}
-		(*pReadStr->clbkFunc)(pReadStr->pCallBack,pReadStr->pcBuffer,a_dwNumberOfBytesTransfered);
+		//(*pReadStr->clbkFunc)(pReadStr->pCallBack,pReadStr->pcBuffer,a_dwNumberOfBytesTransfered);
 		bRetByReadEx = ReadFileEx(
 			pReadStr->handle,
 			pReadStr->pcBuffer,

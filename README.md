@@ -10,3 +10,4 @@ Raspberry pi [serial interface]() interface will be used
 ## links  
 [web](https://davitkalantaryan.github.io/pitz-laserbeamline/)  
 [virt com1](https://freevirtualserialports.com/)  
+[virt com 2](http://com0com.sourceforge.net/)  

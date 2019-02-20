@@ -256,11 +256,10 @@
     <ClCompile Include="..\..\..\src\common\common_tools_overlapped_io.cpp" />
     <ClCompile Include="..\..\..\src\tests\main_tcp_to_virtcom_test.cpp" />
     <ClCompile Include="..\..\..\src\tests\prepare_com_port_test_win.cpp" />
-    <ClCompile Include="..\..\..\src\tools\pitz_rpi_tools_serial.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\common_argument_parser.hpp" />
-    <ClInclude Include="..\..\..\include\common_argument_parser.impl.hpp" />
+    <ClInclude Include="..\..\..\include\common\common_argument_parser.hpp" />
+    <ClInclude Include="..\..\..\include\common\common_argument_parser.impl.hpp" />
     <ClInclude Include="..\..\..\include\common_defination.h" />
     <ClInclude Include="..\..\..\include\common_iodevice.hpp" />
     <ClInclude Include="..\..\..\include\common_serial_comport.hpp" />

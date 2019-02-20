@@ -36,8 +36,18 @@ enum {
 }
 
 int MakeErrorReport(void);
+int PrepareSerial2_old(common::serial::ComPort* a_pSerial, const char* a_portName);
+int MakeStatisticForCom(common::serial::ComPort* a_pSerial);
+#ifdef _USE_PITZ_RPI_SERIAL
 int PrepareSerial(pitz::rpi::tools::Serial* a_pSerial, const char* a_portName);
-int PrepareSerial2(common::serial::ComPort* a_pSerial, const char* a_portName);
+#endif
+
+#ifdef __cplusplus
+
+template<typename SerialType>
+int MakeStatisticForComT(SerialType* a_pSerial);
+#include "impl.com_port_global_functions.h"
+#endif
 
 
 #endif  // #ifndef __com_port_global_functions_h__

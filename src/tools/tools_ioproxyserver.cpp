@@ -88,14 +88,29 @@ void tools::IoProxyServer::SetMutex(STDN::mutex* a_pMutex)
 }
 
 
+tools::TDataForOverlappeedReadSock ovrReadSock(NULL, NULL, 0, NULL, NULL, NULL);
+
 void tools::IoProxyServer::AddClient(common::SocketTCP& a_ClientSocket, const sockaddr_in* a_bufForRemAddress)
 {
 	char vcBufferProg[PROG_BUFFER1 + 1];
 
 	if(!m_pIoDevice){return;}
 #ifdef _WIN32
-	TDataForOverlappeedReadSock ovrReadSock((HANDLE)a_ClientSocket.handle(),vcBufferProg, PROG_BUFFER1,m_pIoDevice,this, FromSock);
+	//TDataForOverlappeedReadSock ovrReadSock((HANDLE)a_ClientSocket.handle(),vcBufferProg, PROG_BUFFER1,m_pIoDevice,NULL, FromSock);
 	BOOL bRetByReadEx;
+
+	// tmp
+	ovrReadSock.handle = (HANDLE)a_ClientSocket.handle();
+	ovrReadSock.pcBuffer = vcBufferProg;
+	ovrReadSock.bufSize = PROG_BUFFER1;
+	ovrReadSock.pToSend = m_pIoDevice;
+	ovrReadSock.pCallBack = &ovrReadSock;
+	ovrReadSock.clbkFunc = &FromSock;
+	// end tmp
+
+	ovrReadSock.pToSend = m_pIoDevice;
+	ovrReadSock.pCallBack = &ovrReadSock;
+	m_overlappedCom.pToSend = &a_ClientSocket;
 #else
 #endif
 
@@ -106,15 +121,17 @@ void tools::IoProxyServer::AddClient(common::SocketTCP& a_ClientSocket, const so
 
 #ifdef _WIN32
 
+#if 1
 	m_overlappedCom.handle = (HANDLE)m_pIoDevice->handle();
 	m_overlappedCom.run = 1;
 	bRetByReadEx = ReadFileEx(
 		m_overlappedCom.handle,
 		m_vcBuffrForIo,
-		PROG_BUFFER1,
+		5,
 		&m_overlappedCom.ovrlp,
 		&common::tools::OVERLAPPED_READ_COMPLETION_ROUTINE_GEN);
 	if (!bRetByReadEx) { m_overlappedCom.run = 0; goto returnPoint; }
+#endif
 
 	bRetByReadEx = ReadFileEx(
 		ovrReadSock.handle,
@@ -140,14 +157,23 @@ returnPoint:
 }
 
 
-static void FromSock(void*, const char* , int )
+static void FromSock(void* a_pClbk, const char* a_Buffer, int a_size)
 {
+	tools::TDataForOverlappeedReadSock* pClbk = (tools::TDataForOverlappeedReadSock*)a_pClbk;
+	// new
+	if (a_size>0) {
+		printf("request(size:%d): ", a_size);
+		fwrite(a_Buffer, 1, a_size, stdout);
+	}
 }
 
 
 static void FromCom(void*, const char* a_Buffer, int a_size)
 {
-	if (a_size) {
+	printf("reply(size:%d): ", a_size);
+	if (a_size>0) {
+		//printf("reply(size:%d): ",a_size);
 		fwrite(a_Buffer, 1, a_size, stdout);
 	}
+	else { printf("\n"); }
 }

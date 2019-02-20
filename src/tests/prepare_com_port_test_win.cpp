@@ -16,35 +16,21 @@
 #include "com_port_global_functions.h"
 
 
-static PCWSTR StringFromSerialParity(SerialParityT a_parity);
-static PCWSTR StringFromSerialStopBits(SerialStopBitsT a_stopBits);
-static PCWSTR StringFromDtrControl(DWORD a_dtrControl);
-static PCWSTR StringFromRtsControl(DWORD a_rtsControl);
-
 //int MakeErrorReport(void);
 //int PrepareSerial(pitz::rpi::tools::Serial* a_pSerial, const char* a_portName);
 
 //int PrepareSerial(pitz::rpi::tools::Serial* a_pSerial, const char* a_portName)
-int PrepareSerial2(common::serial::ComPort* a_pSerial, const char* a_portName)
+int MakeStatisticForCom(common::serial::ComPort* a_pSerial)
 {
 	DCB actualDcb;
 	COMMTIMEOUTS aTimeouts;
 	int nRet(0);
 
-	if (a_pSerial->OpenCom(a_portName)) {
-		nRet = MakeErrorReport();
-		goto returnPoint;
-	}
-
 	if (a_pSerial->GetCommStates(&actualDcb, &aTimeouts)) {
 		nRet = MakeErrorReport();
 		goto returnPoint;
 	}
-	printf(
-		"\n"
-		"                portName = %s\n",
-		a_portName);
-
+	
 	wprintf(
 		L"                    baud = %d\n"
 		L"                  parity = %s\n"
@@ -55,7 +41,8 @@ int PrepareSerial2(common::serial::ComPort* a_pSerial, const char* a_portName)
 		L" output CTS flow control = %s\n"
 		L"             DTR control = %s\n"
 		L"             RTS control = %s\n"
-		L" DSR circuit sensitivity = %s\n",
+		L" DSR circuit sensitivity = %s\n"
+		L"                timeouts = {%d,%d,%d,%d,%d}\n",
 		actualDcb.BaudRate,
 		StringFromSerialParity(actualDcb.Parity),
 		actualDcb.ByteSize,
@@ -65,22 +52,37 @@ int PrepareSerial2(common::serial::ComPort* a_pSerial, const char* a_portName)
 		actualDcb.fOutxCtsFlow ? L"on" : L"off",
 		StringFromDtrControl(actualDcb.fDtrControl),
 		StringFromRtsControl(actualDcb.fRtsControl),
-		actualDcb.fDsrSensitivity ? L"on" : L"off");
-
-#ifdef DO_DEBUG
-	printf(
-		"\tReadIntervalTimeout         =%d\n"
-		"\tReadTotalTimeoutMultiplier  =%d\n"
-		"\tReadTotalTimeoutConstant    =%d\n"
-		"\tWriteTotalTimeoutMultiplier =%d\n"
-		"\tWriteTotalTimeoutConstant   =%d\n\n",
+		actualDcb.fDsrSensitivity ? L"on" : L"off",
+		
 		aTimeouts.ReadIntervalTimeout,
 		aTimeouts.ReadTotalTimeoutMultiplier,
 		aTimeouts.ReadTotalTimeoutConstant,
 		aTimeouts.WriteTotalTimeoutMultiplier,
 		aTimeouts.WriteTotalTimeoutConstant);
-	goto retiurnPoint;
-#endif
+
+returnPoint:
+	if (nRet) { a_pSerial->closeC(); }
+	return nRet;
+}
+
+
+int PrepareSerial2_old(common::serial::ComPort* a_pSerial, const char* a_portName)
+{
+	DCB actualDcb;
+	COMMTIMEOUTS aTimeouts;
+	int nRet(0);
+
+	if (a_pSerial->OpenCom(a_portName)) {
+		nRet = MakeErrorReport();
+		goto returnPoint;
+	}
+
+	printf(
+		"\n"
+		"                portName = %s\n",
+		a_portName);
+
+	nRet = MakeStatisticForCom(a_pSerial);
 
 	actualDcb.BaudRate = 19200;
 	aTimeouts.ReadTotalTimeoutMultiplier = 10;
@@ -97,6 +99,8 @@ returnPoint:
 	return nRet;
 }
 
+
+#ifdef _USE_PITZ_RPI_SERIAL
 
 int PrepareSerial(pitz::rpi::tools::Serial* a_pSerial, const char* a_portName)
 {
@@ -171,6 +175,9 @@ returnPoint:
 }
 
 
+#endif  // #ifdef _USE_PITZ_RPI_SERIAL
+
+
 int MakeErrorReport(void)
 {
 	DWORD dwError = GetLastError();
@@ -196,7 +203,7 @@ int MakeErrorReport(void)
 
 /*/////////////////////////////////////////////////////////////////////////////*/
 
-static PCWSTR StringFromSerialParity(SerialParityT a_parity)
+PCWSTR StringFromSerialParity(SerialParityT a_parity)
 {
 	switch (a_parity) {
 	case SerialParity::None: return L"none";
@@ -209,7 +216,7 @@ static PCWSTR StringFromSerialParity(SerialParityT a_parity)
 }
 
 
-static PCWSTR StringFromSerialStopBits(SerialStopBitsT a_stopBits)
+PCWSTR StringFromSerialStopBits(SerialStopBitsT a_stopBits)
 {
 	switch (a_stopBits) {
 	case SerialStopBits::One: return L"1";
@@ -220,7 +227,7 @@ static PCWSTR StringFromSerialStopBits(SerialStopBitsT a_stopBits)
 }
 
 
-static PCWSTR StringFromDtrControl(DWORD a_dtrControl)
+PCWSTR StringFromDtrControl(DWORD a_dtrControl)
 {
 	switch (a_dtrControl) {
 	case DTR_CONTROL_ENABLE: return L"on";
@@ -231,7 +238,7 @@ static PCWSTR StringFromDtrControl(DWORD a_dtrControl)
 }
 
 
-static PCWSTR StringFromRtsControl(DWORD a_rtsControl)
+PCWSTR StringFromRtsControl(DWORD a_rtsControl)
 {
 	switch (a_rtsControl) {
 	case RTS_CONTROL_ENABLE: return L"on";

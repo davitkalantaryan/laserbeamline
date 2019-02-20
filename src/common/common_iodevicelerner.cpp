@@ -27,7 +27,7 @@ void common::IoDeviceLerner::SetAndGet(const ::common::SMem& a_input, ::common::
 {
 	SEntry* pEntry;
 
-	if(m_table.FindEntry(a_input.mem,a_input.size,&pEntry)){
+	if(m_table.FindEntry(a_input.mem,(uint32_t)a_input.size,&pEntry)){
 		if (pEntry->lastUpdate == m_lastUpdate){
 			*a_pOutput = pEntry->output;
 			return;
@@ -36,10 +36,10 @@ void common::IoDeviceLerner::SetAndGet(const ::common::SMem& a_input, ::common::
 	else{
 		pEntry = new SEntry(a_input,m_nTimeoutMsMax);
 		if(!pEntry){throw "Low memory!";}
-		m_table.AddEntry(a_input.mem, a_input.size, pEntry);
+		m_table.AddEntry(a_input.mem,(uint32_t)a_input.size, pEntry);
 	}
-	*a_pnSet = m_pDevice->writeC(a_input.mem, a_input.size);
-	*a_pnGet = m_pDevice->readC(a_pOutput->mem, a_pOutput->size);
+	*a_pnSet = m_pDevice->writeC(a_input.mem,(int)a_input.size);
+	*a_pnGet = m_pDevice->readC(a_pOutput->mem,(int)a_pOutput->size);
 
 	// recalculate timeout
 	if(*a_pnGet>0){

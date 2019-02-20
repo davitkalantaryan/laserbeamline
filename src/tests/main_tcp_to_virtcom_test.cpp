@@ -14,8 +14,9 @@
 #include "common/common_serial_comport.hpp"
 #include <stdio.h>
 #include <string>
+#include <iostream>
 #include "com_port_global_functions.h"
-#include "common_argument_parser.hpp"
+#include "common/common_argument_parser.hpp"
 #include "tools_ioproxy_common_header.h"
 #include <common/tools/overlapped_io.hpp>
 
@@ -36,16 +37,18 @@ int main(int a_argc, char* a_argv[])
 	const char* cpcSerialDeviceName;
 	const char* cpcDebugLevel;
 	common::SocketTCP aSocket;
-	common::serial::ComPort serialProg;
+	common::serial::ComPort aSerial;
 	common::argument_parser aParser;
 	int argc = a_argc - 1;
 	char** argv = a_argv + 1;
 	char vcBufferCom[PROG_BUFFER1 + 1], vcBufferSock[PROG_BUFFER1 + 1];
 
 #ifdef _WIN32
-	TDataForOverlappeedReadSock ovrReadSock(NULL,vcBufferSock, PROG_BUFFER1,&serialProg,NULL, FromSock);
+	TDataForOverlappeedReadSock ovrReadSock(NULL,vcBufferSock, PROG_BUFFER1,&aSerial,NULL, FromSock);
 	TDataForOverlappeedReadCom ovrReadCom(NULL,vcBufferCom, PROG_BUFFER1,&aSocket,NULL, FromCom);
 	BOOL bRetByReadEx;
+
+	ovrReadSock.pCallBack = &ovrReadSock;
 #else
 #endif
 
@@ -61,10 +64,19 @@ int main(int a_argc, char* a_argv[])
 
 	aParser.ParseCommandLine(argc, argv);
 
-	if(aParser["--help"]){ nReturn=0;goto returnPoint;}
+	if(aParser["--help"]){ 
+		::std::cout<<aParser.HelpString()<< ::std::endl; 
+		nReturn=0;
+		goto returnPoint;
+	}
 
 	cpcSerialDeviceName = aParser["--com-name"];
-	if (!cpcSerialDeviceName) { goto returnPoint; }
+	if (!cpcSerialDeviceName) { 
+		::std::cerr << "Com name is not provided!" << ::std::endl;
+		::std::cout << aParser.HelpString() << ::std::endl;
+		goto returnPoint; 
+	}
+	printf("ComPortName=%s\n", cpcSerialDeviceName);
 
 #ifdef DO_DEBUG
 	PrepareSerial(&serialProg, cpcSerialDeviceName);
@@ -77,16 +89,17 @@ int main(int a_argc, char* a_argv[])
 	cpcDebugLevel = aParser["--debug-level"];
 	if (cpcDebugLevel) { s_nDebugLevel= atoi(cpcDebugLevel); }
 
-	if (PrepareSerial2(&serialProg, cpcSerialDeviceName)) { 
+	if (aSerial.OpenCom(cpcSerialDeviceName)) {
 		nReturn = 1;
 		goto returnPoint;
 	}
+	MakeStatisticForCom(&aSerial);
 
 	//////////////////////////////////////////////////
 #ifdef _WIN32
 	
 	ovrReadCom.run = 1;
-	ovrReadCom.handle = (HANDLE)serialProg.handle();
+	ovrReadCom.handle = (HANDLE)aSerial.handle();
 
 	while (ovrReadCom.run) {
 		if (aSocket.connectC(cpcHostName, IO_PROXY_PORT_NAME,5000)) { continue; }
@@ -122,7 +135,7 @@ int main(int a_argc, char* a_argv[])
 	nReturn = 0;
 returnPoint:
 	aSocket.closeC();
-	serialProg.closeC();
+	aSerial.closeC();
 	common::socketN::Cleanup();
 
 	return nReturn;
@@ -131,12 +144,24 @@ returnPoint:
 
 static void FromCom(void*, const char* a_Buffer, int a_size)
 {
-	if(a_size){
+	printf("request(size:%d): ", a_size);
+	if(a_size>0){
+		if(a_size>1){printf(" preLastCode:%d: ", a_Buffer[a_size-2]);}
+		printf(" lastCode:%d: ", a_Buffer[a_size-1]);
+		////printf("request(size:%d): ", a_size);
+		//printf("{%c(%d)", a_Buffer[0], (int)a_Buffer[0]);
+		//for(int i(1);i<a_size;++i){printf(",%c(%d)", a_Buffer[i],(int)a_Buffer[i]);}
+		//printf("}; -> ");
 		fwrite(a_Buffer, 1, a_size, stdout);
 	}
 }
 
 
-static void FromSock(void*, const char* , int )
+static void FromSock(void*, const char* a_Buffer, int a_size)
 {
+	// new
+	if (a_size>0) {
+		printf("reply(size:%d): ", a_size);
+		fwrite(a_Buffer, 1, a_size, stdout);
+	}
 }
