@@ -9,14 +9,20 @@
  *
  *
  */
+
+
+#define USE_ASYNC_COM
+
 #include <common/common_argument_parser.hpp>
 #include <common/io/serial/async.hpp>
 #include <com_port_global_functions.h>
 #include <iostream>
 #include <string.h>
+#include <pitz_rpi_tools_serial.hpp>
 
-#define DEFAULT_TIMEOUT		1000 // 1s
-#define DEFAULT_ECHO_STRING	"1 nidenttify"
+#define DEFAULT_TIMEOUT		5000 // 1s
+#define DEFAULT_ECHO_STRING	"1 nidentify"
+//#define t					"1 nidentify"
 
 #ifndef lblcontainer_of
 #define lblcontainer_of(_ptr,_type,_member) (_type*)(  ((char*)(_ptr)) + (size_t)( (char*)(&((_type *)0)->_member) )  )
@@ -39,7 +45,6 @@ int main(int a_argc, char* a_argv[])
 	int nReturn = -1;
 	int argc = a_argc - 1;
 	int nRW;
-	DWORD dwSleepExReturn;
 	int nTimeout = DEFAULT_TIMEOUT;
 	char** argv = a_argv + 1;
 	const char* cpcSerialDeviceName;
@@ -48,9 +53,18 @@ int main(int a_argc, char* a_argv[])
 	char* pcStrinToEcho;
 	size_t unStrToEchoLen;
 	::common::argument_parser aParser;
-	::common::io::serial::Async aSerial(NULL, DefaultReadCallback,NULL);
+#ifdef _USE_PITZ_RPI_SERIAL
+	::pitz::rpi::tools::Serial aSerial;
+#elif defined(USE_ASYNC_COM)
+	::common::io::serial::Async aSerial(&nRW, DefaultReadCallback,NULL);
+#else
+	::common::io::serial::Sync aSerial;
+#endif
 	char vcBuffer[1024];
-	COMMTIMEOUTS aTimeouts = { 0 };
+	//COMMTIMEOUTS aTimeouts = { 65536,0,5,0,5 }; // works with sync
+	//COMMTIMEOUTS aTimeouts = { 65536,0,1000,0,1000 }; // works fine with sync and async
+	//COMMTIMEOUTS aTimeouts = { 65536,65536,65536,65536,65536 };
+	COMMTIMEOUTS aTimeouts = { 65536,0,65536,0,65536 };
 
 	printf("version 1!\n");
 
@@ -73,10 +87,16 @@ int main(int a_argc, char* a_argv[])
 	}
 	printf("ComPortName=%s\n", cpcSerialDeviceName);
 
-	if (aSerial.OpenCom(cpcSerialDeviceName)) {
+#ifdef _USE_PITZ_RPI_SERIAL
+	if(PrepareSerial(&aSerial,cpcSerialDeviceName)){goto reurnPoint;}
+#else
+	if (aSerial.openC(cpcSerialDeviceName)) {
 		::std::cerr << "Unable to open serial " << cpcSerialDeviceName << ::std::endl;
 		return -2;
 	}
+#endif
+	SetCommTimeouts((HANDLE)aSerial.handle(), &aTimeouts);
+	MakeStatisticForComT(&aSerial);
 
 	cpcStringToEchoInp = aParser["--echo-string"];
 	if(!cpcStringToEchoInp){ cpcStringToEchoInp =DEFAULT_ECHO_STRING;}
@@ -84,45 +104,30 @@ int main(int a_argc, char* a_argv[])
 	cpcTimeout = aParser["--timeout"];
 	if(cpcTimeout){nTimeout=atoi(cpcTimeout);}
 
-	::SetCommTimeouts((HANDLE)aSerial.handle(), &aTimeouts);
-	MakeStatisticForComT(&aSerial);
-
 	unStrToEchoLen = strlen(cpcStringToEchoInp);
 	//unStrToEchoLen += 4;
 	pcStrinToEcho=(char*)_alloca(unStrToEchoLen+4);
 	memcpy(pcStrinToEcho,cpcStringToEchoInp,unStrToEchoLen);
 	pcStrinToEcho[unStrToEchoLen++]=13;
-	pcStrinToEcho[unStrToEchoLen]=10;
-	pcStrinToEcho[unStrToEchoLen+1]=0;
-	printf("Sending string(len:%d) %s", (int)unStrToEchoLen,cpcStringToEchoInp); fflush(stdout);
+	pcStrinToEcho[unStrToEchoLen++]=10;
+	pcStrinToEcho[unStrToEchoLen]=0;
+	printf("Sending string(len:%d) %s", (int)unStrToEchoLen, pcStrinToEcho); fflush(stdout);
 
 	nRW=aSerial.writeC(pcStrinToEcho,(int)unStrToEchoLen);
 	if(nRW<0){goto reurnPoint;}
 
-	dwSleepExReturn = SleepEx(nTimeout, TRUE);
-	if(dwSleepExReturn==WAIT_IO_COMPLETION){printf("write without timeout!\n");}
-	else {printf("write timeout!!!\n");goto reurnPoint;}
+	nRW = aSerial.readC(vcBuffer, 1023);
+	if (nRW < 0) { goto reurnPoint; }
 
-#if 0
-	nRW=aSerial.readC(vcBuffer,1023);
-	if(nRW<0){goto reurnPoint;}
+#if defined(USE_ASYNC_COM) && !defined(_USE_PITZ_RPI_SERIAL)
+	if (aSerial.WaitForWriteComplation(nTimeout)) { printf("write timeout!!!\n"); }
+	else { printf("write is ok\n"); }
 
-	dwSleepExReturn = SleepEx(INFINITE, TRUE);
-	if (dwSleepExReturn == WAIT_IO_COMPLETION) { printf("read without timeout!\n"); }
-	else { printf("read timeout!!!\n"); }
+	if (aSerial.WaitForReadComplation(nTimeout)) { printf("read timeout!!!\n");goto reurnPoint; }
 #endif
-	nRW = aSerial.readSync(vcBuffer, 1023);
 
-	if(nRW>0){ dwSleepExReturn == WAIT_IO_COMPLETION ;}
-	else if(nRW==0){  // pending io
-		dwSleepExReturn = SleepEx(nTimeout, TRUE);
-	}
-	else{goto reurnPoint;}
-
-	if (dwSleepExReturn == WAIT_IO_COMPLETION) { 
-		printf("read: %s\n", vcBuffer);
-	}
-	else { printf("read timeout!!!\n"); }
+	vcBuffer[nRW] = 0;
+	printf("read(%d): %s\n", nRW,vcBuffer);
 	
 	nReturn = 0;
 reurnPoint:
@@ -132,10 +137,12 @@ reurnPoint:
 }
 
 
-static void DefaultReadCallback(void*, int a_errCode, const char* a_pcBuffer, int a_nTransfer) 
+static void DefaultReadCallback(void* a_pClbk, int a_errCode, const char* a_pcBuffer, int a_nTransfer) 
 {
 	if ((!a_errCode) || (a_errCode == ERROR_MORE_DATA)) {
 		//fwrite(a_pcBuffer, 1, a_nTransfer, stdout);
+		int* pnRead = static_cast<int*>(a_pClbk);
+		*pnRead = a_nTransfer;
 	}
 	else if (a_errCode) {
 		fprintf(stderr, "Error accured!\n");

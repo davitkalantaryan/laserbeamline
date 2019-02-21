@@ -108,7 +108,7 @@ int PrepareSerial(pitz::rpi::tools::Serial* a_pSerial, const char* a_portName)
 	COMMTIMEOUTS aTimeouts;
 	int nRet(0);
 
-	if (a_pSerial->OpenSerial(a_portName)) {
+	if (a_pSerial->openC(a_portName)) {
 		nRet = MakeErrorReport();
 		goto returnPoint;
 	}
@@ -170,7 +170,7 @@ int PrepareSerial(pitz::rpi::tools::Serial* a_pSerial, const char* a_portName)
 	}
 
 returnPoint:
-	if (nRet) { a_pSerial->CloseCom(); }
+	if (nRet) { a_pSerial->closeC(); }
 	return nRet;
 }
 

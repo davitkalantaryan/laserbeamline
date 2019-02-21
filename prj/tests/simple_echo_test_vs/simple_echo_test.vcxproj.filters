@@ -33,6 +33,12 @@
     <ClCompile Include="..\..\..\src\common\common_io_serial_async.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_serial_base.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tools\pitz_rpi_tools_serial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\common\io\serial\async.hpp">
@@ -48,6 +54,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\impl.com_port_global_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\serial\base.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -29,9 +29,9 @@ public:
 	Serial();
 	virtual ~Serial();
 
-	int OpenSerial(const char* entry_name);
+	int openC(const char* entry_name);
 	int OpenSerial(const wchar_t* entry_name);
-	void CloseCom();
+	void closeC();
 
 	int SetupCommState(const DCB* DcbPtr, const COMMTIMEOUTS* timeouts=NULL,
 		int inQueue=512, int outQueue=512);
@@ -46,14 +46,15 @@ public:
 		int inQueue = 512, int outQueue = 512);
 	int GetCommStates(DCB* DcbPtr, COMMTIMEOUTS* timeouts);
 
-	int Write(const void* data, int data_len);
-	int Read1(void* buffer, int buf_len);
+	int writeC(const void* data, int data_len);
+	int readC(void* buffer, int buf_len);
 	int Read2(void* buffer, int buf_len, long int timeoutMS, long int secondTimeoutMS);
 	int Read3(void* a_buffer, int a_buf_len, long int a_lnTimeoutMS,
 		const void* a_terminationStr, int a_strLen, bool* a_bFound);
 	int Read4(void* buffer, int bufLen, int timeoutFirstMs, int timeoutBtwMs);
 
 	operator COM_HANDLE&();
+	COM_HANDLE handle() {return m_handle;}
 
 protected:
 	COM_HANDLE		m_handle;

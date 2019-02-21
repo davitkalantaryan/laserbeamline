@@ -24,11 +24,11 @@ pitz::rpi::tools::Serial::Serial()
 
 pitz::rpi::tools::Serial::~Serial()
 {
-	CloseCom();
+	closeC();
 }
 
 
-int pitz::rpi::tools::Serial::Write(const void* a_data, int a_data_len)
+int pitz::rpi::tools::Serial::writeC(const void* a_data, int a_data_len)
 {
 	DWORD dwWritten;
 	BOOL bRet = WriteFile(m_handle, a_data, a_data_len, &dwWritten, NULL);
@@ -37,7 +37,7 @@ int pitz::rpi::tools::Serial::Write(const void* a_data, int a_data_len)
 }
 
 
-int pitz::rpi::tools::Serial::Read1(void* a_buffer, int a_buf_len)
+int pitz::rpi::tools::Serial::readC(void* a_buffer, int a_buf_len)
 {
 	DWORD dwReaded;
 	BOOL bRet = ReadFile(m_handle, a_buffer, a_buf_len, &dwReaded, NULL);
@@ -152,10 +152,10 @@ int pitz::rpi::tools::Serial::Read4(void* a_buffer,int a_nBufLen,int a_nTimeoutF
 }
 
 
-int pitz::rpi::tools::Serial::OpenSerial(const char* a_entry_name)
+int pitz::rpi::tools::Serial::openC(const char* a_entry_name)
 {
-#ifdef WIN32
-	CloseCom(); // First close any open handle
+#ifdef _WIN32
+	closeC(); // First close any open handle
 
 	m_handle = CreateFileA(
 		a_entry_name,
@@ -175,8 +175,8 @@ int pitz::rpi::tools::Serial::OpenSerial(const char* a_entry_name)
 
 int pitz::rpi::tools::Serial::OpenSerial(const wchar_t* a_entry_name)
 {
-#ifdef WIN32
-	CloseCom(); // First close any open handle
+#ifdef _WIN32
+	closeC(); // First close any open handle
 
 	m_handle = CreateFileW(
 		a_entry_name,
@@ -194,10 +194,10 @@ int pitz::rpi::tools::Serial::OpenSerial(const wchar_t* a_entry_name)
 }
 
 
-void pitz::rpi::tools::Serial::CloseCom()
+void pitz::rpi::tools::Serial::closeC()
 {
 	//if (hComm && (hComm != INVALID_HANDLE_VALUE)){CloseHandle(hComm);}
-#ifdef WIN32
+#ifdef _WIN32
 	if (m_handle && (m_handle != INVALID_HANDLE_VALUE)){CloseHandle(m_handle);}
 #else  // #ifdef WIN32
 	//return FALSE;
