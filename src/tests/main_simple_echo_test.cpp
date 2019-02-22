@@ -64,7 +64,8 @@ int main(int a_argc, char* a_argv[])
 	//COMMTIMEOUTS aTimeouts = { 65536,0,5,0,5 }; // works with sync
 	//COMMTIMEOUTS aTimeouts = { 65536,0,1000,0,1000 }; // works fine with sync and async
 	//COMMTIMEOUTS aTimeouts = { 65536,65536,65536,65536,65536 };
-	COMMTIMEOUTS aTimeouts = { 65536,0,65536,0,65536 };
+	//COMMTIMEOUTS aTimeouts = { MAXDWORD,0,65536,0,65536 };
+	COMMTIMEOUTS aTimeouts = { 5,0,65536,0,10 };
 
 	printf("version 1!\n");
 
