@@ -60,6 +60,12 @@
     <ClCompile Include="..\..\..\src\common\common_tools_overlapped_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_serial_async.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_serial_base.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp">

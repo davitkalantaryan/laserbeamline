@@ -259,11 +259,20 @@
     <ClCompile Include="..\..\..\src\common\common_functionalities.cpp" />
     <ClCompile Include="..\..\..\src\common\common_iodevice.cpp" />
     <ClCompile Include="..\..\..\src\common\common_iodevicelerner.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_serial_async.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_serial_base.cpp" />
     <ClCompile Include="..\..\..\src\common\common_serial_comport.cpp" />
     <ClCompile Include="..\..\..\src\common\common_servertcp.cpp" />
     <ClCompile Include="..\..\..\src\common\common_socketbase.cpp" />
     <ClCompile Include="..\..\..\src\common\common_sockettcp.cpp" />
-    <ClCompile Include="..\..\..\src\common\common_tools_overlapped_io.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_tools_overlapped_io.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\cpp11\mutex_cpp11.cpp" />
     <ClCompile Include="..\..\..\src\cpp11\thread_cpp11.cpp" />
     <ClCompile Include="..\..\..\src\tests\main_realcom_to_tcp_test.cpp" />

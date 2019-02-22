@@ -10,7 +10,8 @@
  *
  */
 //#include "pitz_rpi_tools_serial.hpp"
-#include "common/common_serial_comport.hpp"
+#include <common/io/serial/async.hpp>
+//#include "common/common_serial_comport.hpp"
 #include <common/common_argument_parser.hpp>
 #include <stdio.h>
 #include <tchar.h>
@@ -28,7 +29,11 @@
 //#define	_REAL_SERIAL_PORT_NAME_	"\\.\\COM1"
 #endif // #ifdef __ARM
 
-
+class IoProxyPrivate : public tools::IoProxyServer {
+public:
+	static void ReadCallback(void* a_pClbk, int a_errCode, const char* a_pcBuffer, int a_nTransfer);
+	static void WriteCallback(void* a_pClbk, int a_errCode, const char* a_pcBuffer, int a_nTransfer);
+};
 
 int g_nDebugLevel = 1;
 
@@ -50,6 +55,7 @@ int main(int a_argc, char* a_argv[])
 
 	return 0;
 #endif
+	COMMTIMEOUTS aTimeouts = { 5,0,65536,0,10 };
 
 	printf("version 4!\n");
 
@@ -71,16 +77,18 @@ int main(int a_argc, char* a_argv[])
 	printf("ComPortName=%s\n", cpcSerialDeviceName);
 
 	//pitz::rpi::tools::Serial aSerial;
-	common::serial::ComPort aSerial;
+	//common::serial::ComPort aSerial;
 	//tools::ComServer aServer;
-	tools::IoProxyServer aServer;
+	IoProxyPrivate aServer;
+	::common::io::serial::Async aSerial(&aServer, &IoProxyPrivate::ReadCallback, &IoProxyPrivate::WriteCallback);
 
 	common::socketN::Initialize();
-	if(aSerial.OpenCom(cpcSerialDeviceName)){
+	if(aSerial.openC(cpcSerialDeviceName)){
 		::std::cerr << "Unable to open serial "<< cpcSerialDeviceName << ::std::endl;
 		return -2;
 	}
-	MakeStatisticForCom(&aSerial);
+	SetCommTimeouts((HANDLE)aSerial.handle(), &aTimeouts);
+	MakeStatisticForComT(&aSerial);
 	//aSerial.SetReadTimeouts(45, 8);
 	printf("version 12\n");
 	aServer.SetIoDevice(&aSerial);
@@ -89,4 +97,30 @@ int main(int a_argc, char* a_argv[])
 	common::socketN::Cleanup();
 
 	return 0;
+}
+
+
+void IoProxyPrivate::ReadCallback(void* a_pClbk, int a_errCode, const char* a_pcBuffer, int a_nTransfer)
+{
+	if ((!a_errCode) || (a_errCode == ERROR_MORE_DATA)) {
+		//fwrite(a_pcBuffer, 1, a_nTransfer, stdout);
+		int* pnRead = static_cast<int*>(a_pClbk);
+		*pnRead = a_nTransfer;
+	}
+	else if (a_errCode) {
+		fprintf(stderr, "Error accured!\n");
+	}
+}
+
+
+void IoProxyPrivate::WriteCallback(void* a_pClbk, int a_errCode, const char* a_pcBuffer, int a_nTransfer)
+{
+	if ((!a_errCode) || (a_errCode == ERROR_MORE_DATA)) {
+		//fwrite(a_pcBuffer, 1, a_nTransfer, stdout);
+		int* pnRead = static_cast<int*>(a_pClbk);
+		*pnRead = a_nTransfer;
+	}
+	else if (a_errCode) {
+		fprintf(stderr, "Error accured!\n");
+	}
 }

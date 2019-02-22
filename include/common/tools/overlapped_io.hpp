@@ -4,6 +4,8 @@
 #ifndef __common_tools_overlapped_io_hpp__
 #define __common_tools_overlapped_io_hpp__
 
+#if 0
+
 #include <stdint.h>
 #include <stddef.h>
 #include <common/common_iodevice.hpp>
@@ -47,6 +49,9 @@ public:  // this
 #endif
 
 }}
+
+
+#endif
 
 
 #endif  // #ifndef __common_tools_overlapped_io_hpp__

@@ -14,10 +14,6 @@
 
 namespace tools{
 
-class IoProxyServer;
-
-typedef ::common::tools::SDataForReadAndTransfer TDataForOverlappeedReadCom, TDataForOverlappeedReadSock;
-
 
 class IoProxyServer : protected common::ServerTCP
 {
@@ -38,13 +34,9 @@ protected:
 	virtual void AddClient(common::SocketTCP& clientSocket, const sockaddr_in* bufForRemAddress);
 
 protected:
-#ifdef _WIN32
-	TDataForOverlappeedReadCom	m_overlappedCom;
-#endif
 	common::IODevice*			m_pIoDevice;
 	STDN::mutex*				m_pMutex;
 	common::SocketTCP*			m_pCurSocket;
-	char						m_vcBuffrForIo[PROG_BUFFER1+1];
 };
 
 }
