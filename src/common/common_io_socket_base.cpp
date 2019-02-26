@@ -2,7 +2,7 @@
 // common_socketbase.cpp
 // 2017 Jul 06
 
-#include "common/common_socketbase.hpp"
+#include <common/io/socket/base.hpp>
 
 #include <string.h>
 #include <time.h>
@@ -30,46 +30,47 @@
 #else
 #endif
 
+using namespace common::io;
 
-common::SocketBase::SocketBase()
+
+socket::Base::Base()
 	:
-	m_socket(-1)
+	m_handle(-1)
 {
 }
 
 
-common::SocketBase::~SocketBase()
+socket::Base::~Base()
 {
-	closeC();
 }
 
 
-void common::SocketBase::closeC(void)
+void socket::Base::closeC(void)
 {
-	IODevice::closeC();
-	m_socket = -1;
+	Device::closeC();
+	m_handle = -1;
 }
 
 
-bool common::SocketBase::isOpenC(void)const
+bool socket::Base::isOpenC(void)const
 {
-	return (m_socket >= 0);
+	return (m_handle >= 0);
 }
 
 
-void common::SocketBase::closeHard(void)
+void socket::Base::closeHard(void)
 {
-	if (m_socket > 0)
+	if (m_handle > 0)
 #ifdef	_WIN32
-		closesocket(m_socket);
+		closesocket(m_handle);
 #else
 		close(m_socket);
 #endif
-	m_socket = -1;
+	m_handle = -1;
 }
 
 
-int common::SocketBase::setTimeout(int a_nTimeoutMs)
+int socket::Base::setTimeout(int a_nTimeoutMs)
 {
 
 	char* pInput;
@@ -100,74 +101,62 @@ int common::SocketBase::setTimeout(int a_nTimeoutMs)
 	}
 #endif
 
-	if (setsockopt(m_socket,SOL_SOCKET,SO_RCVTIMEO,pInput,nInputLen) < 0){return -1;}
+	if (setsockopt(m_handle,SOL_SOCKET,SO_RCVTIMEO,pInput,nInputLen) < 0){return -1;}
 
 	return 0;
 }
 
 
-common::SocketBase& common::SocketBase::operator=(const common::SocketBase& a_aM)
+socket::Base& socket::Base::operator=(const Base& a_aM)
 {
-	IODevice::operator=(a_aM);
-	m_socket = a_aM.m_socket;
+	Device::operator=(a_aM);
+	m_handle = a_aM.m_handle;
 	return *this;
 }
 
 
-common::SocketBase::operator const int&()const
-{
-	return m_socket;
-}
-
-
-common::SocketBase::operator int&()
-{
-	return m_socket;
-}
-
-
-void common::SocketBase::SetNewSocketDescriptor(int a_rawSocket)
+void socket::Base::SetNewSocketDescriptor(socketNativeType a_rawSocket)
 {
 	closeC();
-	m_socket = a_rawSocket;
+	m_handle = a_rawSocket;
 }
 
 
-void common::SocketBase::ResetSocketWithoutClose()
+void socket::Base::ResetSocketWithoutClose()
 {
 	m_pPrev = m_pNext = NULL;  // or this is not needed
-	m_socket = -1;
+	m_handle = -1;
 }
 
 
-int common::SocketBase::GetAndResetSocket()
+socket::socketNativeType socket::Base::GetAndResetSocket()
 {
-	int nRet(m_socket);
+	int nRet(m_handle);
 	m_pPrev = m_pNext = NULL;
-	m_socket = -1;
+	m_handle = -1;
 	return nRet;
 }
 
 
-int common::SocketBase::DublicateSocket(int a_nProcID, void* a_pProtInfo)const
+int socket::Base::DublicateSocket(int a_nProcID, void* a_pProtInfo)const
 {
 #ifdef _WIN32
 	WSAPROTOCOL_INFOW* pProtInfo = (WSAPROTOCOL_INFOW*)a_pProtInfo;
-	return WSADuplicateSocketW(m_socket, (DWORD)a_nProcID, pProtInfo);
+	return WSADuplicateSocketW(m_handle, (DWORD)a_nProcID, pProtInfo);
 #else
 	throw "For berkley sockets not implemented!";
 	return (a_nProcID == (int)((size_t)a_pProtInfo)) ? 1 : 0;
 #endif
 }
 
-namespace common{ namespace socketN{
 
-static void SignalHandler(int)
-{
-    //
-}
+///////////////////////////////////////////////////////////////////////////////////////////
 
-int Initialize()
+namespace common{ namespace io{ namespace socket{
+
+static void SignalHandler(int){}
+
+int Initialize(void)
 {
 #ifdef _WIN32
 	WORD wVersionRequested;
@@ -211,42 +200,13 @@ int Initialize()
 /*
  * Cleanup socket library
  */
-void Cleanup()
+void Cleanup(void)
 {
 #ifdef _WIN32
 	WSACleanup();
 #endif
 }
 
-
-int SleepN(long long int a_nanoSec)
-{
-#ifdef _WIN32
-	struct timeval tv;
-	long int lnNs;
-	int maxsd, fh1;
-	fd_set rfds;
-
-	fh1 = (int)::socket(AF_INET, SOCK_STREAM, 0);
-
-	//fd_set rfds;
-	FD_ZERO(&rfds);
-	FD_SET((unsigned int)fh1, &rfds);
-	maxsd = fh1 + 1;
-
-	//struct timeval tv;
-	lnNs = (a_nanoSec % 1000000000L);
-	tv.tv_sec = (long)(a_nanoSec / 1000000000L);
-	tv.tv_usec = (lnNs%1000)?(lnNs/1000)+1: (lnNs / 1000);
-
-	return (long int)(1000*::select(maxsd, &rfds, 0, 0, &tv));
-#else
-	struct timespec waitspec;
-        waitspec.tv_sec = a_nanoSec / 1000000000;
-        waitspec.tv_nsec = a_nanoSec % 1000000000;
-	return (long)nanosleep(&waitspec, NULL);
-#endif
-}
 
 #ifdef sockaddr_in_using_ok
 
@@ -374,4 +334,4 @@ const char* GetIp4AddressFromHostName(const char* a_hostName)
 
 #endif  // #ifdef sockaddr_in_using_ok
 
-}} // namespace common{ namespace socketN{
+}}} // namespace common{ namespace io{ namespace socket{

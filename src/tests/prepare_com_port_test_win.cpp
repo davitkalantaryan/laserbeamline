@@ -203,48 +203,4 @@ int MakeErrorReport(void)
 
 /*/////////////////////////////////////////////////////////////////////////////*/
 
-PCWSTR StringFromSerialParity(SerialParityT a_parity)
-{
-	switch (a_parity) {
-	case SerialParity::None: return L"none";
-	case SerialParity::Odd: return L"odd";
-	case SerialParity::Even: return L"even";
-	case SerialParity::Mark: return L"mark";
-	case SerialParity::Space: return L"space";
-	default: return L"[invalid parity]";
-	}
-}
 
-
-PCWSTR StringFromSerialStopBits(SerialStopBitsT a_stopBits)
-{
-	switch (a_stopBits) {
-	case SerialStopBits::One: return L"1";
-	case SerialStopBits::OnePointFive: return L"1.5";
-	case SerialStopBits::Two: return L"2";
-	default: return L"[invalid serial stop bits]";
-	}
-}
-
-
-PCWSTR StringFromDtrControl(DWORD a_dtrControl)
-{
-	switch (a_dtrControl) {
-	case DTR_CONTROL_ENABLE: return L"on";
-	case DTR_CONTROL_DISABLE: return L"off";
-	case DTR_CONTROL_HANDSHAKE: return L"handshake";
-	default: return L"[invalid DtrControl value]";
-	}
-}
-
-
-PCWSTR StringFromRtsControl(DWORD a_rtsControl)
-{
-	switch (a_rtsControl) {
-	case RTS_CONTROL_ENABLE: return L"on";
-	case RTS_CONTROL_DISABLE: return L"off";
-	case RTS_CONTROL_HANDSHAKE: return L"handshake";
-	case RTS_CONTROL_TOGGLE: return L"toggle";
-	default: return L"[invalid RtsControl value]";
-	}
-}

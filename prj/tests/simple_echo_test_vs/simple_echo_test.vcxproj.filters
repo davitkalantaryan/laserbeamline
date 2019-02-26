@@ -13,54 +13,96 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\include">
+      <UniqueIdentifier>{08e6e80a-1ed8-466d-b332-943723849c7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\common">
+      <UniqueIdentifier>{92f8d948-9916-4d6a-9ad3-ab27e4f3263a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\common\io">
+      <UniqueIdentifier>{206973ce-691f-46a3-a5f6-384a10b6659e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\common\io\serial">
+      <UniqueIdentifier>{242b8f85-4510-4ecc-98a6-eb0e364c2090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\common\io\socket">
+      <UniqueIdentifier>{27557060-0d6d-47d3-9dbc-2655311ded1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common">
+      <UniqueIdentifier>{37972a6d-2466-430c-9344-ee7a44edcbfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\common\tool">
+      <UniqueIdentifier>{350a5739-6225-429c-b7f8-b347e07d3dd0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\tests\main_simple_echo_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\common\common_argument_parser.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_base.cpp">
+      <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\common\common_serial_comport.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\common\common_iodevice.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\tests\prepare_com_port_test_win.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpbase.cpp">
+      <Filter>Source Files\common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\common\common_io_serial_async.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\common\common_io_serial_base.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\tools\pitz_rpi_tools_serial.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpasync.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_base.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_tool_argument_parser.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_device.cpp">
+      <Filter>Source Files\common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\common\io\serial\async.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\common\common_iodevice.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\common\common_serial_comport.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\com_port_global_functions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\impl.com_port_global_functions.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\include\common\io\serial</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\common\io\serial\base.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\include\common\io\serial</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\..\include\common\io\socket\base.hpp">
+      <Filter>Header Files\include\common\io\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\device.hpp">
+      <Filter>Header Files\include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\socket\impl.base.hpp">
+      <Filter>Header Files\include\common\io\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\socket\tcpbase.hpp">
+      <Filter>Header Files\include\common\io\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\asyncbase.hpp">
+      <Filter>Header Files\include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\impl.asyncbase.hpp">
+      <Filter>Header Files\include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\socket\tcpasync.hpp">
+      <Filter>Header Files\include\common\io\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\serial\impl.base.hpp">
+      <Filter>Header Files\include\common\io\serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\base.hpp">
+      <Filter>Header Files\include\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\tool\argument_parser.hpp">
+      <Filter>Header Files\include\common\tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\tool\impl.argument_parser.hpp">
+      <Filter>Header Files\include\common\tool</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

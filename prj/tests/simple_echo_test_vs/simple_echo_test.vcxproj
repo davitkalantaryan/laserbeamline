@@ -128,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_COMMON_FUNCTIOALITY_;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -138,7 +138,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_COMMON_FUNCTIOALITY_;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
@@ -148,7 +148,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_COMMON_FUNCTIOALITY_;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <PostBuildEvent>
       <Command>copy /Y $(TargetPath) \\$(DebugHost)\c$\test\serial_server\.</Command>
@@ -163,7 +163,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_COMMON_FUNCTIOALITY_;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -179,7 +179,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_COMMON_FUNCTIOALITY_;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -195,7 +195,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_COMMON_FUNCTIOALITY_;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -206,23 +206,30 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\common\common_argument_parser.cpp" />
-    <ClCompile Include="..\..\..\src\common\common_iodevice.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_base.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_device.cpp" />
     <ClCompile Include="..\..\..\src\common\common_io_serial_async.cpp" />
     <ClCompile Include="..\..\..\src\common\common_io_serial_base.cpp" />
-    <ClCompile Include="..\..\..\src\common\common_serial_comport.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_socket_base.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpasync.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpbase.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_tool_argument_parser.cpp" />
     <ClCompile Include="..\..\..\src\tests\main_simple_echo_test.cpp" />
-    <ClCompile Include="..\..\..\src\tests\prepare_com_port_test_win.cpp" />
-    <ClCompile Include="..\..\..\src\tools\pitz_rpi_tools_serial.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\common\common_iodevice.hpp" />
-    <ClInclude Include="..\..\..\include\common\common_serial_comport.hpp" />
+    <ClInclude Include="..\..\..\include\common\base.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\asyncbase.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\device.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\impl.asyncbase.hpp" />
     <ClInclude Include="..\..\..\include\common\io\serial\async.hpp" />
     <ClInclude Include="..\..\..\include\common\io\serial\base.hpp" />
-    <ClInclude Include="..\..\..\include\com_port_global_functions.h" />
-    <ClInclude Include="..\..\..\include\impl.com_port_global_functions.h" />
-    <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\serial\impl.base.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\socket\base.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\socket\impl.base.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\socket\tcpasync.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\socket\tcpbase.hpp" />
+    <ClInclude Include="..\..\..\include\common\tool\argument_parser.hpp" />
+    <ClInclude Include="..\..\..\include\common\tool\impl.argument_parser.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

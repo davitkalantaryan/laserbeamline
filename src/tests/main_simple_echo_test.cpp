@@ -13,12 +13,11 @@
 
 #define USE_ASYNC_COM
 
-#include <common/common_argument_parser.hpp>
+#include <common/tool/argument_parser.hpp>
 #include <common/io/serial/async.hpp>
-#include <com_port_global_functions.h>
 #include <iostream>
 #include <string.h>
-#include <pitz_rpi_tools_serial.hpp>
+#include <common/base.hpp>
 
 #define DEFAULT_TIMEOUT		5000 // 1s
 #define DEFAULT_ECHO_STRING	"1 nidentify"
@@ -28,10 +27,10 @@
 #define lblcontainer_of(_ptr,_type,_member) (_type*)(  ((char*)(_ptr)) + (size_t)( (char*)(&((_type *)0)->_member) )  )
 #endif
 
-#ifdef __ARM
- //#define	_REAL_SERIAL_PORT_NAME_	"\\\\?\\ACPI#BCM2836#0#{86e0d1e0-8089-11d0-9ce4-08003e301f73}"
+#ifdef _M_ARM
+#define	_REAL_SERIAL_PORT_NAME_	"\\\\?\\ACPI#BCM2836#0#{86e0d1e0-8089-11d0-9ce4-08003e301f73}"
 #else  // #ifdef __ARM
- //#define	_REAL_SERIAL_PORT_NAME_	"\\.\\COM1"
+#define	_REAL_SERIAL_PORT_NAME_	"\\.\\COM1"
 #endif // #ifdef __ARM
 
 // echo strings examples
@@ -52,10 +51,8 @@ int main(int a_argc, char* a_argv[])
 	const char* cpcTimeout;
 	char* pcStrinToEcho;
 	size_t unStrToEchoLen;
-	::common::argument_parser aParser;
-#ifdef _USE_PITZ_RPI_SERIAL
-	::pitz::rpi::tools::Serial aSerial;
-#elif defined(USE_ASYNC_COM)
+	::common::tool::argument_parser aParser;
+#ifdef USE_ASYNC_COM
 	::common::io::serial::Async aSerial(&nRW, DefaultReadCallback,NULL);
 #else
 	::common::io::serial::Sync aSerial;
@@ -81,11 +78,7 @@ int main(int a_argc, char* a_argv[])
 	}
 
 	cpcSerialDeviceName = aParser["--com-name"];
-	if(!cpcSerialDeviceName){
-		::std::cerr<<"Com name is not provided!"<< ::std::endl;
-		::std::cout << aParser.HelpString() << ::std::endl;
-		return -1;
-	}
+	if(!cpcSerialDeviceName){cpcSerialDeviceName = _REAL_SERIAL_PORT_NAME_;}
 	printf("ComPortName=%s\n", cpcSerialDeviceName);
 
 #ifdef _USE_PITZ_RPI_SERIAL
@@ -97,7 +90,7 @@ int main(int a_argc, char* a_argv[])
 	}
 #endif
 	SetCommTimeouts((HANDLE)aSerial.handle(), &aTimeouts);
-	MakeStatisticForComT(&aSerial);
+	common::io::serial::MakeStatisticForCom(&aSerial);
 
 	cpcStringToEchoInp = aParser["--echo-string"];
 	if(!cpcStringToEchoInp){ cpcStringToEchoInp =DEFAULT_ECHO_STRING;}
@@ -132,7 +125,16 @@ int main(int a_argc, char* a_argv[])
 	
 	nReturn = 0;
 reurnPoint:
-	if (nReturn) {MakeErrorReport();}
+	if (nReturn) {
+		common::MakeErrorReport(nullptr, [](void* a_pClbkData, const wchar_t* a_fmt, ...) {
+			int nRet;
+			va_list aList;
+			va_start(aList, a_fmt);
+			nRet = vwprintf(a_fmt, aList);
+			va_end(aList);
+			return nRet;
+		});
+	}
 	aSerial.closeC();
 	return 0;
 }

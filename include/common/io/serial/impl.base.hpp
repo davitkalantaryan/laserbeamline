@@ -9,16 +9,18 @@
  *
  *
  */
-#ifndef __impl_com_port_global_functions_h__
-#define __impl_com_port_global_functions_h__
+#ifndef __common_io_serial_impl_base_hpp__
+#define __common_io_serial_impl_base_hpp__
 
-#ifndef __com_port_global_functions_h__
-#error do not include this file directly
-#include "com_port_global_functions.h"
+#ifndef __common_io_serial_base_hpp__
+#error "do not include this file directly""
+#include "base.h"
 #endif
 
+#if 0
+
 #include <stdio.h>
-//#include "com_port_global_functions.h"
+ //#include "com_port_global_functions.h"
 PCWSTR StringFromSerialStopBits(SerialStopBitsT a_stopBits);
 PCWSTR StringFromSerialParity(SerialParityT a_parity);
 PCWSTR StringFromDtrControl(DWORD a_dtrControl);
@@ -35,7 +37,7 @@ int MakeStatisticForComT(SerialType* a_pSerial)
 		nRet = MakeErrorReport();
 		goto returnPoint;
 	}
-	
+
 	wprintf(
 		L"                    baud = %d\n"
 		L"                  parity = %s\n"
@@ -58,7 +60,7 @@ int MakeStatisticForComT(SerialType* a_pSerial)
 		StringFromDtrControl(actualDcb.fDtrControl),
 		StringFromRtsControl(actualDcb.fRtsControl),
 		actualDcb.fDsrSensitivity ? L"on" : L"off",
-		
+
 		aTimeouts.ReadIntervalTimeout,
 		aTimeouts.ReadTotalTimeoutMultiplier,
 		aTimeouts.ReadTotalTimeoutConstant,
@@ -70,5 +72,7 @@ returnPoint:
 	return nRet;
 }
 
+#endif  // #if 0
 
-#endif  // #ifndef __impl_com_port_global_functions_h__
+
+#endif  // #ifndef __common_io_serial_impl_base_hpp__

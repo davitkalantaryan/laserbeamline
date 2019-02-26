@@ -10,10 +10,10 @@
  *  but sometime dependency from boost is not needed
  *
  */
-#ifndef __common_argument_parser_impl_hpp__
-#define __common_argument_parser_impl_hpp__
+#ifndef __common_tool_impl_argument_parser_hpp__
+#define __common_tool_impl_argument_parser_hpp__
 
-#ifndef __common_argument_parser_hpp__
+#ifndef __common_tool_argument_parser_hpp__
 #error Direct include not allowed!
 #endif
 #ifdef development_stage
@@ -62,4 +62,4 @@ void common::argument_parser::ParseCommandLine(TypeArgc a_argc, TypeArgv a_argv[
 #endif  // #ifdef __cplusplus
 
 
-#endif  // #ifndef __common_argument_parser_impl_hpp__
+#endif  // #ifndef __common_tool_impl_argument_parser_hpp__

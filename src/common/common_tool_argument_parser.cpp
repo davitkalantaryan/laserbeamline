@@ -11,10 +11,8 @@
  *
  */
 
-//#include "stdafx.h"
 #ifdef __cplusplus
-#include <common/common_argument_parser.hpp>
-
+#include <common/tool/argument_parser.hpp>
 #include <string.h>
 
 #if defined(_MSC_VER) & (_MSC_VER>1400)
@@ -32,7 +30,7 @@ public:
 	int isFound;std::string helpStr;
 	CInputBase():isFound(0){}
     virtual ~CInputBase(){}
-	virtual common::argumentParser::argType::Type getType()const {return common::argumentParser::argType::noArg;}
+	virtual common::tool::argumentParser::argType::Type getType()const {return common::tool::argumentParser::argType::noArg;}
 	virtual const char* valueRight()const { return ""; }
 	virtual const char* valueLeft()const { return ""; }
 };
@@ -42,7 +40,7 @@ class CInputArgRight : public CInputBase
 public:
 	std::string defaultOrValueRight;
 	CInputArgRight(const std::string& a_defRight): defaultOrValueRight(a_defRight){}
-	virtual common::argumentParser::argType::Type getType()const {return common::argumentParser::argType::rightArg;}
+	virtual common::tool::argumentParser::argType::Type getType()const {return common::tool::argumentParser::argType::rightArg;}
 	virtual const char* valueRight()const { return defaultOrValueRight.c_str(); }
 };
 
@@ -53,7 +51,7 @@ public:
 	CInputArgRightAndLeft(const std::string& a_defRight,const std::string& a_defLeft)
 		: CInputArgRight(a_defRight), defaultOrValueLeft(a_defLeft)
 	{}
-	virtual common::argumentParser::argType::Type getType()const{return common::argumentParser::argType::bougthArg;}
+	virtual common::tool::argumentParser::argType::Type getType()const{return common::tool::argumentParser::argType::bougthArg;}
 	virtual const char* valueLeft()const { return defaultOrValueLeft.c_str(); }
 };
 
@@ -62,24 +60,24 @@ struct InfoAndCleanPair {
 	InfoAndCleanPair(CInputBase* a_pInfo):pInfo(a_pInfo){}
 };
 
-common::argument_parser::argument_parser()
+common::tool::argument_parser::argument_parser()
 {
 	m_unMaxForHelp = 0;
 }
 
-common::argument_parser::~argument_parser()
+common::tool::argument_parser::~argument_parser()
 {
 	this->Clear();
 }
 
 
-common::argument_parser&  common::argument_parser::operator<<(const std::string& a_strOptionName)
+common::tool::argument_parser&  common::tool::argument_parser::operator<<(const std::string& a_strOptionName)
 {
 	return AddOption(a_strOptionName, argumentParser::argType::noArg,"");
 }
 
 
-common::argument_parser& common::argument_parser::AddOption(
+common::tool::argument_parser& common::tool::argument_parser::AddOption(
 	const std::string& a_strOptionName, argumentParser::argType::Type a_argType,
 	const char* a_defRight, const char* a_defLeft)
 {
@@ -174,7 +172,7 @@ returnPoint:
 }
 
 
-const char* common::argument_parser::valueLeft(const char* a_option_name)
+const char* common::tool::argument_parser::valueLeft(const char* a_option_name)
 {
     if(m_htOptionsInAndOut.count(a_option_name)){
 		CInputBase* pInput = m_htOptionsInAndOut[a_option_name];
@@ -184,7 +182,7 @@ const char* common::argument_parser::valueLeft(const char* a_option_name)
 }
 
 
-const char* common::argument_parser::operator[](const char* a_option_name)
+const char* common::tool::argument_parser::operator[](const char* a_option_name)
 {
     if(m_htOptionsInAndOut.count(a_option_name)){
 		CInputBase* pInput = m_htOptionsInAndOut[a_option_name];
@@ -194,7 +192,7 @@ const char* common::argument_parser::operator[](const char* a_option_name)
 }
 
 
-std::string common::argument_parser::HelpString()const
+std::string common::tool::argument_parser::HelpString()const
 {
 	std::string aReturnStr;
 
@@ -210,7 +208,7 @@ std::string common::argument_parser::HelpString()const
 }
 
 
-void common::argument_parser::Clear()
+void common::tool::argument_parser::Clear()
 {
 	const size_t cunSize(m_vectForHelp.size());
 
@@ -224,7 +222,7 @@ void common::argument_parser::Clear()
 }
 
 
-void common::argument_parser::ParseCommandLine(int& a_argc, char** a_argv)
+void common::tool::argument_parser::ParseCommandLine(int& a_argc, char** a_argv)
 {
 	CInputBase* pInput;
 	CInputArgRight* pInpRight;
@@ -303,7 +301,7 @@ void common::argument_parser::ParseCommandLine(int& a_argc, char** a_argv)
 
 
 
-void common::argument_parser::SetRightOptionValueIfNeeded(TInputBase a_pOption, const char* a_value)
+void common::tool::argument_parser::SetRightOptionValueIfNeeded(TInputBase a_pOption, const char* a_value)
 {
     CInputArgRight* pInpRight=(CInputArgRight*)a_pOption;
     pInpRight->defaultOrValueRight = a_value;

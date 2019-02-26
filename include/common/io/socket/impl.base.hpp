@@ -2,12 +2,12 @@
 // common_socketbase.impl.hpp
 // 2017 Jul 07
 
-#ifndef __impl_common_socketbase_hpp__
-#define __impl_common_socketbase_hpp__
+#ifndef __impl_common_io_socket_base_hpp__
+#define __impl_common_io_socket_base_hpp__
 
-#ifndef __common_socketbase_hpp__
+#ifndef __common_io_socket_base_hpp__
 #error do not include this header directly
-#include "common_socketbase.hpp"
+#include "base.hpp"
 #endif
 
 #ifdef _SELECT_NEEDED_
@@ -24,7 +24,7 @@
 #include <memory.h>
 #endif
 
-namespace common{ namespace socketN{
+namespace common{ namespace io{ namespace socket{
 
 template <typename TypeCntRd, typename TypeCntWr, typename TypeCntEr, typename TypeCntRet>
 int	selectMltCpp3(
@@ -115,10 +115,10 @@ int	selectMltCpp3(
 	return nSelectReturn;
 }
 
-}}  // namespace common{ namespace socket{
+}}}  // namespace common{ namespace io{ namespace socket{
 
 #endif  // #ifdef _SELECT_NEEDED_
 
 
 
-#endif  // #ifndef __impl_common_socketbase_hpp__
+#endif  // #ifndef __impl_common_io_socket_base_hpp__

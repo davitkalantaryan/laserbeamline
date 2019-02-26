@@ -2,29 +2,29 @@
 // common_iodevice.cpp
 // 2017 Jul 6
 
-#include "common/common_iodevice.hpp"
+#include <common/io/device.hpp>
 
-common::IODevice::IODevice()
+common::io::Device::Device()
 	:
-	m_pPrev(NULL),
-	m_pNext(NULL)
+	m_pPrev(nullptr),
+	m_pNext(nullptr)
 {
 }
 
 
-common::IODevice::IODevice(const common::IODevice& a_cM)
+common::io::Device::Device(const Device& a_cM)
 {
 	cloneFromOther(a_cM);
 }
 
 
-common::IODevice::~IODevice() 
+common::io::Device::~Device()
 {
 	closeC();
 }
 
 
-void common::IODevice::closeC(void)
+void common::io::Device::closeC(void)
 {
 	if(isOpenC()){
 		if (!m_pPrev && !m_pNext) {
@@ -39,17 +39,17 @@ void common::IODevice::closeC(void)
 }
 
 
-common::IODevice& common::IODevice::operator=(const common::IODevice& a_cM)
+common::io::Device& common::io::Device::operator=(const Device& a_cM)
 {
 	cloneFromOther(a_cM);
 	return *this;
 }
 
 
-void common::IODevice::cloneFromOther(const common::IODevice& a_cM)
+void common::io::Device::cloneFromOther(const Device& a_cM)
 {
 	if (a_cM.isOpenC()) {
-		IODevice* pNext = a_cM.m_pNext;
+		Device* pNext = a_cM.m_pNext;
 		a_cM.m_pNext = this;
 		m_pNext = pNext;
 		if (pNext) { pNext->m_pPrev = this; }
@@ -58,7 +58,7 @@ void common::IODevice::cloneFromOther(const common::IODevice& a_cM)
 }
 
 
-common::IODevice* common::IODevice::Clone()const
+common::io::Device* common::io::Device::Clone()const
 {
-	return NULL;
+	return nullptr;
 }

@@ -14,15 +14,15 @@
 #include <stddef.h>
 #include <stdint.h>
 
-namespace common{
+namespace common{ namespace io{
 
 
-class IODevice
+class Device
 {
 public:
-	IODevice();
-	IODevice(const common::IODevice& cM);
-	virtual ~IODevice();
+	Device();
+	Device(const Device& cM);
+	virtual ~Device();
 
 	virtual bool		isOpenC(void)const { return false; }
 	virtual void		closeC(void);
@@ -33,19 +33,19 @@ public:
 	virtual int			setTimeout(int timeoutMS) = 0;
 	virtual ptrdiff_t	handle()=0;
 
-	common::IODevice& operator=(const common::IODevice& aM);
-	virtual common::IODevice* Clone()const;
+	Device&				operator=(const Device& aM);
+	virtual				Device* Clone()const;
 
 protected:
-	virtual void	closeHard(void) {}
-	virtual void	cloneFromOther(const common::IODevice& other);
+	virtual void		closeHard(void) {}
+	virtual void		cloneFromOther(const Device& other);
 
 protected:
-	const IODevice*		m_pPrev;
-	mutable IODevice*	m_pNext;
+	const Device*		m_pPrev;
+	mutable Device*		m_pNext;
 };
 
-};
+}}  // namespace common{ namespace io{
 
 
 #endif  // #ifndef __common_iodevice_hpp__

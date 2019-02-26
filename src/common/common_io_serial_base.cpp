@@ -5,6 +5,12 @@
 
 
 #include "common/io/serial/base.hpp"
+#include <stdio.h>
+#include <functional>
+#include <stdarg.h>
+#ifdef _USE_COMMON_FUNCTIOALITY_
+#include <common/base.hpp>
+#endif
 
 using namespace common::io;
 
@@ -62,7 +68,7 @@ int serial::Base::readC(void* a_buffer, int a_nBufLen)const
 }
 
 
-common::IODevice* serial::Base::Clone()const
+common::io::Device* serial::Base::Clone()const
 {
 	return new serial::Base(*this);
 }
@@ -134,3 +140,113 @@ int serial::Base::GetCommStates(DCB* a_DcbPtr, COMMTIMEOUTS* a_timeouts)
 	if (!(::GetCommTimeouts(m_handle, a_timeouts))) { return GetLastError(); }
 	return 0;
 }
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+namespace common{ namespace io{ namespace serial{
+
+int MakeStatisticForCom(Base* a_pSerial)
+{
+	DCB actualDcb;
+	COMMTIMEOUTS aTimeouts;
+	int nRet(0);
+
+	if (a_pSerial->GetCommStates(&actualDcb, &aTimeouts)) {
+#ifdef _USE_COMMON_FUNCTIOALITY_
+		nRet = MakeErrorReport(nullptr,[](void* a_pClbkData, const wchar_t* a_fmt, ...) {
+			int nRet;
+			va_list aList;
+			va_start(aList,a_fmt);
+			nRet=vwprintf(a_fmt, aList);
+			va_end(aList);
+			return nRet;
+		});
+#else
+		nRet = -1;
+#endif
+		goto returnPoint;
+	}
+	
+	wprintf(
+		L"                    baud = %d\n"
+		L"                  parity = %s\n"
+		L"               data bits = %d\n"
+		L"               stop bits = %s\n"
+		L"   XON/XOFF flow control = %s\n"
+		L" output DSR flow control = %s\n"
+		L" output CTS flow control = %s\n"
+		L"             DTR control = %s\n"
+		L"             RTS control = %s\n"
+		L" DSR circuit sensitivity = %s\n"
+		L"                timeouts = {%d,%d,%d,%d,%d}\n",
+		actualDcb.BaudRate,
+		StringFromSerialParity(actualDcb.Parity),
+		actualDcb.ByteSize,
+		StringFromSerialStopBits(actualDcb.StopBits),
+		(actualDcb.fInX && actualDcb.fOutX) ? L"on" : L"off",
+		actualDcb.fOutxDsrFlow ? L"on" : L"off",
+		actualDcb.fOutxCtsFlow ? L"on" : L"off",
+		StringFromDtrControl(actualDcb.fDtrControl),
+		StringFromRtsControl(actualDcb.fRtsControl),
+		actualDcb.fDsrSensitivity ? L"on" : L"off",
+		
+		aTimeouts.ReadIntervalTimeout,
+		aTimeouts.ReadTotalTimeoutMultiplier,
+		aTimeouts.ReadTotalTimeoutConstant,
+		aTimeouts.WriteTotalTimeoutMultiplier,
+		aTimeouts.WriteTotalTimeoutConstant);
+
+returnPoint:
+	if (nRet) { a_pSerial->closeC(); }
+	return nRet;
+}
+
+
+const wchar_t* StringFromSerialParity(SerialParityT a_parity)
+{
+	switch (a_parity) {
+	case SerialParity::None: return L"none";
+	case SerialParity::Odd: return L"odd";
+	case SerialParity::Even: return L"even";
+	case SerialParity::Mark: return L"mark";
+	case SerialParity::Space: return L"space";
+	default: return L"[invalid parity]";
+	}
+}
+
+
+const wchar_t* StringFromSerialStopBits(SerialStopBitsT a_stopBits)
+{
+	switch (a_stopBits) {
+	case SerialStopBits::One: return L"1";
+	case SerialStopBits::OnePointFive: return L"1.5";
+	case SerialStopBits::Two: return L"2";
+	default: return L"[invalid serial stop bits]";
+	}
+}
+
+
+const wchar_t* StringFromDtrControl(DWORD a_dtrControl)
+{
+	switch (a_dtrControl) {
+	case DTR_CONTROL_ENABLE: return L"on";
+	case DTR_CONTROL_DISABLE: return L"off";
+	case DTR_CONTROL_HANDSHAKE: return L"handshake";
+	default: return L"[invalid DtrControl value]";
+	}
+}
+
+
+const wchar_t* StringFromRtsControl(DWORD a_rtsControl)
+{
+	switch (a_rtsControl) {
+	case RTS_CONTROL_ENABLE: return L"on";
+	case RTS_CONTROL_DISABLE: return L"off";
+	case RTS_CONTROL_HANDSHAKE: return L"handshake";
+	case RTS_CONTROL_TOGGLE: return L"toggle";
+	default: return L"[invalid RtsControl value]";
+	}
+}
+
+}}}  // namespace common{ namespace io{ namespace serial{
