@@ -12,7 +12,7 @@
 
 namespace common{ namespace io{ namespace socket{
 
-class TcpAsync : public async::Base< socket::TcpBase >
+class TcpAsync : public async::Dev< socket::TcpBase >
 {
 public:
 	TcpAsync(void* clbkData, async::ReadClbkType fpRead, async::WriteClbkType fpWrite);

@@ -10,6 +10,15 @@
  *
  */
 
+#if 1
+
+int main()
+{
+	return 0;
+}
+
+#else    // #if 1
+
 #include <common/common_sockettcp.hpp>
 #include "common/common_serial_comport.hpp"
 #include <stdio.h>
@@ -165,3 +174,6 @@ static void FromSock(void*, const char* a_Buffer, int a_size)
 		fwrite(a_Buffer, 1, a_size, stdout);
 	}
 }
+
+
+#endif   // // #if 1

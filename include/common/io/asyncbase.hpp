@@ -7,6 +7,12 @@
 #define __common_io_serial_asyncbase_hpp__
 
 #include <common/io/device.hpp>
+#ifdef _WIN32
+#include <WinSock2.h>
+#include <WS2tcpip.h>
+#include <Windows.h>
+#else
+#endif
 
 
 namespace common{ namespace io{ namespace async{
@@ -14,24 +20,18 @@ namespace common{ namespace io{ namespace async{
 typedef void(*ReadClbkType)(void* clbkData,int error,const char* data, int dataLen);
 typedef void(*WriteClbkType)(void* clbkData,int error,const char* data, int dataLen);
 
-template <typename BaseIoDevice>
-class Base : public BaseIoDevice 
+class Base
 {
 public:
 	Base(void* clbkData, ReadClbkType fpRead, WriteClbkType fpWrite);
 	virtual ~Base();
 
-	virtual int			writeC(const void* buffer, int bufferLen) override;
-	virtual int			readC(void* buffer, int bufferLen)const override;
+	virtual int			writeC(const void* buffer, int bufferLen) =0;
+	virtual int			readC(void* buffer, int bufferLen)const =0;
 
 	void				SetCallbacks(void* a_clbkData, ReadClbkType a_fpRead, WriteClbkType a_fpWrite);
-	int					ReadSync(void* a_buffer, int a_nBufLen)const;
-	int					WriteSync(void* a_buffer, int a_nBufLen);
 	int					WaitForReadComplation(int timeoutMs);
 	int					WaitForWriteComplation(int timeoutMs);
-
-protected:
-	virtual Device*		Clone()const;
 
 protected:
 #ifdef _WIN32
@@ -51,6 +51,23 @@ protected:
 protected:
 	SOvrlpdRead		m_ovrlpRead;
 	SOvrlpdWrite	m_ovrlpWrite;
+};
+
+template <typename BaseIoDevice>
+class Dev : public BaseIoDevice, public Base
+{
+public:
+	Dev(void* clbkData, ReadClbkType fpRead, WriteClbkType fpWrite);
+	virtual ~Dev() {}
+
+	virtual int			writeC(const void* buffer, int bufferLen) override;
+	virtual int			readC(void* buffer, int bufferLen)const override;
+
+	int					ReadSync(void* a_buffer, int a_nBufLen)const;
+	int					WriteSync(void* a_buffer, int a_nBufLen);
+
+protected:
+	virtual io::Device*	Clone()const;
 };
 
 

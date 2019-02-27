@@ -12,7 +12,7 @@
 
 namespace common{ namespace io{ namespace serial{
 
-class Async : public async::Base< serial::Base >
+class Async : public async::Dev< serial::Base >
 {
 public:
 	Async(void* clbkData, async::ReadClbkType fpRead, async::WriteClbkType fpWrite);

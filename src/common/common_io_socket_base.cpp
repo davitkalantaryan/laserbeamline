@@ -131,7 +131,7 @@ void socket::Base::ResetSocketWithoutClose()
 
 socket::socketNativeType socket::Base::GetAndResetSocket()
 {
-	int nRet(m_handle);
+	socketNativeType nRet(m_handle);
 	m_pPrev = m_pNext = NULL;
 	m_handle = -1;
 	return nRet;

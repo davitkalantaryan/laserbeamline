@@ -247,27 +247,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\common\common_argument_parser.cpp" />
-    <ClCompile Include="..\..\..\src\common\common_functionalities.cpp" />
-    <ClCompile Include="..\..\..\src\common\common_iodevice.cpp" />
-    <ClCompile Include="..\..\..\src\common\common_serial_comport.cpp" />
-    <ClCompile Include="..\..\..\src\common\common_socketbase.cpp" />
-    <ClCompile Include="..\..\..\src\common\common_sockettcp.cpp" />
-    <ClCompile Include="..\..\..\src\common\common_tools_overlapped_io.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_asyncbase.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_device.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_proxy.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_serial_async.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_serial_base.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_socket_base.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpasync.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpbase.cpp" />
     <ClCompile Include="..\..\..\src\tests\main_tcp_to_virtcom_test.cpp" />
-    <ClCompile Include="..\..\..\src\tests\prepare_com_port_test_win.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\common\common_argument_parser.hpp" />
-    <ClInclude Include="..\..\..\include\common\common_argument_parser.impl.hpp" />
-    <ClInclude Include="..\..\..\include\common_defination.h" />
-    <ClInclude Include="..\..\..\include\common_iodevice.hpp" />
-    <ClInclude Include="..\..\..\include\common_serial_comport.hpp" />
-    <ClInclude Include="..\..\..\include\common_socketbase.hpp" />
-    <ClInclude Include="..\..\..\include\common_socketbase.impl.hpp" />
-    <ClInclude Include="..\..\..\include\common_sockettcp.hpp" />
-    <ClInclude Include="..\..\..\include\com_port_global_functions.h" />
-    <ClInclude Include="..\..\..\include\pitz_rpi_tools_serial.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\asyncbase.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\device.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\impl.asyncbase.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\proxy.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\serial\async.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\serial\base.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\serial\impl.base.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
