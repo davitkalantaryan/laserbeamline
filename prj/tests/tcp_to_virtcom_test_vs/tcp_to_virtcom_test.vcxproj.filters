@@ -22,34 +22,40 @@
     <Filter Include="Header Files\common\io\serial">
       <UniqueIdentifier>{81fdff09-8db0-4442-8539-a4595db30544}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\common">
+      <UniqueIdentifier>{5d92067b-7844-42a9-a4a8-befd4a410abb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\common\io\socket">
+      <UniqueIdentifier>{00bd3ae3-bcfb-4a70-a0d3-bd4eb96edcb1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\tests\main_tcp_to_virtcom_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\common\common_io_asyncbase.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\common\common_io_device.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\common\common_io_serial_async.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\common\common_io_serial_base.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\common\common_io_socket_base.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpasync.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpbase.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\common\common_io_proxy.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_serial_async.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_serial_base.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_base.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpasync.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpbase.cpp">
+      <Filter>Source Files\common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +79,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\common\io\serial\impl.base.hpp">
       <Filter>Header Files\common\io\serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\socket\base.hpp">
+      <Filter>Header Files\common\io\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\socket\impl.base.hpp">
+      <Filter>Header Files\common\io\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\socket\tcpasync.hpp">
+      <Filter>Header Files\common\io\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\socket\tcpbase.hpp">
+      <Filter>Header Files\common\io\socket</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -12,8 +12,16 @@
 
 #if 1
 
+#include <common/io/socket/tcpasync.hpp>
+#include <common/io/proxy.hpp>
+
 int main()
 {
+	//::comm
+	::common::io::socket::Initialize();
+
+	::common::io::socket::Cleanup();
+
 	return 0;
 }
 

@@ -265,6 +265,10 @@
     <ClInclude Include="..\..\..\include\common\io\serial\async.hpp" />
     <ClInclude Include="..\..\..\include\common\io\serial\base.hpp" />
     <ClInclude Include="..\..\..\include\common\io\serial\impl.base.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\socket\base.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\socket\impl.base.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\socket\tcpasync.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\socket\tcpbase.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
