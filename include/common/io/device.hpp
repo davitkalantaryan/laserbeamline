@@ -31,7 +31,7 @@ public:
 	virtual int			writeC(const void* buffer, int bufferLen)=0;
 
 	virtual int			setTimeout(int timeoutMS) = 0;
-	virtual ptrdiff_t	handle()=0;
+	virtual ptrdiff_t	handle()const=0;
 
 	Device&				operator=(const Device& aM);
 	virtual				Device* Clone()const;

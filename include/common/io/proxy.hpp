@@ -9,6 +9,9 @@
 
 #include <common/io/asyncbase.hpp>
 
+#define NUBER_OF_DEVICES	2
+#define PROXY_BUFFER_SIZE2	1024
+
 namespace common{ namespace io{
 
 class Proxy
@@ -17,8 +20,14 @@ public:
 	Proxy();
 	virtual ~Proxy();
 
+	void SetDevices(async::Base** a_devs);
+	void StartProxying();
+
 protected:
-	async::Base		*m_pDev1, *m_pDev2;
+	struct NewDev{Proxy* aThis;async::Base* dev;char buff[PROXY_BUFFER_SIZE2];};
+protected:
+	NewDev*			m_devs2[NUBER_OF_DEVICES];
+	volatile int	m_nError;
 };
 
 }}  // namespace common{ namespace io{

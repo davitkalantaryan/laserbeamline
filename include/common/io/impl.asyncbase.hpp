@@ -50,6 +50,13 @@ int common::io::async::Dev<BaseIoDevice>::writeC(const void* a_data, int a_nData
 
 
 template <typename BaseIoDevice>
+ptrdiff_t common::io::async::Dev<BaseIoDevice>::handle()const
+{
+	return BaseIoDevice::handle();
+}
+
+
+template <typename BaseIoDevice>
 int common::io::async::Dev<BaseIoDevice>::readC(void* a_buffer, int a_nBufLen)const
 {
 #ifdef _WIN32

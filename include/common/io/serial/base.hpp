@@ -49,7 +49,7 @@ public:
 	virtual ~Base();
 
 	bool				isOpenC(void)const override;
-	ptrdiff_t			handle() override  {return (ptrdiff_t)m_handle;}
+	ptrdiff_t			handle()const override {return (ptrdiff_t)m_handle;}
 	virtual int			setTimeout(int a_timeoutMS) override;
 	virtual int			writeC(const void* buffer, int bufferLen) override;
 	virtual int			readC(void* a_buffer, int a_nBufLen)const override;
