@@ -12,7 +12,7 @@
 #ifndef MUTEX_CPP11_HPP
 #define MUTEX_CPP11_HPP
 
-#include "common/common_defination.h"
+#include <common_compiler_and_system_definations.h>
 
 #ifdef __CPP11_DEFINED__
 #include <mutex>

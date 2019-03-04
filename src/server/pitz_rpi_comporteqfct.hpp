@@ -10,8 +10,8 @@
 #define __pitz_rpi_comporteqfct_hpp__
 
 #include <eq_fct.h>
-#include "common_serial_comport.hpp"
-#include "tools_ioproxyserver.hpp"
+#include <common/io/serial/async.hpp>
+#include <common/io/proxy.hpp>
 
 extern int g_nDebugLevel;
 
@@ -103,7 +103,7 @@ public:
 	int ReadComRaw(void* buffer,int bufLen);
 	int ReadComRaw(void* buffer, int bufLen, int timeoutMs);
 
-	common::serial::ComPort* comPtr() {return &m_serial3;}
+	common::io::serial::Async* comPtr() {return &m_serial3;}
 
 protected:
 	virtual int  fct_code(void);
@@ -112,14 +112,14 @@ protected:
 	void ThreadForProxyFnc(void);
 
 protected:
-	common::serial::ComPort		m_serial3;
+	common::io::serial::Async	m_serial3;
 	New_D_types<D_string>		m_anyCommand;
 	D_string					m_comPortName;
 	D_int						m_baudRate;
 
 	std::string					m_strComName;
 	std::string					m_asciiEnding;
-	::tools::IoProxyServer		m_proxyServer;
+	::common::io::Proxy			m_proxy;
 	STDN::mutex					m_mutexForSerial;
 	STDN::thread				m_threadForProxy;
 };

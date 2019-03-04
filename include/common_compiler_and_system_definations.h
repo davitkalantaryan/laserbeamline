@@ -1,5 +1,5 @@
 /*****************************************************************************
- * File:    common_defination.h
+ * File:    common_compiler_and_system_definations.h
  * created: 2017 Apr 24
  *****************************************************************************
  * Author:	D.Kalantaryan, Tel:+49(0)33762/77552 kalantar
@@ -9,11 +9,33 @@
  * Description
  *   ...
  ****************************************************************************/
-#ifndef COMMON_DEFINATION_H
-#define COMMON_DEFINATION_H
+#ifndef COMMON_COMPILER_AND_SYSTEM_DEFINATION_H
+#define COMMON_COMPILER_AND_SYSTEM_DEFINATION_H
 
-#define	CURRENT_SERIALIZER_VERSION2		5
-#define	CURRENT_SERIALIZER_TYPE2		1
+#ifdef __cplusplus
+#define __BEGIN_C_DECL__ extern "C"{
+#else   // #ifdef __cplusplus
+#define __BEGIN_C_DECL__
+#endif  // #ifdef __cplusplus
+
+#ifdef _MSC_VER
+#ifdef __cplusplus
+#define __THISCALL__ __thiscall
+#else   // #ifdef __cplusplus
+#define __THISCALL__
+#endif  // #ifdef __cplusplus
+#ifdef _MSVC_LANG
+#define __CPP_STANDARD__	_MSVC_LANG
+#else
+#define __CPP_STANDARD__	2003L
+#endif   // #ifdef _MSVC_LANG
+#elif defined(__CYGWIN__)
+#define __THISCALL__
+#elif defined(__GNUC__) || defined(__clang__)
+#endif   // #ifdef _MSC_VER
+
+
+
 
 #ifndef __THISCALL__
 #ifdef _MSC_VER
