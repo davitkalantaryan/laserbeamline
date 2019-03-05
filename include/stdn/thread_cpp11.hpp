@@ -9,14 +9,17 @@
  * Description
  *   ...
  ****************************************************************************/
-#ifndef THREAD_CPP11_HPP
-#define THREAD_CPP11_HPP
+#ifndef STDN_THREAD_CPP11_HPP
+#define STDN_THREAD_CPP11_HPP
 
-#include <common/common_defination.h>
+#include <common_compiler_and_system_definations.h>
 
-#ifdef __CPP11_DEFINED__
+#if (__CPP_STANDARD__>=201101L) && !defined(IMPLEMENT_STD_THREAD)
 #include <thread>
-#else  // #ifdef __CPP11_DEFINED__
+namespace STDN {
+	typedef std::thread  thread;
+}
+#else  // #if (__CPP_STANDARD__>201101L) && !defined(IMPLEMENT_STD_THREAD)
 
 #include <stddef.h>
 #ifdef WIN32
@@ -67,8 +70,8 @@ protected:
 
 } // namespace STD{
 
-#include "thread_cpp11.impl.hpp"
+#include "impl.thread_cpp11.hpp"
 
-#endif // #ifdef __CPP11_DEFINED__
+#endif // #if (__CPP_STANDARD__>201101L) && !defined(IMPLEMENT_STD_THREAD)
 
-#endif // THREAD_CPP11_HPP
+#endif // STDN_THREAD_CPP11_HPP

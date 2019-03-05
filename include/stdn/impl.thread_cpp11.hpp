@@ -9,14 +9,13 @@
  * Description
  *   ...
  ****************************************************************************/
-#ifndef THREAD_CPP11_IMPL_HPP
-#define THREAD_CPP11_IMPL_HPP
+#ifndef IMPL_THREAD_CPP11_IMPL_HPP
+#define IMPL_THREAD_CPP11_IMPL_HPP
 
-#ifndef __CPP11_DEFINED__
+#if (__CPP_STANDARD__<201101L) || defined(IMPLEMENT_STD_THREAD)
 
-#ifndef THREAD_CPP11_HPP
+#ifndef STDN_THREAD_CPP11_HPP
 #error this file should be included from thread_cpp11.hpp
-#else   // #ifndef THREAD_CPP11_HPP
 #include "thread_cpp11.hpp"
 #endif  // #ifndef THREAD_CPP11_HPP
 
@@ -73,4 +72,4 @@ static void ThreadFunctionWithArg(void* a_arg)
 
 #endif //#ifndef __CPP11_DEFINED__
 
-#endif // THREAD_CPP11_IMPL_HPP
+#endif // #ifndef IMPL_THREAD_CPP11_IMPL_HPP

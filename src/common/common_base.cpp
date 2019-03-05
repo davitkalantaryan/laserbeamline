@@ -3,7 +3,7 @@
 // created on:		2019 Feb 26 
 // 
 
-#ifdef _USE_COMMON_FUNCTIOALITY_
+#if defined(_USE_COMMON_FUNCTIOALITY_ASCII) || defined(_USE_COMMON_FUNCTIOALITY_UNICODE)
 
 #include <common/base.hpp>
 #ifdef _WIN32
@@ -15,29 +15,30 @@
 #endif
 
 
-int common::MakeErrorReport(void* a_clbkData,TypeReportW a_repFunc)
+int common::MakeErrorReport(void* a_clbkData,TypeReport a_repFunc, ::common::String* a_pBuffer)
 {
 #ifdef _WIN32
 	DWORD dwError = GetLastError();
 
-	LPVOID lpMsgBuf;
-	FormatMessage(
+	void* lpMsgBuf;
+	Common_FormatMessage(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER |
 		FORMAT_MESSAGE_FROM_SYSTEM |
 		FORMAT_MESSAGE_IGNORE_INSERTS,
 		NULL,
 		dwError,
 		0, // Default language
-		(LPTSTR)&lpMsgBuf,
+		reinterpret_cast<Char*>(&lpMsgBuf),
 		0,
-		NULL
+		nullptr
 	);
 
-	(*a_repFunc)(a_clbkData, L"err_code=%d, text=%s", (int)dwError, (LPTSTR)lpMsgBuf);
+	if(a_repFunc){(*a_repFunc)(a_clbkData, Common_Text("err_code=%d, text=%s"),static_cast<int>(dwError), static_cast<Char*>(lpMsgBuf));}
+	if(a_pBuffer){*a_pBuffer= static_cast<Char*>(lpMsgBuf);}
 	LocalFree(lpMsgBuf);
-	return (int)dwError;
+	return static_cast<int>(dwError);
 #else   // #ifdef _WIN32
 #endif  // #ifdef _WIN32
 }
 
-#endif  // #ifdef _USE_COMMON_FUNCTIOALITY_
+#endif  // #if defined(_USE_COMMON_FUNCTIOALITY_ASCII) || defined(_USE_COMMON_FUNCTIOALITY_UNICODE)

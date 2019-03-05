@@ -48,6 +48,14 @@ void common::io::async::Base::SetCallbacks(void* a_clbkData, ReadClbkType a_fpRe
 }
 
 
+void common::io::async::Base::GetCallbacks(void** a_clbkDataPtr, ReadClbkType* a_fpReadPtr, WriteClbkType* a_fpWritePtr)
+{
+	*a_clbkDataPtr = m_ovrlpRead.clbkData;
+	*a_fpReadPtr = m_ovrlpRead.fpRead;
+	*a_fpWritePtr = m_ovrlpWrite.fpWrite;
+}
+
+
 int common::io::async::Base::WaitForReadComplation(int a_timeoutMs)
 {
 	if(m_ovrlpRead.ovrlp.hEvent){
@@ -87,6 +95,27 @@ void common::io::async::CancelIoForHandle(const SOvrlpdBase* a_handle)
 #ifdef _WIN32
 	CancelIo((HANDLE)a_handle->parent->handle());
 #else
+#endif
+}
+
+
+common::io::async::IoContext common::io::async::GetIoContext()
+{
+	// should be unix signal inited
+#ifdef _WIN32
+	return GetCurrentThread();
+#else
+	return pthread_self();
+#endif
+}
+
+
+void common::io::async::InteruptIoContext(IoContext a_context)
+{
+#ifdef _WIN32
+	QueueUserAPC([](ULONG_PTR) {}, a_context, 0);
+#else
+	pthread_kill(a_context,SIGUSR1);
 #endif
 }
 

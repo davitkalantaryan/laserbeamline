@@ -51,6 +51,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\common\base.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\asyncbase.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\device.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\impl.asyncbase.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\proxy.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\serial\async.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\serial\base.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\serial\impl.base.hpp" />
     <ClInclude Include="..\..\..\include\common_compiler_and_system_definations.h" />
     <ClInclude Include="..\..\..\include\first_include_for_laserbeamline.h" />
     <ClInclude Include="..\..\..\include\stdn\impl.thread_cpp11.hpp" />
@@ -61,6 +69,15 @@
     <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\common\common_base.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_asyncbase.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_device.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_proxy.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_serial_async.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_serial_base.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_socket_base.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpasync.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpbase.cpp" />
     <ClCompile Include="..\..\..\src\server\pitz_rpi_comporteqfct.cpp" />
     <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.cpp" />
     <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.cpp" />
@@ -123,7 +140,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWL|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -310,8 +327,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;remote_function_call.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../../../sysafs/x86_win32/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;rfc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WLACDEV_LIB_ROOT)\$(TargetFolderBase)\lib;$(DOOCSDEV_LIB_ROOT)\$(TargetFolderBase)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugWL|Win32'">
@@ -329,8 +346,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;remote_function_call.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../../../sysafs/x86_win32/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;rfc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WLACDEV_LIB_ROOT)\$(TargetFolderBase)\lib;$(DOOCSDEV_LIB_ROOT)\$(TargetFolderBase)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDbg|Win32'">
@@ -348,8 +365,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;remote_function_call.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../../../sysafs/x86_win32/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;rfc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WLACDEV_LIB_ROOT)\$(TargetFolderBase)\lib;$(DOOCSDEV_LIB_ROOT)\$(TargetFolderBase)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
@@ -367,8 +384,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;remote_function_call.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../../sysafs/arm_win/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;rfc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WLACDEV_LIB_ROOT)\$(TargetFolderBase)\lib;$(DOOCSDEV_LIB_ROOT)\$(TargetFolderBase)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy $(TargetPath) \\znpi02\c$\export\doocs\server\$(TargetFileName)\.</Command>
@@ -389,8 +406,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;remote_function_call.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../../sysafs/arm_win/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;rfc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WLACDEV_LIB_ROOT)\$(TargetFolderBase)\lib;$(DOOCSDEV_LIB_ROOT)\$(TargetFolderBase)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy $(TargetPath) \\znpi02\c$\export\doocs\server\$(TargetFileName)\.</Command>
@@ -411,8 +428,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;remote_function_call.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../../sysafs/arm_win/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;rfc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WLACDEV_LIB_ROOT)\$(TargetFolderBase)\lib;$(DOOCSDEV_LIB_ROOT)\$(TargetFolderBase)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy $(TargetPath) \\znpi02\c$\export\doocs\server\$(TargetFileName)\.</Command>
@@ -433,8 +450,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;remote_function_call.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../../../sysafs/amd64_win64/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;rfc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\davit\dev\doocs-all\wlac-private\public\sys\$(TargetFolderBase)\lib;D:\davit\dev\doocs-all\sys\win64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugWL|x64'">
@@ -452,8 +469,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;remote_function_call.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../../../sysafs/amd64_win64/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;rfc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WLACDEV_LIB_ROOT)\$(TargetFolderBase)\lib;$(DOOCSDEV_LIB_ROOT)\$(TargetFolderBase)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDbg|x64'">
@@ -471,8 +488,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;remote_function_call.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../../../sysafs/amd64_win64/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;rfc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WLACDEV_LIB_ROOT)\$(TargetFolderBase)\lib;$(DOOCSDEV_LIB_ROOT)\$(TargetFolderBase)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -494,8 +511,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;remote_function_call.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../../../sysafs/x86_win32/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;rfc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WLACDEV_LIB_ROOT)\$(TargetFolderBase)\lib;$(DOOCSDEV_LIB_ROOT)\$(TargetFolderBase)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -517,8 +534,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;remote_function_call.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../../../sysafs/arm_win/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;rfc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WLACDEV_LIB_ROOT)\$(TargetFolderBase)\lib;$(DOOCSDEV_LIB_ROOT)\$(TargetFolderBase)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy $(TargetPath) \\znpi02\c$\export\doocs\server\$(TargetFileName)\.</Command>
@@ -543,8 +560,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;remote_function_call.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../../../sysafs/amd64_win64/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EqServer.lib;DOOCSapi.lib;mini_xdr_rpc.lib;wlac.lib;rfc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WLACDEV_LIB_ROOT)\$(TargetFolderBase)\lib;$(DOOCSDEV_LIB_ROOT)\$(TargetFolderBase)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -25,6 +25,30 @@
     <ClInclude Include="..\..\..\include\common_compiler_and_system_definations.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\asyncbase.hpp">
+      <Filter>include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\device.hpp">
+      <Filter>include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\impl.asyncbase.hpp">
+      <Filter>include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\proxy.hpp">
+      <Filter>include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\serial\async.hpp">
+      <Filter>include\common\io\serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\serial\base.hpp">
+      <Filter>include\common\io\serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\serial\impl.base.hpp">
+      <Filter>include\common\io\serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\base.hpp">
+      <Filter>include\common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\server\pitz_rpi_comporteqfct.cpp">
@@ -38,6 +62,33 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.cpp">
       <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_asyncbase.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_device.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_proxy.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_serial_async.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_serial_base.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_base.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpasync.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpbase.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_base.cpp">
+      <Filter>src\common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +117,18 @@
     </Filter>
     <Filter Include="include\stdn">
       <UniqueIdentifier>{dc342dee-4fef-4fb4-b493-8c906090ab5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\common">
+      <UniqueIdentifier>{17e47605-de59-46e6-9c50-0c0106b4d678}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\common\io">
+      <UniqueIdentifier>{f786db4f-61f8-4e9f-a45e-4b9adf722c41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common">
+      <UniqueIdentifier>{0713036d-737d-4ff0-ae35-b01d9d9bc081}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\common\io\serial">
+      <UniqueIdentifier>{630231e7-bed9-4689-a19e-a2c942aebd28}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

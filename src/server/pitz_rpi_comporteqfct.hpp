@@ -12,6 +12,10 @@
 #include <eq_fct.h>
 #include <common/io/serial/async.hpp>
 #include <common/io/proxy.hpp>
+#include <stdn/thread_cpp11.hpp>
+#include <stdn/mutex_cpp11.hpp>
+#include <stdint.h>
+#include <common/io/socket/tcpasync.hpp>
 
 extern int g_nDebugLevel;
 
@@ -89,7 +93,7 @@ protected:
 class ComPortEqFct : public EqFct
 {
 public:
-	ComPortEqFct(const std::string& ending,const char* comName);
+	ComPortEqFct(const char* comName);
 	virtual ~ComPortEqFct();
 
 	int WriteStringWithEnding2(char* string, int str_len);
@@ -101,9 +105,8 @@ public:
 
 	//const ::common::serial::ComPort& ComPort()const;
 	int ReadComRaw(void* buffer,int bufLen);
-	int ReadComRaw(void* buffer, int bufLen, int timeoutMs);
 
-	common::io::serial::Async* comPtr() {return &m_serial3;}
+	common::io::serial::Async* comPtr() {return &m_serial;}
 
 protected:
 	virtual int  fct_code(void);
@@ -112,16 +115,19 @@ protected:
 	void ThreadForProxyFnc(void);
 
 protected:
-	common::io::serial::Async	m_serial3;
-	New_D_types<D_string>		m_anyCommand;
-	D_string					m_comPortName;
-	D_int						m_baudRate;
+	common::io::socket::TcpAsync*	m_pClientSocket;
+	common::io::serial::Async		m_serial;
+	char*							m_pcStrComNameRaw;
 
-	std::string					m_strComName;
-	std::string					m_asciiEnding;
-	::common::io::Proxy			m_proxy;
-	STDN::mutex					m_mutexForSerial;
-	STDN::thread				m_threadForProxy;
+
+	New_D_types<D_string>			m_anyCommand;
+	D_string						m_comPortName;
+	D_int							m_baudRate;
+
+	::common::io::Proxy				m_proxy;
+	STDN::mutex						m_mutexForSerial;
+	STDN::thread					m_threadForProxy;
+	volatile uint64_t				m_proxyRuns : 1;
 };
 
 

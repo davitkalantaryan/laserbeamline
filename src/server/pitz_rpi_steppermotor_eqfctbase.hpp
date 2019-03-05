@@ -24,10 +24,10 @@ class ControllerRaw
 public:
 	ControllerRaw();
 	virtual ~ControllerRaw() {}
-	void SetComPortAndAddress(common::serial::ComPort* a_com, int address);
+	void SetComPortAndAddress( ::common::io::serial::Base* a_com, int address);
 
 protected:
-	common::serial::ComPort* m_com;
+	::common::io::serial::Base* m_com;
 	int m_nControllerAddress;
 };
 

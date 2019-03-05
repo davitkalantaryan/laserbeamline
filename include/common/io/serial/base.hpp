@@ -23,7 +23,7 @@ typedef HANDLE	COM_HANDLE;
 namespace common{ namespace io{ namespace serial{
 
 typedef int SerialParityT;
-namespace SerialParity {enum {
+namespace SerialParity {enum Type{
 	None,
 	Odd,
 	Even,
@@ -32,7 +32,7 @@ namespace SerialParity {enum {
 };}
 
 typedef int SerialStopBitsT;
-namespace SerialStopBits {enum {
+namespace SerialStopBits {enum Type{
 	One,
 	OnePointFive,
 	Two,

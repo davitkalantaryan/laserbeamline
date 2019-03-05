@@ -27,6 +27,8 @@ public:
 
 common::io::Proxy::Proxy()
 {
+	m_ioContext = static_cast<async::IoContext>(0);
+	m_nRun = 0;
 	memset(m_devs2, 0, NUBER_OF_DEVICES*sizeof(NewDev));
 #if 0
 	for (int i(0); i < NUBER_OF_DEVICES; ++i) {
@@ -52,12 +54,21 @@ void common::io::Proxy::SetDevices(async::Base** a_devs)
 }
 
 
-void common::io::Proxy::StartProxying()
+void common::io::Proxy::Stop()
+{
+	m_nRun = 0;
+	async::InteruptIoContext(m_ioContext);
+}
+
+
+void common::io::Proxy::Start()
 {
 	int i;
 	async::CPtrSOvrlpdBase handleRead;
 	async::CPtrSOvrlpdBase* pHandles = (async::CPtrSOvrlpdBase*)alloca(sizeof(async::CPtrSOvrlpdBase)*NUBER_OF_DEVICES);
 	
+	m_ioContext = async::GetIoContext();
+	m_nRun = 1;
 	m_nError = 0;
 
 	for (i=0; i < NUBER_OF_DEVICES; ++i) {
@@ -65,17 +76,17 @@ void common::io::Proxy::StartProxying()
 		m_devs2[i]->dev->readC(m_devs2[i]->buff,PROXY_BUFFER_SIZE2);
 	}
 
-	while(!m_nError){
+	while(m_nRun && (!m_nError)){
 		handleRead=async::WaitForMultipleHandles(NUBER_OF_DEVICES,pHandles,INFINITE);
 		if(!handleRead){break;}
 	}
 
 	for (i = 0; i < NUBER_OF_DEVICES; ++i) {
 		pHandles[i] = m_devs2[i]->dev->ReadHandle();
-		m_devs2[i]->dev->readC(m_devs2[i]->buff, PROXY_BUFFER_SIZE2);
+		async::CancelIoForHandle(pHandles[i]);
 	}
 
-	// io-s shuld be stopped
+	m_ioContext = static_cast<async::IoContext>(0);
 }
 
 

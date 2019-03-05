@@ -21,13 +21,19 @@ public:
 	virtual ~Proxy();
 
 	void SetDevices(async::Base** a_devs);
-	void StartProxying();
+	void Start();
+	void Stop();
 
 protected:
-	struct NewDev{Proxy* aThis;async::Base* dev;char buff[PROXY_BUFFER_SIZE2];};
+	struct NewDev { 
+		Proxy* aThis; async::Base* dev; char buff[PROXY_BUFFER_SIZE2];
+		void *clbkData; async::ReadClbkType fpRead; async::WriteClbkType fpWrite;
+	};
 protected:
-	NewDev*			m_devs2[NUBER_OF_DEVICES];
-	volatile int	m_nError;
+	NewDev*				m_devs2[NUBER_OF_DEVICES];
+	volatile int		m_nError;
+	volatile int		m_nRun;
+	async::IoContext	m_ioContext;
 };
 
 }}  // namespace common{ namespace io{

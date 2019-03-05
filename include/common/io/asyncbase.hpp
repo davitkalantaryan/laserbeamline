@@ -20,6 +20,12 @@
 
 namespace common{ namespace io{ namespace async{
 
+#ifdef _WIN32
+typedef HANDLE	IoContext;
+#else
+typedef pthread_t IoContext;
+#endif
+
 typedef void(*ReadClbkType)(void* clbkData,int error,const char* data, int dataLen);
 typedef void(*WriteClbkType)(void* clbkData,int error,const char* data, int dataLen);
 class Base;
@@ -37,6 +43,8 @@ typedef struct SOvrlpdBase {
 
 const SOvrlpdBase*	WaitForMultipleHandles(int number, CPtrSOvrlpdBase* handles, int timeoutMs);
 void CancelIoForHandle(const SOvrlpdBase* handle);
+IoContext GetIoContext();
+void InteruptIoContext(IoContext context);
 
 class Base
 {
@@ -49,6 +57,7 @@ public:
 	virtual ptrdiff_t		handle()const = 0;
 
 	void					SetCallbacks(void* a_clbkData, ReadClbkType a_fpRead, WriteClbkType a_fpWrite);
+	void					GetCallbacks(void** a_clbkDataPtr, ReadClbkType* a_fpReadPtr, WriteClbkType* a_fpWritePtr);
 	int						WaitForReadComplation(int timeoutMs);
 	int						WaitForWriteComplation(int timeoutMs);
 

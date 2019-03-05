@@ -6,15 +6,30 @@
 #ifndef __common_base_hpp__
 #define __common_base_hpp__
 
-#include <stdarg.h>
 
-#ifdef _USE_COMMON_FUNCTIOALITY_
+#if defined(_USE_COMMON_FUNCTIOALITY_ASCII) || defined(_USE_COMMON_FUNCTIOALITY_UNICODE)
+
+#include <stdarg.h>
+#include <string>
+
 namespace common {
 
-typedef int(*TypeReportW)(void* a_pClbkData, const wchar_t* frmt,...);
-int MakeErrorReport(void* clbkData, TypeReportW repFunc);
+#ifdef _USE_COMMON_FUNCTIOALITY_ASCII
+typedef char Char;
+typedef ::std::string	String;
+#define Common_FormatMessage	::FormatMessageA
+#define Common_Text(_text)		_text
+#elif defined(_USE_COMMON_FUNCTIOALITY_UNICODE)
+typedef wchar_t Char;
+typedef ::std::wstring	String;
+#define Common_FormatMessage	::FormatMessageW
+#define Common_Text(_text)		L##_text
+#endif
+
+typedef int(*TypeReport)(void* a_pClbkData, const ::common::Char* frmt,...);
+int MakeErrorReport(void* clbkData, TypeReport repFunc,::common::String* a_pBuffer);
 
 }  // namespace common {
-#endif
+#endif  // #if defined(_USE_COMMON_FUNCTIOALITY_ASCII) || defined(_USE_COMMON_FUNCTIOALITY_UNICODE)
 
 #endif  // #ifndef __common_base_hpp__

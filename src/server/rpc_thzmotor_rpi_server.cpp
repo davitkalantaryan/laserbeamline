@@ -10,7 +10,7 @@
  *
  */
 
-#include "pitz_rpi_thzmotor_eqfctsm.hpp"
+#include "pitz_rpi_steppermotor_eqfctthz.hpp"
 
 const char*	object_name = "thzmotor_rpi_server";
 void interrupt_usr1_prolog(int)  {}
@@ -29,8 +29,8 @@ EqFct* eq_create(int a_eq_code, void* a_comPortName)
 	case ((int)pitz::rpi::EQ_FCT_CODES::GEN_COM_PORT):
 		pRet = new pitz::rpi::ComPortEqFct((const char*)a_comPortName);
 		break;
-	case ((int)pitz::rpi::EQ_FCT_CODES::THZ_MOT_COM_USER):
-		pRet = new pitz::rpi::ThzMotor::EqFctThzMot;
+	case ((int)pitz::rpi::STP_MTR_EQ_FCT_CODES::THZ_MOT):
+		pRet = new pitz::rpi::StepperMotor::EqFctThz;
 		break;
 	default: break;
 	}

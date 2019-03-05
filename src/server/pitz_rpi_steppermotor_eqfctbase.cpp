@@ -70,7 +70,7 @@ void pitz::rpi::StepperMotor::EqFctBase::post_init(void)
 	nLen=snprintf(vcBuffer,1023,"%d nidentify\r\n",nMotorNumber);
 	printf("!!!!!!!!!!!! identify_string=\"%s\"\n", vcBuffer);
 	m_pComPort->WriteByteStream(vcBuffer, nLen);
-	nLen=m_pComPort->ReadComRaw(vcBuffer, 1023,10004);
+	nLen=m_pComPort->ReadComRaw(vcBuffer, 1023);
 	if(nLen<=0){
 		printf("!!!!!!!!!!!!!!!! Identify failled!\n");
 		m_statusStr.set_value("Identify failled");
@@ -145,7 +145,7 @@ pitz::rpi::ControllerRaw::ControllerRaw()
 	m_nControllerAddress = -1;
 }
 
-void pitz::rpi::ControllerRaw::SetComPortAndAddress(common::serial::ComPort* a_com, int a_address)
+void pitz::rpi::ControllerRaw::SetComPortAndAddress(::common::io::serial::Base* a_com, int a_address)
 {
 	m_com = a_com;
 	m_nControllerAddress = a_address;
@@ -191,7 +191,7 @@ double pitz::rpi::D_curPos::GetPosFromDeviceRaw()
 
 	nRet = snprintf(vcBuffer, 128, "%d np\r\n", m_nControllerAddress);
 	m_com->writeC(vcBuffer, nRet);
-	nRet = m_com->Read2(vcBuffer, 16, 100, 10);
+	nRet = m_com->readC(vcBuffer, 16);
 	if (nRet<1) {
 		// send error to user
 		return FLOAT_ERR_VAL;
@@ -242,7 +242,7 @@ int pitz::rpi::D_isBusy::GetIsBusyRaw()
 	if (IS_NOT_INITED()) {return -1;}
 	nRet = snprintf(vcBuffer, 128, "%d nst\r\n", m_nControllerAddress);
 	m_com->writeC(vcBuffer, nRet);
-	nRet = m_com->Read2(vcBuffer, 16, 100, 10);
+	nRet = m_com->readC(vcBuffer, 16);
 	if (nRet<1) {return -2;}
 	vcBuffer[nRet] = 0;
 	return atoi(vcBuffer);

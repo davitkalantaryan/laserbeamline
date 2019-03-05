@@ -14,12 +14,12 @@
 
 #include <common_compiler_and_system_definations.h>
 
-#ifdef __CPP11_DEFINED__
+#if (__CPP_STANDARD__>=201101L) && !defined(IMPLEMENT_STD_MUTEX)
 #include <mutex>
 namespace STDN {
 typedef std::mutex  mutex;
 }
-#else  // #ifdef __CPP11_DEFINED__
+#else  // #if (__CPP_STANDARD__>=201101L) && !defined(IMPLEMENT_STD_MUTEX)
 
 #include <stddef.h>
 #ifdef _WIN32
@@ -51,6 +51,6 @@ private:
 
 }
 
-#endif // #ifdef __CPP11_DEFINED__
+#endif // #if (__CPP_STANDARD__>=201101L) && !defined(IMPLEMENT_STD_MUTEX)
 
 #endif // MUTEX_CPP11_HPP
