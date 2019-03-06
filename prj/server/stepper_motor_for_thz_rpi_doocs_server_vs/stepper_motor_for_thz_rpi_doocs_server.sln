@@ -1,52 +1,37 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "stepper_motor_for_thz_rpi_doocs_server", "stepper_motor_for_thz_rpi_doocs_server.vcxproj", "{BCAF5407-15EB-4C69-AD96-2753227F11FF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "stepper_motor_for_thz_rpi_doocs_server", "stepper_motor_for_thz_rpi_doocs_server.vcxproj", "{F5CC6AA6-7691-442C-93DA-D653D4C151B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
-		DebugDbg|ARM = DebugDbg|ARM
-		DebugDbg|x64 = DebugDbg|x64
-		DebugDbg|x86 = DebugDbg|x86
-		DebugWL|ARM = DebugWL|ARM
-		DebugWL|x64 = DebugWL|x64
-		DebugWL|x86 = DebugWL|x86
 		Release|ARM = Release|ARM
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.Debug|ARM.ActiveCfg = Debug|ARM
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.Debug|ARM.Build.0 = Debug|ARM
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.Debug|x64.ActiveCfg = Debug|x64
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.Debug|x64.Build.0 = Debug|x64
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.Debug|x86.ActiveCfg = Debug|Win32
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.Debug|x86.Build.0 = Debug|Win32
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.DebugDbg|ARM.ActiveCfg = DebugDbg|ARM
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.DebugDbg|ARM.Build.0 = DebugDbg|ARM
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.DebugDbg|x64.ActiveCfg = DebugDbg|x64
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.DebugDbg|x64.Build.0 = DebugDbg|x64
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.DebugDbg|x86.ActiveCfg = DebugDbg|Win32
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.DebugDbg|x86.Build.0 = DebugDbg|Win32
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.DebugWL|ARM.ActiveCfg = DebugWL|ARM
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.DebugWL|ARM.Build.0 = DebugWL|ARM
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.DebugWL|x64.ActiveCfg = DebugWL|x64
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.DebugWL|x64.Build.0 = DebugWL|x64
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.DebugWL|x86.ActiveCfg = DebugWL|Win32
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.DebugWL|x86.Build.0 = DebugWL|Win32
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.Release|ARM.ActiveCfg = Release|ARM
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.Release|ARM.Build.0 = Release|ARM
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.Release|x64.ActiveCfg = Release|x64
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.Release|x64.Build.0 = Release|x64
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.Release|x86.ActiveCfg = Release|Win32
-		{BCAF5407-15EB-4C69-AD96-2753227F11FF}.Release|x86.Build.0 = Release|Win32
+		{F5CC6AA6-7691-442C-93DA-D653D4C151B0}.Debug|ARM.ActiveCfg = Debug|ARM
+		{F5CC6AA6-7691-442C-93DA-D653D4C151B0}.Debug|ARM.Build.0 = Debug|ARM
+		{F5CC6AA6-7691-442C-93DA-D653D4C151B0}.Debug|x64.ActiveCfg = Debug|x64
+		{F5CC6AA6-7691-442C-93DA-D653D4C151B0}.Debug|x64.Build.0 = Debug|x64
+		{F5CC6AA6-7691-442C-93DA-D653D4C151B0}.Debug|x86.ActiveCfg = Debug|Win32
+		{F5CC6AA6-7691-442C-93DA-D653D4C151B0}.Debug|x86.Build.0 = Debug|Win32
+		{F5CC6AA6-7691-442C-93DA-D653D4C151B0}.Release|ARM.ActiveCfg = Release|ARM
+		{F5CC6AA6-7691-442C-93DA-D653D4C151B0}.Release|ARM.Build.0 = Release|ARM
+		{F5CC6AA6-7691-442C-93DA-D653D4C151B0}.Release|x64.ActiveCfg = Release|x64
+		{F5CC6AA6-7691-442C-93DA-D653D4C151B0}.Release|x64.Build.0 = Release|x64
+		{F5CC6AA6-7691-442C-93DA-D653D4C151B0}.Release|x86.ActiveCfg = Release|Win32
+		{F5CC6AA6-7691-442C-93DA-D653D4C151B0}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4040E332-C824-49D9-B5BE-1E76EE3932A9}
 	EndGlobalSection
 EndGlobal

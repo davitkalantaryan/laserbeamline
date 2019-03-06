@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_comporteqfct.hpp">
+      <Filter>src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.hpp">
+      <Filter>src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.hpp">
+      <Filter>src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\first_include_for_laserbeamline.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\stdn\impl.thread_cpp11.hpp">
+      <Filter>include\stdn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\stdn\mutex_cpp11.hpp">
+      <Filter>include\stdn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\stdn\thread_cpp11.hpp">
+      <Filter>include\stdn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common_compiler_and_system_definations.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\asyncbase.hpp">
+      <Filter>include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\device.hpp">
+      <Filter>include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\impl.asyncbase.hpp">
+      <Filter>include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\proxy.hpp">
+      <Filter>include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\serial\async.hpp">
+      <Filter>include\common\io\serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\serial\base.hpp">
+      <Filter>include\common\io\serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\serial\impl.base.hpp">
+      <Filter>include\common\io\serial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\base.hpp">
+      <Filter>include\common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_comporteqfct.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\server\rpc_thzmotor_rpi_server.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_asyncbase.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_device.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_proxy.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_serial_async.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_serial_base.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_base.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpasync.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpbase.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_base.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\server\pitz_rpi_comporteqfct.impl.hpp">
+      <Filter>src\server</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{04b17a85-bad7-4595-be87-624bd0d490c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{6dd6472b-abde-4707-a984-12c84acae05b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\server">
+      <UniqueIdentifier>{49c5f83a-c5e7-4a7b-a987-795005a96f7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\tools">
+      <UniqueIdentifier>{c81ec41b-661a-46b2-b42f-b8dd054bed8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other">
+      <UniqueIdentifier>{91952e8a-477e-4b1b-9fe2-c2dcaab8ee31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="doc">
+      <UniqueIdentifier>{fa592dc1-747a-437f-bf1a-f5677514e93c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\stdn">
+      <UniqueIdentifier>{dc342dee-4fef-4fb4-b493-8c906090ab5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\common">
+      <UniqueIdentifier>{17e47605-de59-46e6-9c50-0c0106b4d678}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\common\io">
+      <UniqueIdentifier>{f786db4f-61f8-4e9f-a45e-4b9adf722c41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common">
+      <UniqueIdentifier>{0713036d-737d-4ff0-ae35-b01d9d9bc081}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\common\io\serial">
+      <UniqueIdentifier>{630231e7-bed9-4689-a19e-a2c942aebd28}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

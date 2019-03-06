@@ -24,6 +24,8 @@ EqFct* eq_create(int a_eq_code, void* a_comPortName)
 {
 	EqFct* pRet = NULL;
 
+#ifndef _DEBUGGING_APP
+
 	switch (a_eq_code)
 	{
 	case ((int)pitz::rpi::EQ_FCT_CODES::GEN_COM_PORT):
@@ -34,6 +36,9 @@ EqFct* eq_create(int a_eq_code, void* a_comPortName)
 		break;
 	default: break;
 	}
+
+#endif  // #ifndef _DEBUGGING_APP
+
 	return pRet;
 }
 
