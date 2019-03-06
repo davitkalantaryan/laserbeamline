@@ -13,10 +13,99 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\server">
+      <UniqueIdentifier>{2bec94bc-ed1f-4db5-b2e1-b0b8e96d200d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common">
+      <UniqueIdentifier>{0c5c6e4c-0a4d-419a-a942-3503acb1a5db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\src">
+      <UniqueIdentifier>{3264f676-16e6-4b38-ba53-88d2790449a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\src\server">
+      <UniqueIdentifier>{007d67a9-81e5-435f-ae61-fb6e2bb14e8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include">
+      <UniqueIdentifier>{bc4ef4e8-cee7-45ac-afed-d70f267dbb89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\common">
+      <UniqueIdentifier>{3f8fb8c7-c98d-4941-b0fb-cf49b5ed261e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\common\io">
+      <UniqueIdentifier>{d13c4fd9-ee9a-426f-8a4b-5f2ee6c0d9cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\server\rpc_thzmotor_rpi_server.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\server</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_comporteqfct.cpp">
+      <Filter>Source Files\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_base.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_asyncbase.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_device.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_proxy.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_serial_async.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_serial_base.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_base.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpasync.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpbase.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.cpp">
+      <Filter>Source Files\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.cpp">
+      <Filter>Source Files\server</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.hpp">
+      <Filter>Header Files\src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.hpp">
+      <Filter>Header Files\src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\asyncbase.hpp">
+      <Filter>Header Files\include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\device.hpp">
+      <Filter>Header Files\include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\impl.asyncbase.hpp">
+      <Filter>Header Files\include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\io\proxy.hpp">
+      <Filter>Header Files\include\common\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\base.hpp">
+      <Filter>Header Files\include\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\common_iodevicelerner.hpp">
+      <Filter>Header Files\include\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\common\common_servertcp.hpp">
+      <Filter>Header Files\include\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_comporteqfct.hpp">
+      <Filter>Header Files\src\server</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

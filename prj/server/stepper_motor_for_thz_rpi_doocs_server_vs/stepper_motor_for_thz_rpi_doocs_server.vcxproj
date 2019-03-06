@@ -128,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../../../include;$(DOOCSDEV_INCLUDE);$(WLACDEV_INCLUDE);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUGGING_APP;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>first_include_for_laserbeamline.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
@@ -144,7 +144,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../../../include;$(DOOCSDEV_INCLUDE);$(WLACDEV_INCLUDE);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUGGING_APP;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>first_include_for_laserbeamline.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
@@ -160,7 +160,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../../../include;$(DOOCSDEV_INCLUDE);$(WLACDEV_INCLUDE);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUGGING_APP;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>first_include_for_laserbeamline.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
@@ -178,7 +178,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../../../include;$(DOOCSDEV_INCLUDE);$(WLACDEV_INCLUDE);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUGGING_APP;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>first_include_for_laserbeamline.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
@@ -198,7 +198,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../../../include;$(DOOCSDEV_INCLUDE);$(WLACDEV_INCLUDE);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUGGING_APP;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>first_include_for_laserbeamline.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
@@ -218,7 +218,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../../../include;$(DOOCSDEV_INCLUDE);$(WLACDEV_INCLUDE);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUGGING_APP;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>first_include_for_laserbeamline.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
@@ -230,7 +230,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\common\common_base.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_asyncbase.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_device.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_proxy.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_serial_async.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_serial_base.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_socket_base.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpasync.cpp" />
+    <ClCompile Include="..\..\..\src\common\common_io_socket_tcpbase.cpp" />
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_comporteqfct.cpp" />
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.cpp" />
+    <ClCompile Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.cpp" />
     <ClCompile Include="..\..\..\src\server\rpc_thzmotor_rpi_server.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\common\base.hpp" />
+    <ClInclude Include="..\..\..\include\common\common_iodevicelerner.hpp" />
+    <ClInclude Include="..\..\..\include\common\common_servertcp.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\asyncbase.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\device.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\impl.asyncbase.hpp" />
+    <ClInclude Include="..\..\..\include\common\io\proxy.hpp" />
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_comporteqfct.hpp" />
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctbase.hpp" />
+    <ClInclude Include="..\..\..\src\server\pitz_rpi_steppermotor_eqfctthz.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
